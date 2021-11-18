@@ -1,13 +1,15 @@
 Cene Odendaal:
 
 What you have done since yesterday:
-  - created github reop
+  - created github repo
+  - read all instructions
   
 What you are planning on doing:
-  -
+  - initialize android project, link to github
+  - think about authorisation
   
 Any impediments or stumbling:
-  -
+  - time contraints
 
 Julia Park:
 
