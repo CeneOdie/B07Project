@@ -12,8 +12,12 @@ Any impediments or stumbling:
 Julia Park:
 
 Tasks done since yesterday:
-
+  - Set up a GitHub account
+  - Selected user stories to work on
+  
 Plan for today:
+  - Understanding project instructions
+  - Getting familiar with GitHub and Firebase
 
 Impediments/stumbling:
 
