@@ -24,7 +24,8 @@ Impediments/stumbling:
 
 Purui Yi:
 What you have done since yesterday:
-
+  - Read all the project instructions 
 What you are planning on doing:
-
+  - Thinking about how to implement requirements in user stories
+  - Getting famaliar with Github and Firebase
 Any impediments or stumbling:
