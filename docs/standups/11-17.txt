@@ -1,0 +1,33 @@
+Cene Odendaal:
+
+What you have done since yesterday:
+  - created github repo
+  - read all instructions
+  
+What you are planning on doing:
+  - initialize android project, link to github
+  - think about authorisation
+  
+Any impediments or stumbling:
+  - time contraints
+
+Julia Park:
+
+Tasks done since yesterday:
+  - Set up a GitHub account
+  - Selected user stories to work on
+  
+Plan for today:
+  - Understanding project instructions
+  - Getting familiar with GitHub and Firebase
+
+Impediments/stumbling:
+
+
+Purui Yi:
+What you have done since yesterday:
+  - Read all the project instructions 
+What you are planning on doing:
+  - Thinking about how to implement requirements in user stories
+  - Getting famaliar with Github and Firebase
+Any impediments or stumbling:
