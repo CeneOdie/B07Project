@@ -22,10 +22,12 @@ Julia Park:
 
 Purui Yi
   Since yesterday:
-  -
+  - getting to know more about Git and Github
+  - brainstorming on ways to implement user stories 
   
   Planning to do:
-  -
+  - start UI designing 
+  - connect firebase to andriod studio 
   
   Impediments/Obstructions:
-  - 
+  - how to reflect changes made by store owner to customer
