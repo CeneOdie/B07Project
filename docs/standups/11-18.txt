@@ -14,7 +14,7 @@ Julia Park:
   -
   
   Planning to do:
-  -
+  - Brainstorming visual components appropriate for selected user stories
   
   Impediments/Obstructions:
   - 
