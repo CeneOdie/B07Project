@@ -1,9 +1,12 @@
 Cene Odendaal: 
   Since yesterday:
-  -
-  
+  - set up communication and brainstorming locale on github
+  - reading up on implementing vcs in android studio
+  - brainstorming UI components and design for user stories
+
   Planning to do:
-  -
+  - setting up project files in github for team members to pull
+  - starting work on account set up and authorization with firebase auth
   
   Impediments/Obstructions:
   - time constraints
@@ -27,7 +30,7 @@ Purui Yi
   
   Planning to do:
   - start UI designing 
-  - connect firebase to andriod studio 
+  - connect firebase to android studio 
   
   Impediments/Obstructions:
   - how to reflect changes made by store owner to customer
