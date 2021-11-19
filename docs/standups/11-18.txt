@@ -14,13 +14,15 @@ Cene Odendaal:
 
 Julia Park:
   Since yesterday:
-  -
+  - Reviewed "Introduction to GitHub"
   
   Planning to do:
   - Brainstorming visual components appropriate for selected user stories
+  - Brainsotrming fields and methods necessary in each class
   
   Impediments/Obstructions:
-  - 
+  - Time management
+  - Uncertainty on how much actions a store owner can do
 
 
 Purui Yi
