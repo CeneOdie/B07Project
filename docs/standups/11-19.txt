@@ -24,10 +24,12 @@ Julia:
   
  Perry:
    Since yesterday:
-  -
+  - connected firebase to android studio
+  - UI designing started for user stories 4
   
   For tomorrow:
-  -
+  - resolving bugs in android studio 
+  - implement functionalities related to "customer order"
   
   Impediments:
-  -
+  - time constraints
