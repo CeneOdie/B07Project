@@ -10,13 +10,17 @@ Cene:
 
 Julia:
   Since yesterday:
-  -
+  - Started creating database for products
+  - Brainstormed UI components of user stories and fields + methods needed for each class
+  - Attempted to connect Firebase to Android Studio
   
   For tomorrow:
-  -
+  - Resolve the impediment mentioned below
+  - Continue working on database
+  - Implement a couple of methods for each class
   
   Impediments:
-  -
+  - Ran into an error while connecting Firebase to Android Studio
   
  Perry:
    Since yesterday:
