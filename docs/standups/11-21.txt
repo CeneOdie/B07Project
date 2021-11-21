@@ -1,0 +1,29 @@
+Cene:
+  Since yesterday:
+  - 
+  
+  For tomorrow:
+  - 
+  
+  Impediments:
+  - 
+  
+Julia:
+  Since yesterday:
+  - Pseudocode for user story #2
+  
+  For tomorrow:
+  - Refine pseudocode and implement xml and java codes
+  
+  Impediments:
+  - Time constraint (exam tomorrow)
+  
+Perry:
+  Since yesterday:
+  - 
+  
+  For tomorrow:
+  -
+  
+  Impediments:
+  - 
