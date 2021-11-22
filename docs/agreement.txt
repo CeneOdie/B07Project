@@ -1,5 +1,0 @@
-Cene Odendaal (Scrum master)
-Ye-Ahn (Julia) Park
-Purui Yi (Perry)
-
-Using Github for version control
