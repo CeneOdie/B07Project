@@ -1,9 +1,9 @@
 Cene:
   Since yesterday:
-  -
+  - connected andriod studio proj to github repo on master branch
   
   For tomorrow:
-  -
+  - unavailable
   
   Impediments:
   - time constraints
