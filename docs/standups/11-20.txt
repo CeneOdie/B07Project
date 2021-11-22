@@ -1,12 +1,13 @@
 Cene:
   Since yesterday:
-  -
+  - was unavailable
   
   For tomorrow:
-  -
+  - start ui design for login and sign up pages
+  - connect firebase
   
   Impediments:
-  - 
+  - time constraints
 
 Julia:
   Since yesterday:
