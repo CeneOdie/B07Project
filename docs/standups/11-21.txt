@@ -6,7 +6,7 @@ Cene:
   - 
   
   Impediments:
-  - 
+  - time contraints
   
 Julia:
   Since yesterday:
