@@ -20,10 +20,11 @@ Julia:
   
 Perry:
   Since yesterday:
-  - 
+  - testing with different views
+  - continue working on user story 6
   
   For tomorrow:
-  -
+  - elaborate on the implementation of user story 6
   
   Impediments:
-  - 
+  - time constraints
