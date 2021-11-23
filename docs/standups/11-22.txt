@@ -1,0 +1,29 @@
+	Cene:
+  Since yesterday:
+  - 
+  
+  For tomorrow:
+  - 
+  
+  Impediments:
+  - time contraints
+  
+Julia:
+  Since yesterday:
+  - 
+  
+  For tomorrow:
+  - 
+  
+  Impediments:
+  - 
+  
+Perry:
+  Since yesterday:
+  - 
+  
+  For tomorrow:
+  -
+  
+  Impediments:
+  - 
