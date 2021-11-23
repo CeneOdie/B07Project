@@ -26,4 +26,4 @@ Perry:
   -
   
   Impediments:
-  - 
+  - time constraints
