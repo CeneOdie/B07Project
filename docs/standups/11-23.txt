@@ -18,8 +18,10 @@ Cene:
   
  Perry:
   Since yesterday:
+  - tackle with firebase issues 
   
   Plan for tomorrow:
+  - elaborate on user story #6
   
   Impediments:
- 
+  - time constraint
