@@ -13,6 +13,8 @@ Cene:
   - Preparing for tomorrow's demo
   
   Impediments:
+  - Writing code to incorporate Firebase database 
+  - Failure to run activities on an emulator
   
  Perry:
   Since yesterday:
