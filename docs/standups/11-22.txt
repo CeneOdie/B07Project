@@ -10,13 +10,13 @@
   
 Julia:
   Since yesterday:
-  - 
+  - No updates
   
   For tomorrow:
-  - 
+  - Continue working on user story 2
   
   Impediments:
-  - 
+  - Time constraints
   
 Perry:
   Since yesterday:
