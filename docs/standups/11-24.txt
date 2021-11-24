@@ -1,0 +1,22 @@
+Cene:
+  Since yesterday:
+  
+  For tomorrow:
+  
+  Impediments:
+  
+Julia:
+  Since yesterday:
+  - Pushed what I have up until now to master branch
+  
+  For tomorrow:
+  - Resolve Firebase issue
+  
+  Impediments:
+  
+Perry:
+  Since yesterday:
+  
+  For tomorrow:
+  
+  Impediments:
