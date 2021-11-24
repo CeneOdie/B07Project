@@ -1,0 +1,23 @@
+Cene:
+  Since yesterday:
+  
+  Plan for tomorrow:
+  
+  Impediments:
+  
+ Julia:
+  Since yesterday:
+  - Continued working on user story #2
+  
+  Plan for tomorrow:
+  - Preparing for tomorrow's demo
+  
+  Impediments:
+  
+ Perry:
+  Since yesterday:
+  
+  Plan for tomorrow:
+  
+  Impediments:
+ 
