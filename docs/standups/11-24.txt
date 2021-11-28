@@ -1,9 +1,14 @@
 Cene:
   Since yesterday:
+  - prepared for demo and meeting with team
+  - wrote template for firestore database access from app
   
   For tomorrow:
+  - sync build.gradle files for everyone's seperate projects so far
   
   Impediments:
+  - dont have access to everyone's code
+  - time constraints
   
 Julia:
   Since yesterday:
