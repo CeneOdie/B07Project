@@ -1,12 +1,13 @@
-	Cene:
+Cene:
   Since yesterday:
   -
   
   For tomorrow:
-  -
+  - sync build.gradle
   
   Impediments:
-  -
+  - dont have access to everyone's code
+  - time constraints
   
 Julia:
   Since yesterday:
