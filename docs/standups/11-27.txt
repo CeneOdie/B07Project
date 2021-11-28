@@ -1,12 +1,13 @@
-	Cene:
+Cene:
   Since yesterday:
-  -
+  - Asked perry to push his code to the github so i can sync build.gradle
   
   For tomorrow:
-  -
+  - sync build.gradle
   
   Impediments:
-  -
+  - dont have access to everyone's code
+  - time constraints
   
 Julia:
   Since yesterday:
