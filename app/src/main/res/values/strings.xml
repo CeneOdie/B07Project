@@ -14,4 +14,22 @@
     <string name="signupstore" />
     <string name="signupaddress" />
     <string name="SignUpError" />
+
+    <string name="order_id">Order Order ID</string>
+    <string name="order_archive">Archive</string>
+    <string name="order_customer">Customer Name</string>
+    <string name="order_store">Accepted at Store Address</string>
+    <string name="order_time">DD/MM/YYYY 00:00</string>
+    <string name="order_quantity">Quantity: #</string>
+    <string name="order_price">Price: $(HST included)</string>
+    <string-array name="order_status">
+        <item>Order received</item>
+        <item>In progress</item>
+        <item>Completed</item>
+    </string-array>
+
+    <string name="product_name">Product Name</string>
+    <string name="product_brand">Product Brand</string>
+    <string name="product_description">Product Description</string>
+    <string name="product_price">$$</string>
 </resources>
