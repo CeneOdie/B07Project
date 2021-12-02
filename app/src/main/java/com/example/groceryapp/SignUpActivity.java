@@ -16,7 +16,14 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SignUpActivity extends AppCompatActivity {
 
@@ -56,7 +63,7 @@ public class SignUpActivity extends AppCompatActivity {
         if (name.getText().toString().length() != 0 || email.getText().toString().length() != 0 || pass1.getText().toString().length() != 0 || pass2.getText().toString().length() != 0) {
             err.setText("Please fill in all the required fields");
         } else {
-            if (pass1.getText().toString() != pass2.getText().toString()) {
+            if (!pass1.getText().toString().equals(pass2.getText().toString())) {
                 err.setText("Passwords do not match");
             }
 
@@ -79,7 +86,35 @@ public class SignUpActivity extends AppCompatActivity {
                                     String id = user.getUid();
 
 
-                                    db.collection("Customers").add();
+                                    CollectionReference custs = db.collection("Customers");
+                                    custs.whereEqualTo("UID", id)
+                                            .get()
+                                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                    if (task.isSuccessful()) {
+                                                        if (task.getResult().size() > 0) {
+                                                          err.setText("Customer account already exists for the user.");
+                                                        } else {
+                                                            Map<String, Object> data = new HashMap<>();
+                                                            data.put("name", "Washington D.C.");
+                                                            data.put("Email", email.getText().toString());
+                                                            data.put("Name", name.getText().toString());
+                                                            data.put("UID", id);
+//                                                            data.put("Orders", Arrays.asList());
+                                                            custs.add(data);
+                                                        }
+
+
+//                                                        for (QueryDocumentSnapshot document : task.getResult()) {
+////                                                            Log.d(TAG, document.getId() + " => " + document.getData());
+//                                                        }
+                                                    } else {
+                                                        err.setText(task.getException().getLocalizedMessage());
+//                                                        Log.d(TAG, "Error getting documents: ", task.getException());
+                                                    }
+                                                }
+                                            });
 
 //                                    updateUI(user);
                                 } else {
