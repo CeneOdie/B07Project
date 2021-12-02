@@ -13,10 +13,12 @@ Julia:
   - 
   
   For tomorrow:
-  - 
+  - Work on other functionalities for user story #2 and #3
+  - Keep trying new solutions for displaying data
   
   Impediments:
-  -
+  - Retrieving Firestore data
+  	Code registers how many documents there are but does not actually display the data
   
 Perry:
   Since yesterday:
