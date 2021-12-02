@@ -16,6 +16,8 @@ public class ListProducts extends AppCompatActivity {
 
     //TODO Julia list products that a store has to offer
 
+    // Maybe add an optional + button for store owner to add a item so that we can reuse the design? if it will work, if not let me know
+
     private FirebaseFirestore database = FirebaseFirestore.getInstance();
     private CollectionReference productsRef = database.collection("Products");
     private AdapterProduct adapter;

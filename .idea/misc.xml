@@ -4,8 +4,12 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/ceneo/AndroidStudioProjects/GroceryApp/app/src/main/res/drawable/ic_baseline_menu_24.xml" value="0.33487179487179486" />
+        <entry key="..\:/Users/ceneo/AndroidStudioProjects/GroceryApp/app/src/main/res/layout/activity_add_item.xml" value="0.20260416666666667" />
+        <entry key="..\:/Users/ceneo/AndroidStudioProjects/GroceryApp/app/src/main/res/layout/activity_list_orders.xml" value="0.20260416666666667" />
         <entry key="..\:/Users/ceneo/AndroidStudioProjects/GroceryApp/app/src/main/res/layout/activity_list_products.xml" value="0.26666666666666666" />
+        <entry key="..\:/Users/ceneo/AndroidStudioProjects/GroceryApp/app/src/main/res/layout/activity_list_store_orders.xml" value="0.20260416666666667" />
         <entry key="..\:/Users/ceneo/AndroidStudioProjects/GroceryApp/app/src/main/res/layout/activity_main.xml" value="0.25" />
+        <entry key="..\:/Users/ceneo/AndroidStudioProjects/GroceryApp/app/src/main/res/layout/activity_show_cart.xml" value="0.20260416666666667" />
         <entry key="..\:/Users/ceneo/AndroidStudioProjects/GroceryApp/app/src/main/res/layout/activity_show_login.xml" value="0.33" />
         <entry key="..\:/Users/ceneo/AndroidStudioProjects/GroceryApp/app/src/main/res/layout/activity_show_signup.xml" value="0.33" />
         <entry key="..\:/Users/ceneo/AndroidStudioProjects/GroceryApp/app/src/main/res/layout/activity_sign_up.xml" value="0.5" />

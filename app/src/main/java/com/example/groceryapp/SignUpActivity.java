@@ -5,12 +5,15 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -30,6 +33,7 @@ public class SignUpActivity extends AppCompatActivity {
     EditText name, email, pass1, pass2, store, address;
     TextView err;
     Switch acctype;
+    Button signup;
 
     FirebaseAuth mAuth;
     FirebaseFirestore db;
@@ -43,6 +47,83 @@ public class SignUpActivity extends AppCompatActivity {
         err.setText("");
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
+
+        name = findViewById(R.id.nameSignup);
+        email = findViewById(R.id.emailSignup);
+        pass1 = findViewById(R.id.pass1Signup);
+        pass2 = findViewById(R.id.pass2Signup);
+        store = findViewById(R.id.storeSignup);
+        address = findViewById(R.id.addressSignup);
+        acctype = findViewById(R.id.acctypeSignup);
+
+        signup = findViewById(R.id.signupBtn);
+
+        signup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String nameIn = name.getText().toString();
+                String emailIn = email.getText().toString();
+                String pass1In = pass1.getText().toString();
+                String pass2In = pass2.getText().toString();
+                String storeIn = store.getText().toString();
+                String addrIn = address.getText().toString();
+
+                boolean noerrs = true;
+
+                if (TextUtils.isEmpty((nameIn))) {name.setError("Name is required. Please fill in."); noerrs = false;};
+                if (TextUtils.isEmpty((emailIn))) {email.setError("Email is required. Please fill in."); noerrs = false;};
+                if (TextUtils.isEmpty((pass1In))) {pass1.setError("Password is required. Please fill in."); noerrs = false;};
+                if (!pass2In.equals(pass1In)) {pass2.setError("Passwords do not match. Please recheck."); noerrs = false;};
+
+                if (acctype.isChecked() && TextUtils.isEmpty(storeIn)) {store.setError("Store name is required, or change to customer account."); noerrs = false;};
+                if (acctype.isChecked() && TextUtils.isEmpty(addrIn)) {address.setError("Store address is required, or change to customer account."); noerrs = false;};
+
+                if (noerrs) {
+                    if (acctype.isChecked()) signUp(nameIn, emailIn, pass1In, storeIn, addrIn);
+                    else signUp(nameIn, emailIn, pass1In);
+                }
+
+            }
+        });
+
+        acctype.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (acctype.isChecked()){
+                    store.setVisibility(View.VISIBLE);
+                    address.setVisibility(View.VISIBLE);
+                } else {
+                    store.setVisibility(View.GONE);
+                    address.setVisibility(View.GONE);
+
+                }
+            }
+        });
+
+
+    }
+
+    public void signUp(String name, String email, String pass, String store, String addr) {
+        createUser(email, pass);
+    }
+
+    public void signUp(String name, String email, String pass) {
+        createUser(email, pass);
+    }
+
+    public void createUser(String email, String pass) {
+        mAuth.createUserWithEmailAndPassword(email, pass).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                FirebaseUser user = mAuth.getCurrentUser();
+                err.setText(user.getEmail());
+            }
+        }).addOnFailureListener(this, new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                err.setText(e.getMessage());
+            }
+        });
     }
 
     public void switchLogin(View view) {

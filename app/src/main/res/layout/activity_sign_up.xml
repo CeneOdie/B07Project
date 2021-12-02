@@ -95,13 +95,14 @@
     <EditText
         android:id="@+id/storeSignup"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginTop="16dp"
         android:ems="10"
         android:hint="Store Name"
         android:inputType="textPersonName"
         android:minHeight="48dp"
         android:text="@string/signupstore"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/pass2Signup" />
@@ -116,6 +117,7 @@
         android:inputType="textPersonName"
         android:minHeight="48dp"
         android:text="@string/signupaddress"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/storeSignup" />
@@ -131,7 +133,7 @@
         app:layout_constraintTop_toBottomOf="@+id/addressSignup" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/signupBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -151,7 +153,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button2"
+        app:layout_constraintTop_toBottomOf="@+id/signupBtn"
         app:layout_constraintVertical_bias="0.029" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
