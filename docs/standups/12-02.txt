@@ -1,12 +1,17 @@
 	Cene:
   Since yesterday:
-  -
+  - fixed sign up
+  - cleaned up log in
+  - set up framework for page routing
+  - starting syncing between team
   
   For tomorrow:
-  -
+  - finish up sign up and log in
+  - finish up sycning
+  - fill in missing functionality
   
   Impediments:
-  -
+  - time
   
 Julia:
   Since yesterday:
