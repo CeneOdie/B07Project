@@ -1,12 +1,13 @@
 	Cene:
   Since yesterday:
-  -
+  - plotted out flow of app
+  - created new project to make syncing easier
   
   For tomorrow:
-  -
+  - push new project to github
   
   Impediments:
-  -
+  - time
   
 Julia:
   Since yesterday:
