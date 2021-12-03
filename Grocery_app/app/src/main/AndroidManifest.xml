@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+<<<<<<< HEAD
+    package="com.example.grocery_app">
+=======
+    package="com.example.sync_store_customer_acc">
+>>>>>>> 96890f527d9f7ec3db4d86acb312f77cb61295f1
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+<<<<<<< HEAD
+        android:theme="@style/Theme.Grocery_app">
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:label="@string/app_name">
+=======
+        android:theme="@style/Theme.Sync_store_customer_acc">
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
+>>>>>>> 96890f527d9f7ec3db4d86acb312f77cb61295f1
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>

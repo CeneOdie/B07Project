@@ -1,0 +1,13 @@
+<resources>
+<<<<<<< HEAD
+    <string name="app_name">Grocery_app</string>
+    <string name="title_stores">Stores</string>
+    <string name="title_shopping_cart">Shopping Cart</string>
+    <string name="title_notifications">Notifications</string>
+=======
+    <string name="app_name">Sync_store_customer_acc</string>
+    <string name="title_stores">Available Stores</string>
+    <string name="store_list">No available stores found</string>
+
+>>>>>>> 96890f527d9f7ec3db4d86acb312f77cb61295f1
+</resources>

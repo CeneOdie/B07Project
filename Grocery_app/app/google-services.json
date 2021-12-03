@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "742422777756",
+    "project_id": "sync-store-a48dd",
+    "storage_bucket": "sync-store-a48dd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:742422777756:android:bd3411fb0ba65b32b94259",
+        "android_client_info": {
+          "package_name": "com.example.sync_store_customer_acc"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "742422777756-ic49r1obivg5gvcc99nheo1b9ngg4cbp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyASFHFguFGSB2a9yCq2FfWjcl1mOwywkAA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "742422777756-ic49r1obivg5gvcc99nheo1b9ngg4cbp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

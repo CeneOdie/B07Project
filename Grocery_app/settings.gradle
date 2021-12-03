@@ -1,0 +1,18 @@
+dependencyResolutionManagement {
+<<<<<<< HEAD
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+=======
+    repositoriesMode.set(RepositoriesMode.PREFER_SETTINGS)
+>>>>>>> 96890f527d9f7ec3db4d86acb312f77cb61295f1
+    repositories {
+        google()
+        mavenCentral()
+        jcenter() // Warning: this repository is going to shut down soon
+    }
+}
+<<<<<<< HEAD
+rootProject.name = "Grocery_app"
+=======
+rootProject.name = "Sync_store_customer_acc"
+>>>>>>> 96890f527d9f7ec3db4d86acb312f77cb61295f1
+include ':app'
