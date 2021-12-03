@@ -1,12 +1,16 @@
 	Cene:
   Since yesterday:
-  -
+  - posted project to github
+  - able to log in
   
   For tomorrow:
-  -
+  - redo sign up
+  - sync up everyones code
+  - handle routing
+  - check for any missed functionality
   
   Impediments:
-  -
+  - sign up page broke, have to redo
   
 Julia:
   Since yesterday:
