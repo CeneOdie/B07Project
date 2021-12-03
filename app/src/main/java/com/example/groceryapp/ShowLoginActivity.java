@@ -32,9 +32,8 @@ public class ShowLoginActivity extends AppCompatActivity {
 
     EditText email, pass;
     TextView err;
-    Switch accType;
     FirebaseAuth mAuth;
-    Button login;
+    Button login, signup;
     FirebaseFirestore db;
 
 
@@ -46,11 +45,23 @@ public class ShowLoginActivity extends AppCompatActivity {
         email = findViewById(R.id.emailLogin);
         pass = findViewById(R.id.passLogin);
         login = findViewById(R.id.loginBtn);
-        accType = findViewById(R.id.loginType);
         err = findViewById(R.id.errLogin);
         err.setText("");
 
+        email.setText("");
+        pass.setText("");
+
         db = FirebaseFirestore.getInstance();
+
+        signup = findViewById(R.id.switchSignUp);
+        signup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                email.setText("");
+                pass.setText("");
+                switchSignup();
+            }
+        });
 
         login.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,11 +87,11 @@ public class ShowLoginActivity extends AppCompatActivity {
                     mAuth.signInWithEmailAndPassword(emailIn, passIn).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                         @Override
                         public void onSuccess(AuthResult authResult) {
-                            FirebaseUser current = mAuth.getCurrentUser();
-
+                            FirebaseUser current = authResult.getUser();
                             if (current != null ) {
-                                if (accType.isChecked()) loginStore(current.getUid());
-                                else loginCust(current.getUid());
+                                email.setText("");
+                                pass.setText("");
+                                goToUserView();
                             }
                         }
                     }).addOnFailureListener(new OnFailureListener() {
@@ -90,77 +101,18 @@ public class ShowLoginActivity extends AppCompatActivity {
                             err.setText(e.getMessage());
                         }
                     });
-
-
-
                 }
             }
         });
-    }
-
-    public void loginCust(String UID) {
-        db.collection("Customers").document(UID).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                if (documentSnapshot.exists()) goToCustView();
-                else {
-                    err.setText("Customer account not created. Click here to create one quickly.");
-                    err.setTextColor(Color.BLUE);
-                    err.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            //create customer
-                        }
-                    });
-                }
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                err.setText("Something went wrong. Please try again.");
-            }
-        });
-    }
-
-    public void loginStore(String UID) {
-        db.collection("Store Owners").document(UID).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                if (documentSnapshot.exists()) goToStoreView();
-                else {
-                    err.setTextColor(Color.BLUE);
-                    err.setText("Store account not created. Click here to create one.");
-                    err.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            switchSignup();
-                        }
-                    });
-                }
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                err.setText("Something went wrong. Please try again.");
-            }
-        });
-    }
-
-
-    //View changers
-
-    public void goToCustView() {
-        Intent intent = new Intent(this, StoreList.class);
-        startActivity(intent);
-    }
-
-    public void goToStoreView() {
-        Intent intent = new Intent(this, listStoreOrders.class);
-        startActivity(intent);
     }
 
     public void switchSignup() {
         Intent intent = new Intent(this, SignUpActivity.class);
+        startActivity(intent);
+    }
+
+    public void goToUserView() {
+        Intent intent = new Intent(this, UserView.class);
         startActivity(intent);
     }
 

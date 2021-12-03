@@ -27,12 +27,15 @@ public class User {
     FirebaseFirestore db;
     static FirebaseAuth auths;
 
+    StoreOwner store;
+    Customer customer;
+
 
 
     public static User signin(String email, String pass) {
         final User[] user = {new User()};
 
-       auths.signInWithEmailAndPassword(email, pass).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+        auths.signInWithEmailAndPassword(email, pass).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
            @Override
            public void onSuccess(AuthResult authResult) {
                FirebaseUser current = auths.getCurrentUser();

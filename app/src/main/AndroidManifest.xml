@@ -10,6 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.GroceryApp">
         <activity
+            android:name=".UserView"
+            android:exported="false" />
+        <activity
             android:name=".addItem"
             android:exported="false" />
         <activity

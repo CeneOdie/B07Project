@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -14,25 +15,27 @@ import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SignUpActivity extends AppCompatActivity {
 
-    EditText name, email, pass1, pass2, storename, address;
+    EditText name, email, pass1, pass2;
     TextView err;
-    Switch acctype;
-    Button signup;
+    Button signup, login;
 
     FirebaseAuth mAuth;
     FirebaseFirestore db;
-
-    User user;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,21 +50,30 @@ public class SignUpActivity extends AppCompatActivity {
         email = findViewById(R.id.emailSignup);
         pass1 = findViewById(R.id.pass1Signup);
         pass2 = findViewById(R.id.pass2Signup);
-        storename = findViewById(R.id.storeSignup);
-        address = findViewById(R.id.addressSignup);
-        acctype = findViewById(R.id.acctypeSignup);
+
+        name.setText("");
+        email.setText("");
+        pass1.setText("");
+        pass2.setText("");
+
+        login = findViewById(R.id.switchLogin);
+        login.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                switchLogin();
+            }
+        });
 
         signup = findViewById(R.id.signupBtn);
 
         signup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                err.setTextColor(Color.RED);
                 String nameIn = name.getText().toString();
                 String emailIn = email.getText().toString();
                 String pass1In = pass1.getText().toString();
                 String pass2In = pass2.getText().toString();
-                String storeIn = storename.getText().toString();
-                String addrIn = address.getText().toString();
 
                 boolean noerrs = true;
 
@@ -70,96 +82,86 @@ public class SignUpActivity extends AppCompatActivity {
                 if (TextUtils.isEmpty((pass1In))) {pass1.setError("Password is required. Please fill in."); noerrs = false;};
                 if (!pass2In.equals(pass1In)) {pass2.setError("Passwords do not match. Please recheck."); noerrs = false;};
 
-                if (acctype.isChecked() && TextUtils.isEmpty(storeIn)) {
-                    storename.setError("Store name is required, or change to customer account."); noerrs = false;};
-                if (acctype.isChecked() && TextUtils.isEmpty(addrIn)) {address.setError("Store address is required, or change to customer account."); noerrs = false;};
 
                 if (noerrs) {
-                    if (acctype.isChecked()) signUp(nameIn, emailIn, pass1In, storeIn, addrIn);
-                    else signUp(nameIn, emailIn, pass1In);
-                }
 
+                    mAuth.createUserWithEmailAndPassword(emailIn, pass1In).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                        @Override
+                        public void onSuccess(AuthResult authResult) {
+                            FirebaseUser current = authResult.getUser();
+                            if (current != null) {
+                                String UID = current.getUid();
+                                db.collection("Customers").document(UID).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                    @Override
+                                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                        if (documentSnapshot.exists()) {
+                                            err.setTextColor(Color.BLUE);
+                                            err.setText("Account exists. Click here to login");
+                                            err.setOnClickListener(new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View view) {
+                                                    name.setText("");
+                                                    email.setText("");
+                                                    pass1.setText("");
+                                                    pass2.setText("");
+                                                    switchLogin();
+                                                }
+                                            });
+                                        } else {
+                                            Map<String, Object> data = new HashMap<>();
+                                            data.put("Name", nameIn);
+                                            data.put("Email", emailIn);
+                                            data.put("UID", UID);
+                                            data.put("Orders", Arrays.asList());
+                                            db.collection("Customers").document(UID).set(data).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void unused) {
+                                                    name.setText("");
+                                                    email.setText("");
+                                                    pass1.setText("");
+                                                    pass2.setText("");
+                                                    goToUserView();
+                                                }
+                                            }).addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    err.setText(e.getMessage());
+                                                }
+                                            });
+                                        }
+
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        err.setText("Something went wrong. Please try again.");
+                                    }
+                                });
+                            } else {
+                                err.setText("Something went wrong. Please try again.");
+                            }
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+//                            mAuth.signOut();
+                            err.setText(e.getMessage());
+                        }
+                    });
+                }
             }
         });
-
-        acctype.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (acctype.isChecked()){
-                    storename.setVisibility(View.VISIBLE);
-                    address.setVisibility(View.VISIBLE);
-                } else {
-                    storename.setVisibility(View.GONE);
-                    address.setVisibility(View.GONE);
-
-                }
-            }
-        });
-
 
     }
 
-    public void goToCustView() {
-        Intent intent = new Intent(this, StoreList.class);
+    //view changers
+
+    public void goToUserView() {
+        Intent intent = new Intent(this, UserView.class);
         startActivity(intent);
     }
 
-    public void goToStoreView() {
-        Intent intent = new Intent(this, listStoreOrders.class);
-        startActivity(intent);
-    }
-
-    public void signUp(String name, String email, String pass, String storename, String addr) {
-        createUser(email, pass, name);
-        FirebaseUser current = mAuth.getCurrentUser();
-        user = new User(current.getDisplayName(), current.getEmail(), current.getUid());
-        if (current != null) {
-            User user = new User(name, email, current.getUid());
-            String storeid = user.getStore();
-            if (!TextUtils.isEmpty(storeid)) {
-                mAuth.signOut();
-                err.setText("Store account already exists. Log in to access.");
-            } else {
-                StoreOwner store = new StoreOwner(user.name, user.email, user.UID, storename, addr);
-                goToStoreView();
-            }
-        }
-    }
-
-    public void signUp(String name, String email, String pass) {
-        createUser(email, pass, name);
-        FirebaseUser current = mAuth.getCurrentUser();
-        user = new User(current.getDisplayName(), current.getEmail(), current.getUid());
-        if (current != null) {
-            User user = new User(name, email, current.getUid());
-            String custid = user.getCust();
-            if (!TextUtils.isEmpty(custid)) {
-                mAuth.signOut();
-                err.setText("Customer account already exists. Log in to access.");
-            } else {
-                Customer cust = new Customer(user.name, user.email, user.UID);
-                goToCustView();
-            }
-        }
-    }
-
-    public void createUser(String email, String pass, String name) {
-        mAuth.createUserWithEmailAndPassword(email, pass).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                        .setDisplayName(name)
-                        .build();
-            }
-        }).addOnFailureListener(this, new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                err.setText(e.getMessage());
-            }
-        });
-    }
-
-    public void switchLogin(View view) {
+    public void switchLogin() {
         Intent intent = new Intent(this, ShowLoginActivity.class);
         startActivity(intent);
     }
