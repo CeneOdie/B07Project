@@ -3,10 +3,11 @@
   -
   
   For tomorrow:
-  -
+  - post project to github
+  - keep working on sign in/up
   
   Impediments:
-  -
+  - time
   
 Julia:
   Since yesterday:
