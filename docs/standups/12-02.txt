@@ -15,13 +15,15 @@
   
 Julia:
   Since yesterday:
-  - 
+  - Conencted Github repository to Android Studio and pushed part of my codes
+  - Implemented adding, deleting and updating of products
   
   For tomorrow:
-  - 
+  - Refine User story #3 codes, and implement archive function and spinner properly in viewOrderDetails activity (mock file name) 
+  - (Time allowing) Implement search functions in listProducts page as well as in listOrders page
   
   Impediments:
-  -
+  - Postponed fixing up proper retrieval of database until other functionalities are implemented
   
 Perry:
   Since yesterday:
