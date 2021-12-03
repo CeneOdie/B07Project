@@ -10,14 +10,7 @@ Cene:
   - time constraints
   
 Julia:
-  Since yesterday:
-  - 
-  
-  For tomorrow:
-  - 
-  
-  Impediments:
-  -
+  <None done>
   
 Perry:
   Since yesterday:
