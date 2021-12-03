@@ -19,24 +19,19 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
-
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 
 public class SignUpActivity extends AppCompatActivity {
 
-    EditText name, email, pass1, pass2, store, address;
+    EditText name, email, pass1, pass2, storename, address;
     TextView err;
     Switch acctype;
     Button signup;
 
     FirebaseAuth mAuth;
     FirebaseFirestore db;
+
+    User user;
 
 
     @Override
@@ -52,7 +47,7 @@ public class SignUpActivity extends AppCompatActivity {
         email = findViewById(R.id.emailSignup);
         pass1 = findViewById(R.id.pass1Signup);
         pass2 = findViewById(R.id.pass2Signup);
-        store = findViewById(R.id.storeSignup);
+        storename = findViewById(R.id.storeSignup);
         address = findViewById(R.id.addressSignup);
         acctype = findViewById(R.id.acctypeSignup);
 
@@ -65,7 +60,7 @@ public class SignUpActivity extends AppCompatActivity {
                 String emailIn = email.getText().toString();
                 String pass1In = pass1.getText().toString();
                 String pass2In = pass2.getText().toString();
-                String storeIn = store.getText().toString();
+                String storeIn = storename.getText().toString();
                 String addrIn = address.getText().toString();
 
                 boolean noerrs = true;
@@ -75,7 +70,8 @@ public class SignUpActivity extends AppCompatActivity {
                 if (TextUtils.isEmpty((pass1In))) {pass1.setError("Password is required. Please fill in."); noerrs = false;};
                 if (!pass2In.equals(pass1In)) {pass2.setError("Passwords do not match. Please recheck."); noerrs = false;};
 
-                if (acctype.isChecked() && TextUtils.isEmpty(storeIn)) {store.setError("Store name is required, or change to customer account."); noerrs = false;};
+                if (acctype.isChecked() && TextUtils.isEmpty(storeIn)) {
+                    storename.setError("Store name is required, or change to customer account."); noerrs = false;};
                 if (acctype.isChecked() && TextUtils.isEmpty(addrIn)) {address.setError("Store address is required, or change to customer account."); noerrs = false;};
 
                 if (noerrs) {
@@ -90,10 +86,10 @@ public class SignUpActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (acctype.isChecked()){
-                    store.setVisibility(View.VISIBLE);
+                    storename.setVisibility(View.VISIBLE);
                     address.setVisibility(View.VISIBLE);
                 } else {
-                    store.setVisibility(View.GONE);
+                    storename.setVisibility(View.GONE);
                     address.setVisibility(View.GONE);
 
                 }
@@ -103,20 +99,57 @@ public class SignUpActivity extends AppCompatActivity {
 
     }
 
-    public void signUp(String name, String email, String pass, String store, String addr) {
-        createUser(email, pass);
+    public void goToCustView() {
+        Intent intent = new Intent(this, StoreList.class);
+        startActivity(intent);
+    }
+
+    public void goToStoreView() {
+        Intent intent = new Intent(this, listStoreOrders.class);
+        startActivity(intent);
+    }
+
+    public void signUp(String name, String email, String pass, String storename, String addr) {
+        createUser(email, pass, name);
+        FirebaseUser current = mAuth.getCurrentUser();
+        user = new User(current.getDisplayName(), current.getEmail(), current.getUid());
+        if (current != null) {
+            User user = new User(name, email, current.getUid());
+            String storeid = user.getStore();
+            if (!TextUtils.isEmpty(storeid)) {
+                mAuth.signOut();
+                err.setText("Store account already exists. Log in to access.");
+            } else {
+                StoreOwner store = new StoreOwner(user.name, user.email, user.UID, storename, addr);
+                goToStoreView();
+            }
+        }
     }
 
     public void signUp(String name, String email, String pass) {
-        createUser(email, pass);
+        createUser(email, pass, name);
+        FirebaseUser current = mAuth.getCurrentUser();
+        user = new User(current.getDisplayName(), current.getEmail(), current.getUid());
+        if (current != null) {
+            User user = new User(name, email, current.getUid());
+            String custid = user.getCust();
+            if (!TextUtils.isEmpty(custid)) {
+                mAuth.signOut();
+                err.setText("Customer account already exists. Log in to access.");
+            } else {
+                Customer cust = new Customer(user.name, user.email, user.UID);
+                goToCustView();
+            }
+        }
     }
 
-    public void createUser(String email, String pass) {
+    public void createUser(String email, String pass, String name) {
         mAuth.createUserWithEmailAndPassword(email, pass).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
-                FirebaseUser user = mAuth.getCurrentUser();
-                err.setText(user.getEmail());
+                UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                        .setDisplayName(name)
+                        .build();
             }
         }).addOnFailureListener(this, new OnFailureListener() {
             @Override
@@ -131,86 +164,4 @@ public class SignUpActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void signUp(View view) {
-        err = findViewById(R.id.errSignup);
-        name = findViewById(R.id.nameSignup);
-        email = findViewById(R.id.emailSignup);
-        pass1 = findViewById(R.id.pass1Signup);
-        pass2 = findViewById(R.id.pass2Signup);
-        store = findViewById(R.id.storeSignup);
-        address = findViewById(R.id.addressSignup);
-        acctype = findViewById(R.id.acctypeSignup);
-
-        if (name.getText().toString().length() != 0 || email.getText().toString().length() != 0 || pass1.getText().toString().length() != 0 || pass2.getText().toString().length() != 0) {
-            err.setText("Please fill in all the required fields");
-        } else {
-            if (!pass1.getText().toString().equals(pass2.getText().toString())) {
-                err.setText("Passwords do not match");
-            }
-
-            if (acctype.isChecked() ){
-                //TODO store signup
-            } else {
-                //cust signup
-                mAuth.createUserWithEmailAndPassword(email.getText().toString(), pass1.getText().toString())
-                        .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                if (task.isSuccessful()) {
-                                    // Sign in success, update UI with the signed-in user's information
-//                                    Log.d(TAG, "createUserWithEmail:success");
-                                    FirebaseUser user = mAuth.getCurrentUser();
-                                    UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                                            .setDisplayName(name.getText().toString())
-//                                            .setPhotoUri(Uri.parse("https://example.com/jane-q-user/profile.jpg"))
-                                            .build();
-                                    String id = user.getUid();
-
-
-                                    CollectionReference custs = db.collection("Customers");
-                                    custs.whereEqualTo("UID", id)
-                                            .get()
-                                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                                @Override
-                                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                                    if (task.isSuccessful()) {
-                                                        if (task.getResult().size() > 0) {
-                                                          err.setText("Customer account already exists for the user.");
-                                                        } else {
-                                                            Map<String, Object> data = new HashMap<>();
-                                                            data.put("name", "Washington D.C.");
-                                                            data.put("Email", email.getText().toString());
-                                                            data.put("Name", name.getText().toString());
-                                                            data.put("UID", id);
-//                                                            data.put("Orders", Arrays.asList());
-                                                            custs.add(data);
-                                                        }
-
-
-//                                                        for (QueryDocumentSnapshot document : task.getResult()) {
-////                                                            Log.d(TAG, document.getId() + " => " + document.getData());
-//                                                        }
-                                                    } else {
-                                                        err.setText(task.getException().getLocalizedMessage());
-//                                                        Log.d(TAG, "Error getting documents: ", task.getException());
-                                                    }
-                                                }
-                                            });
-
-//                                    updateUI(user);
-                                } else {
-                                    err.setText(task.getException().getLocalizedMessage());
-                                    // If sign in fails, display a message to the user.
-//                                    Log.w(TAG, "createUserWithEmail:failure", task.getException());
-//                                    Toast.makeText(EmailPasswordActivity.this, "Authentication failed.",
-//                                            Toast.LENGTH_SHORT).show();
-//                                    updateUI(null);
-                                }
-                            }
-                        });
-            }
-
-        }
-
-    }
 }
