@@ -20,10 +20,13 @@ Julia:
   - RESOLVE FIRESTORE RETRIEVAL ISSUE
   - Refine codes and push 
   - Start testing
+  - Resolve impediment #2
   
   Impediments:
   - Time constraints
   	- Implementation of search function would require more time
+  - Forgot that store owners should only see items & orders belonging to their stores
+  	- Current code displays all existing orders and items in the database
   
 Perry:
   Since yesterday:
