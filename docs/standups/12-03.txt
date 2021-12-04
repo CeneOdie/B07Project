@@ -1,12 +1,17 @@
 	Cene:
   Since yesterday:
-  -
+  - finalized login and signup, working
+  - started working on updating the switch between store and customer view & account navigation
   
   For tomorrow:
-  -
+  - start official testing for login and signup
+  - link up more pages to teams pages
   
   Impediments:
-  -
+  - other assignments
+  - have to figure out if we should use fragments or activities since the nav menu should always be visible
+  - if fragments (figure out how to pass context on)
+  - have to figure out how to pass authorization from login to navigation
   
 Julia:
   Since yesterday:
@@ -38,3 +43,4 @@ Perry:
   Impediments:
   -
   
+
