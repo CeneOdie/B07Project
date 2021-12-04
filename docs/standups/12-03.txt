@@ -10,13 +10,20 @@
   
 Julia:
   Since yesterday:
-  - 
+  - Worked on ViewOrderDetails activity
+  	- Spinner for updating status
+	- ListView for viewing purchased items
+  - Created archivedOrders activity
   
   For tomorrow:
-  - 
+  - Consider implementing interfaces for common functions
+  - RESOLVE FIRESTORE RETRIEVAL ISSUE
+  - Refine codes and push 
+  - Start testing
   
   Impediments:
-  -
+  - Time constraints
+  	- Implementation of search function would require more time
   
 Perry:
   Since yesterday:
