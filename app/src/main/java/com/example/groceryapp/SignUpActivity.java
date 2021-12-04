@@ -157,7 +157,7 @@ public class SignUpActivity extends AppCompatActivity {
     //view changers
 
     public void goToUserView() {
-        Intent intent = new Intent(this, UserView.class);
+        Intent intent = new Intent(this, UserNav.class);
         startActivity(intent);
     }
 

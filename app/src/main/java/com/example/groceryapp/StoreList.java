@@ -30,7 +30,7 @@ public class StoreList extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.view_stores);
         //Use an Adapter to link data to Views
         sa = new SimpleAdapter(this, stores,
                 R.layout.view_store_format,

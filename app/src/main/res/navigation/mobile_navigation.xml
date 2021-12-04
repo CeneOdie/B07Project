@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/nav_cust_home">
+
+    <fragment
+        android:id="@+id/nav_cust_home"
+        android:name="com.example.groceryapp.ui.storeList.storeListFragment"
+        android:label="@string/menu_home">
+        <action
+            android:id="@+id/action_nav_cust_home_to_ordersFragment"
+            app:destination="@id/ordersFragment" />
+        <action
+            android:id="@+id/action_nav_cust_home_to_customerHistoryFragment"
+            app:destination="@id/customerHistoryFragment" />
+        <action
+            android:id="@+id/action_nav_cust_home_to_cartFragment"
+            app:destination="@id/cartFragment" />
+        <action
+            android:id="@+id/action_nav_cust_home_to_storeSetupFragment"
+            app:destination="@id/storeSetupFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/cartFragment"
+        android:name="com.example.groceryapp.ui.cart.CartFragment"
+        android:label="Cart">
+        <action
+            android:id="@+id/action_cartFragment_to_nav_cust_home"
+            app:destination="@id/nav_cust_home" />
+        <action
+            android:id="@+id/action_cartFragment_to_customerHistoryFragment"
+            app:destination="@id/customerHistoryFragment" />
+        <action
+            android:id="@+id/action_cartFragment_to_ordersFragment"
+            app:destination="@id/ordersFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/ordersFragment"
+        android:name="com.example.groceryapp.ui.orders.ordersFragment"
+        android:label="Orders"
+        tools:layout="@layout/fragment_orders">
+        <action
+            android:id="@+id/action_ordersFragment_to_nav_cust_home"
+            app:destination="@id/nav_cust_home" />
+        <action
+            android:id="@+id/action_ordersFragment_to_storeHistoryFragment"
+            app:destination="@id/storeHistoryFragment" />
+        <action
+            android:id="@+id/action_ordersFragment_to_storeItemsFragment2"
+            app:destination="@id/storeItemsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/customerHistoryFragment"
+        android:name="com.example.groceryapp.ui.customerHistory.customerHistoryFragment"
+        android:label="History">
+        <action
+            android:id="@+id/action_customerHistoryFragment_to_nav_cust_home"
+            app:destination="@id/nav_cust_home" />
+        <action
+            android:id="@+id/action_customerHistoryFragment_to_cartFragment"
+            app:destination="@id/cartFragment" />
+        <action
+            android:id="@+id/action_customerHistoryFragment_to_ordersFragment"
+            app:destination="@id/ordersFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/storeSetupFragment"
+        android:name="com.example.groceryapp.ui.storeSetup.storeSetupFragment"
+        android:label="Store Setup">
+        <action
+            android:id="@+id/action_storeSetupFragment_to_nav_cust_home"
+            app:destination="@id/nav_cust_home" />
+        <action
+            android:id="@+id/action_storeSetupFragment_to_customerHistoryFragment"
+            app:destination="@id/customerHistoryFragment" />
+        <action
+            android:id="@+id/action_storeSetupFragment_to_cartFragment"
+            app:destination="@id/cartFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/storeItemsFragment"
+        android:name="com.example.groceryapp.ui.items.itemsFragment"
+        android:label="Items">
+        <action
+            android:id="@+id/action_storeItemsFragment_to_storeHistoryFragment"
+            app:destination="@id/storeHistoryFragment" />
+        <action
+            android:id="@+id/action_storeItemsFragment_to_ordersFragment"
+            app:destination="@id/ordersFragment" />
+        <action
+            android:id="@+id/action_storeItemsFragment_to_nav_cust_home"
+            app:destination="@id/nav_cust_home" />
+    </fragment>
+    <fragment
+        android:id="@+id/storeHistoryFragment"
+        android:name="com.example.groceryapp.ui.storeHistory.storeHistoryFragment"
+        android:label="History">
+        <action
+            android:id="@+id/action_storeHistoryFragment_to_nav_cust_home"
+            app:destination="@id/nav_cust_home" />
+        <action
+            android:id="@+id/action_storeHistoryFragment_to_storeItemsFragment"
+            app:destination="@id/storeItemsFragment" />
+        <action
+            android:id="@+id/action_storeHistoryFragment_to_ordersFragment"
+            app:destination="@id/ordersFragment" />
+    </fragment>
+
+</navigation>

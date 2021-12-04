@@ -112,7 +112,7 @@ public class ShowLoginActivity extends AppCompatActivity {
     }
 
     public void goToUserView() {
-        Intent intent = new Intent(this, UserView.class);
+        Intent intent = new Intent(this, StoreList.class);
         startActivity(intent);
     }
 

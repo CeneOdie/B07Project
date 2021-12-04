@@ -50,4 +50,26 @@
     <string name="archiving">Archiving</string>
     <string name="products">Products</string>
     <string name="orders">Orders</string>
+    <string name="title_activity_user_nav">UserNav</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+    <string name="view_item">View Item</string>
+    <string name="menu_home">Home</string>
+    <string name="menu_orderlist">Order List</string>
+    <string name="menu_itemlist">Item List</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="menu_itemadd">Add Item</string>
+    <string name="menu_cart">Cart</string>
+    <string name="nav_switchStore">Switch to Store</string>
+    <string name="nav_switchCustomer">Switch to Customer</string>
+    <string name="nav_items">Items</string>
+    <string name="nav_orders_done">Completed Orders</string>
+    <string name="nav_open_orders">Open Orders</string>
+    <string name="cartText">cartText</string>
+    <string name="text_cart">text_cart</string>
 </resources>
