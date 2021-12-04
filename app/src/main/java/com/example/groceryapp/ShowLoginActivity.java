@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -31,11 +32,9 @@ public class ShowLoginActivity extends AppCompatActivity {
 
     EditText email, pass;
     TextView err;
-    Switch accType;
     FirebaseAuth mAuth;
-    Button login;
+    Button login, signup;
     FirebaseFirestore db;
-
 
 
     @Override
@@ -46,17 +45,30 @@ public class ShowLoginActivity extends AppCompatActivity {
         email = findViewById(R.id.emailLogin);
         pass = findViewById(R.id.passLogin);
         login = findViewById(R.id.loginBtn);
-        accType = findViewById(R.id.loginType);
         err = findViewById(R.id.errLogin);
         err.setText("");
 
+        email.setText("");
+        pass.setText("");
+
         db = FirebaseFirestore.getInstance();
+
+        signup = findViewById(R.id.switchSignUp);
+        signup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                email.setText("");
+                pass.setText("");
+                switchSignup();
+            }
+        });
 
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 err.setText("");
+                err.setTextColor(Color.RED);
                 String emailIn = email.getText().toString().trim();
                 String passIn = pass.getText().toString().trim();
                 boolean noerrs = true;
@@ -72,74 +84,35 @@ public class ShowLoginActivity extends AppCompatActivity {
                 }
 
                 if (noerrs) {
-                    if (accType.isChecked()) loginStore(emailIn, passIn);
-                    else loginCust(emailIn, passIn);
+                    mAuth.signInWithEmailAndPassword(emailIn, passIn).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                        @Override
+                        public void onSuccess(AuthResult authResult) {
+                            FirebaseUser current = authResult.getUser();
+                            if (current != null ) {
+                                email.setText("");
+                                pass.setText("");
+                                goToUserView();
+                            }
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            mAuth.signOut();
+                            err.setText(e.getMessage());
+                        }
+                    });
                 }
             }
         });
-
-
     }
 
-
-    public void goToCustView() {
-        Intent intent = new Intent(this, StoreList.class);
-        startActivity(intent);
-    }
-
-    public void goToStoreView() {
-        Intent intent = new Intent(this, listStoreOrders.class);
-        startActivity(intent);
-    }
-
-    public void loginCust(String email, String pass) {
-        login(email, pass);
-        FirebaseUser current = mAuth.getCurrentUser();
-        db.collection("Customers").whereEqualTo("UID", current.getUid()).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-            @Override
-            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                goToCustView();
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                err.setText("Customer account not set up. Do you want to set one up now? Click Here.");
-
-                err.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        err.setText("Creating customer account");
-                    }
-                });
-            }
-        });
-
-    }
-
-    public void loginStore(String email, String pass) {
-        login(email, pass);
-        err.setText("store not set up");
-
-    }
-
-    public void login(String email, String pass) {
-        mAuth.signInWithEmailAndPassword(email, pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                FirebaseUser current = mAuth.getCurrentUser();
-//                err.setText(current.getEmail());
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                err.setText(e.getMessage());
-            }
-        });
-    }
-
-
-    public void switchSignup(View view) {
+    public void switchSignup() {
         Intent intent = new Intent(this, SignUpActivity.class);
+        startActivity(intent);
+    }
+
+    public void goToUserView() {
+        Intent intent = new Intent(this, UserView.class);
         startActivity(intent);
     }
 
