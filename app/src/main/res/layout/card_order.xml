@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
 
-    android:id="@+id/productCard"
+    android:id="@+id/orderCard"
     android:layout_margin="7dp"
 
     app:cardCornerRadius="7dp"
@@ -21,60 +21,69 @@
             android:layout_height="wrap_content">
 
             <TextView
-                android:id="@+id/productCard_productName"
+                android:id="@+id/cardOrder"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/product_name"
+                android:text="@string/order"
                 android:textSize="20sp"
                 android:textStyle="bold"
-
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/productCard_productBrand"
+                android:id="@+id/cardOrderID"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/product_brand"
-                android:textStyle="italic"
-                android:layout_marginStart="5dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/productCard_productName" />
-
-            <TextView
-                android:id="@+id/productCard_productDesc"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/product_description"
-                android:layout_marginStart="5dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/productCard_productBrand" />
-
-            <TextView
-                android:id="@+id/productCard_productPrice"
-                android:layout_width="wrap_content"
-
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="10dp"
-                android:text="@string/product_price"
-                android:textColor="@color/purple_500"
-
+                android:text="@string/order_id"
+                android:textSize="20sp"
                 android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/productCard_productDesc" />
+                android:layout_marginStart="7dp"
+                app:layout_constraintStart_toEndOf="@+id/cardOrder"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/productCard_productQS"
+                android:id="@+id/cardOrderCustomer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/product_QS"
-                android:layout_marginStart="5dp"
+                android:text="@string/order_customer"
+                android:textStyle="italic"
+                android:layout_marginStart="18dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/productCard_productDesc" />
+                app:layout_constraintTop_toBottomOf="@+id/cardOrder" />
+
+            <TextView
+                android:id="@+id/cardOrderDateTime"
+                android:layout_width="wrap_content"
+
+                android:layout_height="wrap_content"
+                android:text="@string/order_time"
+                android:layout_marginStart="18dp"
+
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/cardOrderCustomer" />
+
+            <TextView
+                android:id="@+id/cardOrderStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/order_status"
+                android:textStyle="bold"
+                android:layout_marginEnd="14dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <TextView
+                android:id="@+id/cardOrderPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="18dp"
+
+                android:text="@string/order_price"
+                app:layout_constraintTop_toBottomOf="@+id/cardOrderDateTime"
+                app:layout_constraintStart_toStartOf="parent" />
 
             <Button
-                android:id="@+id/buttonEdit"
+                android:id="@+id/buttonArchive"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:backgroundTint="#FFFFFF"
@@ -82,11 +91,12 @@
                 android:minWidth="0dp"
                 android:minHeight="0dp"
                 android:outlineProvider="none"
-                android:text="@string/btn_edit"
+                android:text="@string/btn_archive"
                 android:textAllCaps="false"
                 android:textColor="#FF6D00"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

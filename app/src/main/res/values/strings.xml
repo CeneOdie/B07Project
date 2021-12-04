@@ -15,21 +15,39 @@
     <string name="signupaddress" />
     <string name="SignUpError" />
 
-    <string name="order_id">Order Order ID</string>
+    <string name="order">Order</string>
+    <string name="order_id">Order ID</string>
     <string name="order_archive">Archive</string>
     <string name="order_customer">Customer Name</string>
     <string name="order_store">Accepted at Store Address</string>
     <string name="order_time">DD/MM/YYYY 00:00</string>
     <string name="order_quantity">Quantity: #</string>
-    <string name="order_price">Price: $(HST included)</string>
+    <string name="order_price">Subtotal: $$</string>
+    <string name="order_status">Status</string>
     <string-array name="order_status">
         <item>Order received</item>
         <item>In progress</item>
         <item>Completed</item>
+        <item>Archive</item>
     </string-array>
+    <string name="btn_archive">Archive</string>
 
     <string name="product_name">Product Name</string>
     <string name="product_brand">Product Brand</string>
     <string name="product_description">Product Description</string>
+    <string name="product_QS">Quantity/Size</string>
     <string name="product_price">$$</string>
+    <string name="btn_edit">Edit</string>
+    <string name="customtb">CustomTB</string>
+    <string name="archived_orders">Archived Orders</string>
+    <string name="edit_product_information">Edit Product Information</string>
+    <string name="edit_info">Edit Info</string>
+    <string name="add_QS">Quantity/Size (Include units)</string>
+    <string name="price">Price ($)</string>
+    <string name="btn_cancel">Cancel</string>
+    <string name="btn_save">Save</string>
+    <string name="add_product">Add Product</string>
+    <string name="archiving">Archiving</string>
+    <string name="products">Products</string>
+    <string name="orders">Orders</string>
 </resources>
