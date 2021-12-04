@@ -10,6 +10,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.GroceryApp">
         <activity
+            android:name=".UserNav"
+            android:exported="false"
+            android:label="@string/title_activity_user_nav"
+            android:theme="@style/Theme.GroceryApp.NoActionBar" />
+        <activity
             android:name=".UserView"
             android:exported="false" />
         <activity

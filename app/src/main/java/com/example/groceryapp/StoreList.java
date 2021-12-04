@@ -3,6 +3,7 @@ package com.example.groceryapp;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ListView;
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+
 public class StoreList extends AppCompatActivity {
     public static final String storeKey = "Store Name";
     public static final String ownerKey = "Name";
@@ -30,12 +32,13 @@ public class StoreList extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.view_stores);
         //Use an Adapter to link data to Views
         sa = new SimpleAdapter(this, stores,
                 R.layout.view_store_format,
                 new String[] { "line 1","line 2","line 3" },
-                new int[] {R.id.line_a, R.id.line_b, R.id.line_c});        listeningChanges();
+                new int[] {R.id.line_a, R.id.line_b, R.id.line_c});
+        listeningChanges();
     }
 
     public void listeningChanges() {
@@ -47,30 +50,37 @@ public class StoreList extends AppCompatActivity {
                             Log.w(TAG, "Listen failed.", e);
                             return;
                         }
-
-                        if (stores.size() != 0)
-                            stores.clear();
-
-
+                        stores.clear();
                         for (QueryDocumentSnapshot doc : value) {
-                            if (doc.get(storeKey) != null || doc.get(ownerKey) != null || doc.get(addressKey) != null) {
+                            if (doc.get(storeKey) != null && doc.get(ownerKey) != null && doc.get(addressKey) != null) {
+                                if (doc.get(storeKey) != "" && doc.get(ownerKey) != "" && doc.get(addressKey) != "") {
 
-                                HashMap<String, String> temp;
-                                temp = new HashMap<>();
-                                temp.put("line 1", doc.getString(storeKey));
-                                temp.put("line 2", doc.getString(ownerKey));
-                                temp.put("line 3", doc.getString(addressKey));
-                                doc.getData();
+                                    HashMap<String, String> temp;
+                                    temp = new HashMap<>();
+                                    temp.put("line 1", doc.getString(storeKey));
+                                    temp.put("line 2", doc.getString(ownerKey));
+                                    temp.put("line 3", doc.getString(addressKey));
+                                    doc.getData();
 
-                                stores.add(temp);
-                                ((ListView) findViewById(R.id.storeListView)).setAdapter(sa);
+                                    stores.add(temp);
+                                    ((ListView) findViewById(R.id.storeListView)).setAdapter(sa);
+                                }
+                            }
 
+                            if (stores.isEmpty() == true) {
+                                empty_page();
                             }
                         }
 
                     }
                 });
     }
+
+    public void empty_page(){
+        Intent intent = new Intent(this, Display_empty_store_page.class);
+        startActivity(intent);
+    }
+
     //TODO Perry add your code for showing the list of stores here pls
 
 }
