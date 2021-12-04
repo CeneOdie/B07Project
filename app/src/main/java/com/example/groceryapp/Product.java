@@ -1,17 +1,45 @@
 package com.example.groceryapp;
 
-public class Product {
+import android.os.Parcel;
+import android.os.Parcelable;
 
-    String name, brand, description, price;
+public class Product implements Parcelable {
 
-    public Product() { }
+    String name, brand, description, store, qs;
+    double price;
 
-    public Product(String name, String brand, String description, String price) {
+    public Product() {
+    }
+
+    public Product(String name, String brand, String description, String store, String qs, double price) {
         this.name = name;
         this.brand = brand;
         this.description = description;
+        this.store = store;
+        this.qs = qs;
         this.price = price;
     }
+
+    protected Product(Parcel in) {
+        name = in.readString();
+        brand = in.readString();
+        description = in.readString();
+        store = in.readString();
+        qs = in.readString();
+        price = in.readDouble();
+    }
+
+    public static final Creator<Product> CREATOR = new Creator<Product>() {
+        @Override
+        public Product createFromParcel(Parcel in) {
+            return new Product(in);
+        }
+
+        @Override
+        public Product[] newArray(int size) {
+            return new Product[size];
+        }
+    };
 
     public String getName() {
         return name;
@@ -37,11 +65,42 @@ public class Product {
         this.description = description;
     }
 
-    public String getPrice() {
+    public String getStore() {
+        return store;
+    }
+
+    public void setStore(String store) {
+        this.store = store;
+    }
+
+    public String getQs() {
+        return qs;
+    }
+
+    public void setQs(String qs) {
+        this.qs = qs;
+    }
+
+    public double getPrice() {
         return price;
     }
 
-    public void setPrice(String price) {
+    public void setPrice(double price) {
         this.price = price;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(name);
+        dest.writeString(brand);
+        dest.writeString(description);
+        dest.writeString(store);
+        dest.writeString(qs);
+        dest.writeDouble(price);
     }
 }
