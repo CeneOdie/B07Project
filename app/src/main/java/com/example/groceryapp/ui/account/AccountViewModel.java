@@ -11,7 +11,11 @@ public class AccountViewModel extends ViewModel {
     public AccountViewModel() {
         mText = new MutableLiveData<>();
         mText.setValue("Switch between account types (or setup store). Logout. Delete account");
+
+
     }
+
+
 
     public LiveData<String> getText() {
         return mText;

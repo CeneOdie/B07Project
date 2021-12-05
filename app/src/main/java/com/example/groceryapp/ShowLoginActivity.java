@@ -37,6 +37,8 @@ public class ShowLoginActivity extends AppCompatActivity {
     FirebaseFirestore db;
 
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -113,6 +115,8 @@ public class ShowLoginActivity extends AppCompatActivity {
 
     public void goToUserView() {
         Intent intent = new Intent(this, CustomerNav.class);
+
+        intent.putExtra("logged in", mAuth.getCurrentUser());
         startActivity(intent);
     }
 

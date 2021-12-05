@@ -83,4 +83,6 @@
     <string name="title_history">History</string>
     <string name="title_account">Account</string>
     <string name="title_items">Items</string>
+    <string name="btn_logout">Logout</string>
+    <string name="btn_deleteAccount">Delete Account</string>
 </resources>

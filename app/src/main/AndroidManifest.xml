@@ -10,6 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.GroceryApp">
         <activity
+            android:name=".SetupStore"
+            android:exported="false" />
+        <activity
             android:name=".StoreNav"
             android:exported="false"
             android:label="@string/title_activity_store_nav" />

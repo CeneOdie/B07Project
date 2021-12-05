@@ -9,12 +9,14 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.example.groceryapp.databinding.ActivityCustomerNavBinding;
+import com.google.firebase.auth.FirebaseUser;
 
 public class CustomerNav extends AppCompatActivity {
 
@@ -23,7 +25,8 @@ public class CustomerNav extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        Bundle extras = getIntent().getExtras();
+        FirebaseUser current = (FirebaseUser) extras.get("logged in");
         binding = ActivityCustomerNavBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -37,6 +40,9 @@ public class CustomerNav extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
 
         NavigationUI.setupWithNavController(binding.navView, navController);
+
+
+
     }
 
 
