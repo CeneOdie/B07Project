@@ -9,3 +9,4 @@ dependencyResolutionManagement {
 rootProject.name = "GroceryApp"
 include ':app'
 include ':groceryapp'
+include ':groceryapp'
