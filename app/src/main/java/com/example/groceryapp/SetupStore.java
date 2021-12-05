@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -31,6 +32,10 @@ public class SetupStore extends AppCompatActivity {
     EditText name, address;
     TextView title;
 
+    FirebaseUser current;
+    FirebaseFirestore db;
+    Context context;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,15 +46,15 @@ public class SetupStore extends AppCompatActivity {
         address = findViewById(R.id.storeSetupAddress);
         title = findViewById(R.id.setupStoreTitle);
 
-        FirebaseUser current = (FirebaseUser) getIntent().getExtras().get("auth");
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        current = (FirebaseUser) getIntent().getExtras().get("auth");
+        db = FirebaseFirestore.getInstance();
+        context = getApplicationContext();
 
         create.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 boolean noerrs = true;
-                title.setText(current.getUid());
-                title.setText(current.getDisplayName());
+
                 if (TextUtils.isEmpty(name.getText().toString().trim())) {
                     name.setError("Store name is required");
                     noerrs = false;
@@ -61,46 +66,34 @@ public class SetupStore extends AppCompatActivity {
 
                 if (noerrs) {
 
-//                    if (current == null) {
-//                        // not logged in, please log in and try again
-//
-//                        Toast.makeText(getApplicationContext(), "No user logged in. Redirecting...", Toast.LENGTH_SHORT).show();
-////                        goHome();
-//                    } else {
-//                        //recheck if store exists
-//                        db.collection("Store Owners").document(current.getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-//                            @Override
-//                            public void onSuccess(DocumentSnapshot documentSnapshot) {
-//                                AlertDialog overwrite = new AlertDialog.Builder(getApplicationContext())
-//                                        .setTitle("Store exists for this account")
-//                                        .setMessage("You already have a store. Do you want to overwrite it? This wil delete all orders and items. This cannot be undone.")
-//                                        .setIcon(R.drawable.ic_new_store)
-//                                        .setPositiveButton("Overwrite", new DialogInterface.OnClickListener() {
-//                                            @Override
-//                                            public void onClick(DialogInterface dialogInterface, int i) {
-////                                delete account
-//                                                setStoreData(current);
-//                                            }
-//                                        }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-//                                            @Override
-//                                            public void onClick(DialogInterface dialogInterface, int i) {
-//                                                dialogInterface.dismiss();
-//                                            }
-//                                        }).create();
-//                                overwrite.show();
-//                            }
-//                        }).addOnFailureListener(new OnFailureListener() {
-//                            @Override
-//                            public void onFailure(@NonNull Exception e) {
-//                                setStoreData(current);
-//                            }
-//                        });
+                    if (current == null) {
+                        // not logged in, please log in and try again
 
+                        Toast.makeText(context, "No user logged in. Redirecting...", Toast.LENGTH_SHORT).show();
+                        goHome();
+                    } else {
+                        //recheck if store exists
+                        db.collection("Store Owners").document(current.getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                            @Override
+                            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                if (documentSnapshot.exists()) {
+                                    Toast.makeText(context, "Store account already set up as " + documentSnapshot.getString("Store Name") + ". Redirecting...", Toast.LENGTH_SHORT).show();
+                                    goToStoreView();
+                                } else {
+                                    setStoreData();
+                                }
 
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                // user does not have store. create new
+                                setStoreData();
+                            }
+                        });
                     }
-
                 }
-//            }
+            }
         });
 
     }
@@ -113,8 +106,7 @@ public class SetupStore extends AppCompatActivity {
     }
 
 
-    public void setStoreData(FirebaseUser current) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
+    public void setStoreData() {
         Map<String, Object> data = new HashMap<>();
         data.put("Name", current.getDisplayName());
         data.put("Email", current.getEmail());
@@ -126,20 +118,22 @@ public class SetupStore extends AppCompatActivity {
         db.collection("Store Owners").document(current.getUid()).set(data).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void unused) {
+                Toast.makeText(context, "Store created! Redirecting. Welcome to your Store Account! Start by adding some items to your store.", Toast.LENGTH_LONG).show();
                 goToStoreView();
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
                 // store create failed, try again
+                Toast.makeText(context, "Store create failed. Please try again.", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-
     public void goToStoreView() {
-        Intent intent  = new Intent(this, StoreNav.class);
-        intent.putExtras(getIntent().getExtras());
+        Intent intent = new Intent(this, StoreNav.class);
+        intent.putExtra("account", "Store");
+        intent.putExtra("auth", current);
         startActivity(intent);
     }
 
