@@ -6,40 +6,116 @@ import java.util.HashMap;
 import java.util.List;
 
 public class Order {
+
     int count;
     Customer customer;
     DateTime placed;
     HashMap<Item, Integer> items;
-    boolean completed;
+    boolean archived, completed;
+    String status;
     StoreOwner store;
-    double total;
+    double subtotal, total;
 
-    public Order() {
+    public Order() { }
 
+    public Order(int count, Customer customer, DateTime placed, HashMap<Item, Integer> items, boolean archived, boolean completed, String status, StoreOwner store, double subtotal, double total) {
+        this.count = items.size();
+        this.customer = customer;
+        this.placed = placed;
+        this.items = (HashMap<Item, Integer>) items.clone();
+        this.archived = archived;
+        this.completed = completed;
+        this.status = status;
+        this.store = store;
+        this.subtotal = calculateSubtotal();
+        this.total = calculateSubtotal() * 1.13;
     }
 
-
-
-    public Order(Customer _customer, DateTime _placed, HashMap<Item, Integer> _items, boolean _completed, StoreOwner _store) {
-        customer = _customer;
-        placed = _placed;
-        items = (HashMap<Item, Integer>) _items.clone();
-        completed = _completed;
-        store = _store;
-        count = items.size();
-        total = calculatePrice();
-
-    }
-
-    public double calculatePrice() {
+    public double calculateSubtotal(){
         double result = 0;
-        for (Item key : items.keySet()) {
+        for (Item key: items.keySet()) {
             result += key.price * items.get(key);
         }
         return result;
     }
 
+    public int getCount() {
+        return count;
+    }
 
+    public void setCount(int count) {
+        this.count = count;
+    }
 
+    public Customer getCustomer() {
+        return customer;
+    }
 
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
+
+    public DateTime getPlaced() {
+        return placed;
+    }
+
+    public void setPlaced(DateTime placed) {
+        this.placed = placed;
+    }
+
+    public HashMap<Item, Integer> getItems() {
+        return items;
+    }
+
+    public void setItems(HashMap<Item, Integer> items) {
+        this.items = items;
+    }
+
+    public boolean isArchived() {
+        return archived;
+    }
+
+    public void setArchived(boolean archived) {
+        this.archived = archived;
+    }
+
+    public boolean isCompleted() {
+        return completed;
+    }
+
+    public void setCompleted(boolean completed) {
+        this.completed = completed;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public StoreOwner getStore() {
+        return store;
+    }
+
+    public void setStore(StoreOwner store) {
+        this.store = store;
+    }
+
+    public double getSubtotal() {
+        return subtotal;
+    }
+
+    public void setSubtotal(double subtotal) {
+        this.subtotal = subtotal;
+    }
+
+    public double getTotal() {
+        return total;
+    }
+
+    public void setTotal(double total) {
+        this.total = total;
+    }
 }
