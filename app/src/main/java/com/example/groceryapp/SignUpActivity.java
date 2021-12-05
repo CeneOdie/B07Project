@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -33,6 +34,7 @@ public class SignUpActivity extends AppCompatActivity {
     EditText name, email, pass1, pass2;
     TextView err;
     Button signup, login;
+    ProgressBar progress;
 
     FirebaseAuth mAuth;
     FirebaseFirestore db;
@@ -43,6 +45,8 @@ public class SignUpActivity extends AppCompatActivity {
         setContentView(R.layout.activity_sign_up);
         err = findViewById(R.id.errSignup);
         err.setText("");
+        progress = findViewById(R.id.signupProgress);
+        progress.setVisibility(View.GONE);
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
 
@@ -60,6 +64,8 @@ public class SignUpActivity extends AppCompatActivity {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                progress.setVisibility(View.VISIBLE);
+                progress.setVisibility(View.GONE);
                 switchLogin();
             }
         });
@@ -69,11 +75,13 @@ public class SignUpActivity extends AppCompatActivity {
         signup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                progress.setVisibility(View.VISIBLE);
+
                 err.setTextColor(Color.RED);
-                String nameIn = name.getText().toString();
-                String emailIn = email.getText().toString();
-                String pass1In = pass1.getText().toString();
-                String pass2In = pass2.getText().toString();
+                String nameIn = name.getText().toString().trim();
+                String emailIn = email.getText().toString().trim();
+                String pass1In = pass1.getText().toString().trim();
+                String pass2In = pass2.getText().toString().trim();
 
                 boolean noerrs = true;
 
@@ -86,68 +94,129 @@ public class SignUpActivity extends AppCompatActivity {
                 if (noerrs) {
 
                     mAuth.createUserWithEmailAndPassword(emailIn, pass1In).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+
                         @Override
                         public void onSuccess(AuthResult authResult) {
+                            // successfully created user
                             FirebaseUser current = authResult.getUser();
+
                             if (current != null) {
+
                                 String UID = current.getUid();
-                                db.collection("Customers").document(UID).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                UserProfileChangeRequest init = new UserProfileChangeRequest.Builder()
+                                        .setDisplayName(nameIn).build();
+                                current.updateProfile(init).addOnSuccessListener(new OnSuccessListener<Void>() {
+
                                     @Override
-                                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                        if (documentSnapshot.exists()) {
-                                            err.setTextColor(Color.BLUE);
-                                            err.setText("Account exists. Click here to login");
-                                            err.setOnClickListener(new View.OnClickListener() {
-                                                @Override
-                                                public void onClick(View view) {
-                                                    name.setText("");
-                                                    email.setText("");
-                                                    pass1.setText("");
-                                                    pass2.setText("");
-                                                    switchLogin();
+                                    public void onSuccess(Void unused) {
+                                        // successfully updated user profile
+                                        db.collection("Customers").document(UID).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+
+                                            @Override
+                                            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                                //successfully got customer doc
+
+
+                                                if (documentSnapshot.exists()) {
+                                                    //doc exists => abort
+                                                    err.setTextColor(Color.BLUE);
+                                                    progress.setVisibility(View.GONE);
+                                                    err.setText("Account exists. Click here to login");
+
+                                                    err.setOnClickListener(new View.OnClickListener() {
+
+                                                        @Override
+                                                        public void onClick(View view) {
+                                                            progress.setVisibility(View.VISIBLE);
+                                                            name.setText("");
+                                                            email.setText("");
+                                                            pass1.setText("");
+                                                            pass2.setText("");
+                                                            progress.setVisibility(View.GONE);
+                                                            switchLogin();
+                                                        }
+
+                                                    });
+
+                                                } else {
+                                                    // doc dne, set with new data
+                                                    Map<String, Object> data = new HashMap<>();
+                                                    data.put("Name", nameIn);
+                                                    data.put("Email", emailIn);
+                                                    data.put("UID", UID);
+                                                    data.put("Orders", Arrays.asList());
+
+                                                    db.collection("Customers").document(UID).set(data).addOnSuccessListener(new OnSuccessListener<Void>() {
+
+                                                        @Override
+                                                        public void onSuccess(Void unused) {
+                                                            // successfully set data
+                                                            name.setText("");
+                                                            email.setText("");
+                                                            pass1.setText("");
+                                                            pass2.setText("");
+                                                            progress.setVisibility(View.GONE);
+                                                            goToUserView();
+                                                        }
+
+                                                    }).addOnFailureListener(new OnFailureListener() {
+
+                                                        @Override
+                                                        public void onFailure(@NonNull Exception e) {
+                                                            // failed to set data
+                                                            progress.setVisibility(View.GONE);
+                                                            err.setText(e.getMessage());
+                                                        }
+
+                                                    });
+
                                                 }
-                                            });
-                                        } else {
-                                            Map<String, Object> data = new HashMap<>();
-                                            data.put("Name", nameIn);
-                                            data.put("Email", emailIn);
-                                            data.put("UID", UID);
-                                            data.put("Orders", Arrays.asList());
-                                            db.collection("Customers").document(UID).set(data).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                @Override
-                                                public void onSuccess(Void unused) {
-                                                    name.setText("");
-                                                    email.setText("");
-                                                    pass1.setText("");
-                                                    pass2.setText("");
-                                                    goToUserView();
-                                                }
-                                            }).addOnFailureListener(new OnFailureListener() {
-                                                @Override
-                                                public void onFailure(@NonNull Exception e) {
-                                                    err.setText(e.getMessage());
-                                                }
-                                            });
-                                        }
+
+                                            }
+                                        }).addOnFailureListener(new OnFailureListener() {
+
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                // failed to get customer doc
+                                                progress.setVisibility(View.GONE);
+                                                err.setText("Something went wrong. Please try again.");
+                                            }
+
+                                        });
 
                                     }
                                 }).addOnFailureListener(new OnFailureListener() {
                                     @Override
                                     public void onFailure(@NonNull Exception e) {
-                                        err.setText("Something went wrong. Please try again.");
+                                        // failed to set user profile
+                                        progress.setVisibility(View.GONE);
+                                        err.setText(e.getMessage());
                                     }
                                 });
+
                             } else {
+
+                                // user was null
+                                progress.setVisibility(View.GONE);
                                 err.setText("Something went wrong. Please try again.");
+
                             }
                         }
                     }).addOnFailureListener(new OnFailureListener() {
+
                         @Override
                         public void onFailure(@NonNull Exception e) {
+                            // failed to create user
 //                            mAuth.signOut();
+                            progress.setVisibility(View.GONE);
                             err.setText(e.getMessage());
                         }
+
                     });
+                } else {
+                    progress.setVisibility(View.GONE);
+                    err.setText("Please fill in all the required fields.");
+
                 }
             }
         });
@@ -158,6 +227,8 @@ public class SignUpActivity extends AppCompatActivity {
 
     public void goToUserView() {
         Intent intent = new Intent(this, CustomerNav.class);
+        intent.putExtra("auth", mAuth.getCurrentUser());
+        intent.putExtra("account", "Customer");
         startActivity(intent);
     }
 

@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,11 +32,11 @@ import com.google.firebase.firestore.QuerySnapshot;
 public class ShowLoginActivity extends AppCompatActivity {
 
     EditText email, pass;
-    TextView err;
+    TextView err, forgot;
     FirebaseAuth mAuth;
     Button login, signup;
     FirebaseFirestore db;
-
+    ProgressBar progress;
 
 
 
@@ -43,6 +44,8 @@ public class ShowLoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_login);
+        progress = findViewById(R.id.loginProgress);
+        progress.setVisibility(View.GONE);
         mAuth = FirebaseAuth.getInstance();
         email = findViewById(R.id.emailLogin);
         pass = findViewById(R.id.passLogin);
@@ -55,13 +58,43 @@ public class ShowLoginActivity extends AppCompatActivity {
 
         db = FirebaseFirestore.getInstance();
 
+        forgot = findViewById(R.id.forgotPass);
+        forgot.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                progress.setVisibility(View.VISIBLE);
+
+                String emailIn = email.getText().toString().trim();
+                if (TextUtils.isEmpty(emailIn)) email.setError("Please enter a recovery email.");
+                else {
+                    mAuth.sendPasswordResetEmail(emailIn).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void unused) {
+                            progress.setVisibility(View.GONE);
+                            Toast.makeText(getApplicationContext(), "Password reset email sent. Please check your mailbox", Toast.LENGTH_SHORT).show();
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            progress.setVisibility(View.GONE);
+                            Toast.makeText(getApplicationContext(), "Unable to send password reset email. Please check details and try again, or sign up instead.", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            }
+        });
+
+
         signup = findViewById(R.id.switchSignUp);
         signup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                progress.setVisibility(View.VISIBLE);
                 email.setText("");
                 pass.setText("");
+                progress.setVisibility(View.GONE);
                 switchSignup();
+
             }
         });
 
@@ -69,6 +102,7 @@ public class ShowLoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                progress.setVisibility(View.VISIBLE);
                 err.setText("");
                 err.setTextColor(Color.RED);
                 String emailIn = email.getText().toString().trim();
@@ -93,6 +127,7 @@ public class ShowLoginActivity extends AppCompatActivity {
                             if (current != null ) {
                                 email.setText("");
                                 pass.setText("");
+                                progress.setVisibility(View.GONE);
                                 goToUserView();
                             }
                         }
@@ -100,10 +135,15 @@ public class ShowLoginActivity extends AppCompatActivity {
                         @Override
                         public void onFailure(@NonNull Exception e) {
                             mAuth.signOut();
+                            progress.setVisibility(View.GONE);
                             err.setText(e.getMessage());
                         }
                     });
+                } else {
+                    progress.setVisibility(View.GONE);
+                    err.setText("Please fill in all required fields.");
                 }
+
             }
         });
     }
@@ -116,7 +156,8 @@ public class ShowLoginActivity extends AppCompatActivity {
     public void goToUserView() {
         Intent intent = new Intent(this, CustomerNav.class);
 
-        intent.putExtra("logged in", mAuth.getCurrentUser());
+        intent.putExtra("auth", mAuth.getCurrentUser());
+        intent.putExtra("account", "Customer");
         startActivity(intent);
     }
 

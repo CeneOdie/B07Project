@@ -7,36 +7,95 @@
     tools:context=".ui.account.AccountFragment">
 
     <TextView
-        android:id="@+id/text_account"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:id="@+id/text_account_name"
+        android:layout_width="363dp"
+        android:layout_height="46dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:textAlignment="center"
+        android:textAlignment="viewStart"
+        android:textSize="34sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.055" />
+
+    <TextView
+        android:id="@+id/text_account_email"
+        android:layout_width="340dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:textAlignment="viewStart"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.482"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.044" />
+        app:layout_constraintTop_toBottomOf="@+id/text_account_name"
+        app:layout_constraintVertical_bias="0.024" />
+
+    <TextView
+        android:id="@+id/text_account_type"
+        android:layout_width="340dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:textAlignment="viewStart"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.482"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_account_email"
+        app:layout_constraintVertical_bias="0.021" />
+
+    <TextView
+        android:id="@+id/text_account_store"
+        android:layout_width="340dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:textAlignment="viewStart"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.482"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_account_type"
+        app:layout_constraintVertical_bias="0.022" />
+
+    <TextView
+        android:id="@+id/text_account_address"
+        android:layout_width="340dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:textAlignment="viewStart"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.482"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_account_store"
+        app:layout_constraintVertical_bias="0.03" />
 
     <Button
         android:id="@+id/button2"
         android:layout_width="352dp"
-        android:layout_height="42dp"
-        android:layout_marginTop="12dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
         android:text="Button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.491"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_account" />
+        app:layout_constraintTop_toBottomOf="@+id/text_account_address" />
 
     <Button
         android:id="@+id/btn_deleteAccount"
         android:layout_width="352dp"
-        android:layout_height="42dp"
+        android:layout_height="wrap_content"
         android:text="@string/btn_deleteAccount"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -48,7 +107,7 @@
     <Button
         android:id="@+id/btn_logout"
         android:layout_width="352dp"
-        android:layout_height="42dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="@string/btn_logout"
         app:layout_constraintEnd_toEndOf="parent"

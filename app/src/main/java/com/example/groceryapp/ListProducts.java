@@ -23,7 +23,7 @@ public class ListProducts extends CommonSetUp {
 
         setTB();
 
-        Query query = db.collection("Items").orderBy("Nqme", Query.Direction.ASCENDING);
+        Query query = db.collection("Items").orderBy("Name", Query.Direction.ASCENDING);
         FirestoreRecyclerOptions<Product> options = new FirestoreRecyclerOptions.Builder<Product>()
                 .setQuery(query, Product.class)
                 .build();

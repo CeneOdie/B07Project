@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.groceryapp.databinding.ActivityStoreNavBinding;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.navigation.NavController;
@@ -14,33 +16,31 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.groceryapp.databinding.ActivityUserNavBinding;
+import com.google.firebase.auth.FirebaseUser;
 
 public class UserNav extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
-    private ActivityUserNavBinding binding;
+    private ActivityStoreNavBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        binding = ActivityUserNavBinding.inflate(getLayoutInflater());
+        Bundle extras = getIntent().getExtras();
+        FirebaseUser current = (FirebaseUser) extras.get("logged in");
+        binding = ActivityStoreNavBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        setSupportActionBar(binding.appBarUserNav.toolbar);
-
-
-        DrawerLayout drawer = binding.drawerLayout;
-        NavigationView navigationView = binding.navView;
+        BottomNavigationView navView = findViewById(R.id.nav_store_view);
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
-        mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_cust_home, R.id.cartFragment, R.id.customerHistoryFragment, R.id.storeHistoryFragment, R.id.ordersFragment, R.id.storeItemsFragment, R.id.storeSetupFragment)
-                .setOpenableLayout(drawer)
+        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
+                R.id.navigation_store_home, R.id.navigation_items, R.id.navigation_store_history, R.id.navigation_account)
                 .build();
-        NavController navController = Navigation.findNavController(this, R.id.nav_content_fragment_host);
-        NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
-        NavigationUI.setupWithNavController(navigationView, navController);
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_store_nav);
+        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+
+        NavigationUI.setupWithNavController(binding.navStoreView, navController);
 
 
 

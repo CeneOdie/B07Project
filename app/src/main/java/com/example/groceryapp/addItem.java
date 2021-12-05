@@ -97,7 +97,8 @@ public class addItem extends AppCompatActivity {
                 // newProduct.put("Store", storeOwner); ****************
 
             saveToFirestore(newProduct);
-            startActivity(new Intent(getApplicationContext(), ListProducts.class));
+            finish();
+//            startActivity(new Intent(getApplicationContext(), ListProducts.class));
         });
     }
 

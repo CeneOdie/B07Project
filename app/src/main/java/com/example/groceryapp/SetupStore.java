@@ -41,10 +41,15 @@ public class SetupStore extends AppCompatActivity {
         address = findViewById(R.id.storeSetupAddress);
         title = findViewById(R.id.setupStoreTitle);
 
+        FirebaseUser current = (FirebaseUser) getIntent().getExtras().get("auth");
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
         create.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 boolean noerrs = true;
+                title.setText(current.getUid());
+                title.setText(current.getDisplayName());
                 if (TextUtils.isEmpty(name.getText().toString().trim())) {
                     name.setError("Store name is required");
                     noerrs = false;
@@ -55,14 +60,6 @@ public class SetupStore extends AppCompatActivity {
                 }
 
                 if (noerrs) {
-
-                    title.setText("Got in");
-
-                    FirebaseFirestore db = FirebaseFirestore.getInstance();
-                    FirebaseUser current = (FirebaseUser) getIntent().getExtras().get("logged in");
-
-                    title.setText("current is " + current.getDisplayName());
-
 
 //                    if (current == null) {
 //                        // not logged in, please log in and try again
