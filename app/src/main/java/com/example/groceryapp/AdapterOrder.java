@@ -3,6 +3,8 @@ package com.example.groceryapp;
 // THIS IS A GENERAL ADAPTER FOR HOLDING ORDER CONTENTS
 // ADAPTERORDERMAIN EXTENDS THIS ADAPTER
 
+import android.content.Intent;
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +35,14 @@ public class AdapterOrder extends FirestoreRecyclerAdapter<Order, AdapterOrder.O
         holder.status.setVisibility(View.GONE);
         holder.subtotal.setText(String.valueOf(model.getSubtotal()));
         holder.archive.setVisibility(View.GONE);
+
+        holder.itemView.setOnClickListener(v -> {
+            String docID = getSnapshots().getSnapshot(position).getId();
+            Intent intent = new Intent(v.getContext(), editItem.class);
+            intent.putExtra("docId", docID);
+            intent.putExtra("order", model);
+            v.getContext().startActivity(intent);
+        });
     }
 
     @NonNull

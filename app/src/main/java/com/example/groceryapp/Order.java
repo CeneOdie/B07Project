@@ -1,11 +1,14 @@
 package com.example.groceryapp;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.type.DateTime;
 
 import java.util.HashMap;
 import java.util.List;
 
-public class Order {
+public class Order implements Parcelable {
 
     int count;
     Customer customer;
@@ -30,6 +33,27 @@ public class Order {
         this.subtotal = calculateSubtotal();
         this.total = calculateSubtotal() * 1.13;
     }
+
+    protected Order(Parcel in) {
+        count = in.readInt();
+        archived = in.readByte() != 0;
+        completed = in.readByte() != 0;
+        status = in.readString();
+        subtotal = in.readDouble();
+        total = in.readDouble();
+    }
+
+    public static final Creator<Order> CREATOR = new Creator<Order>() {
+        @Override
+        public Order createFromParcel(Parcel in) {
+            return new Order(in);
+        }
+
+        @Override
+        public Order[] newArray(int size) {
+            return new Order[size];
+        }
+    };
 
     public double calculateSubtotal(){
         double result = 0;
@@ -117,5 +141,20 @@ public class Order {
 
     public void setTotal(double total) {
         this.total = total;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(count);
+        dest.writeByte((byte) (archived ? 1 : 0));
+        dest.writeByte((byte) (completed ? 1 : 0));
+        dest.writeString(status);
+        dest.writeDouble(subtotal);
+        dest.writeDouble(total);
     }
 }
