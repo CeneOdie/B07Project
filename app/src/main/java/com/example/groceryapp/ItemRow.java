@@ -1,5 +1,8 @@
 package com.example.groceryapp;
 
+// ItemRow is essentially the same as Product: need to delete and accommated accordingly
+// AdapterItemList will be affected
+
 public class ItemRow {
 
     String id, name;
