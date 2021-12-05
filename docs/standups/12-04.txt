@@ -10,13 +10,15 @@
   
 Julia:
   Since yesterday:
-  - 
+  - Simplified codes and resolved errors
   
   For tomorrow:
-  - 
+  - Start testing
+  - Tackle Firebase issue
+  - Keep refining codes where necessary
   
   Impediments:
-  -
+  - Time
   
 Perry:
   Since yesterday:
