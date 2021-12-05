@@ -9,7 +9,7 @@
 
 
     <TextView
-        android:id="@+id/nav_header_subtitle"
+        android:id="@+id/textView"
         android:layout_width="193dp"
         android:layout_height="63dp"
         android:text="@string/WelcomeString"
@@ -33,7 +33,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/nav_header_subtitle" />
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
 
     <Button
         android:id="@+id/signuphome"

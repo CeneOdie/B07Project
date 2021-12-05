@@ -8,12 +8,15 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.GroceryApp">
+        android:theme="@style/Theme.GroceryApp" >
         <activity
-            android:name=".UserNav"
+            android:name=".StoreNav"
             android:exported="false"
-            android:label="@string/title_activity_user_nav"
-            android:theme="@style/Theme.GroceryApp.NoActionBar" />
+            android:label="@string/title_activity_store_nav" />
+        <activity
+            android:name=".CustomerNav"
+            android:exported="false"
+            android:label="@string/title_activity_customer_nav" />
         <activity
             android:name=".UserView"
             android:exported="false" />

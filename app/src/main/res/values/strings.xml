@@ -31,6 +31,7 @@
         <item>Archive</item>
     </string-array>
     <string name="btn_archive">Archive</string>
+    </string-array>
 
     <string name="product_name">Product Name</string>
     <string name="product_brand">Product Brand</string>
@@ -73,4 +74,15 @@
     <string name="cartText">cartText</string>
     <string name="text_cart">text_cart</string>
     <string name="default_text">No available stores found</string>
+    <string name="product_price">$$</string>
+    <string name="view_item">items</string>
+    <string name="title_activity_customer_nav">CustomerNav</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="title_cart">Cart</string>
+    <string name="title_history">History</string>
+    <string name="title_activity_store_nav">StoreNav</string>
+    <string name="title_items">Items</string>
+    <string name="title_account">Account</string>
 </resources>
