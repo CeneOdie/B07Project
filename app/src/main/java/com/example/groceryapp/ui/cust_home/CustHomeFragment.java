@@ -75,7 +75,7 @@ public class CustHomeFragment extends Fragment {
 
         ArrayList<StoreOwner> stores = new ArrayList<>();
 
-
+        stores.clear();
         db.collection("Store Owners").orderBy("Store Name", Query.Direction.ASCENDING)
                 .addSnapshotListener((value, error) -> {
                     if (error != null) {
