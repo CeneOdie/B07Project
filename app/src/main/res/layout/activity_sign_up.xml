@@ -7,7 +7,7 @@
     android:padding="10dp"
     android:paddingStart="10dp"
     android:paddingEnd="10dp"
-    tools:context=".SignUpActivity">
+    tools:context=".Auth.SignUpActivity">
 
     <TextView
         android:id="@+id/textView3"

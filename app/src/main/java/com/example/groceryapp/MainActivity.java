@@ -4,12 +4,9 @@ import android.content.Intent;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
-import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.Fragment;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import com.example.groceryapp.Auth.ShowLoginActivity;
+import com.example.groceryapp.Auth.SignUpActivity;
 
 public class MainActivity extends AppCompatActivity {
 

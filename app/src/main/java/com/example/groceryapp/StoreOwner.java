@@ -21,122 +21,74 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-public class StoreOwner extends User{
-    String StoreID;
-    String StoreName;
-    String StoreAddr;
-    ArrayList<Order> orders;
-    ArrayList<Item> items;
+public class StoreOwner {
+    String UID, StoreName, Address, Name, Email;
+    ArrayList<DocumentReference> Orders;
+    ArrayList<DocumentReference> Items;
     FirebaseFirestore db;
 
 
-
-    public void createNew(User user, String _StoreName, String _StoreAddress) {
-        Map<String, Object> data = new HashMap<>();
-        data.put("Name", user.name);
-        data.put("Email", user.email);
-        data.put("Store Name", _StoreName);
-        data.put("Address", _StoreAddress);
-        data.put("UID", user.UID);
-        data.put("Orders", Arrays.asList());
-        data.put("Items", Arrays.asList());
-        db.collection("Customers").add(data);
+    public String getUID() {
+        return UID;
     }
 
-    public void copyStoreOwner(StoreOwner store) {
-        StoreID = store.StoreID;
-        UID = store.UID;
-        name = store.name;
-        email = store.email;
-        orders = store.orders;
-        items = store.items;
-        StoreName = store.StoreName;
-        StoreAddr = store.StoreAddr;
+    public String getStoreName() {
+        return StoreName;
     }
 
-
-
-    @Override
-    public void save() {
-        Map<String, Object> data = new HashMap<>();
-        data.put("Name", name);
-        data.put("Email", email);
-        data.put("UID", UID);
-        data.put("Store Name", StoreName);
-        data.put("Address", StoreAddr);
-
-        //save items
-        //save orders
-
-        db.collection("Customers").document(StoreID).set(data);
-
+    public String getAddress() {
+        return Address;
     }
 
-    public void getStore(String _StoreID) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        StoreOwner store = new StoreOwner();
-        DocumentReference doc = db.collection("Customers").document(_StoreID);
-        final boolean[] setNull = {false};
-        doc.addSnapshotListener(new EventListener<DocumentSnapshot>() {
-            @Override
-            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
-                if (error != null) {
-                    setNull[0] = true;
-                }
-                if (value != null && value.exists()) {
-                    store.StoreID = _StoreID;
-                    store.name = value.getString("Name");
-                    store.email = value.getString("Email");
-                    store.UID = value.getString("UID");
-
-                    //get items
-                    //get orders
-
-//                    store.items = value.get("Items");
-//                    store.orders = value.get("Orders");
-                } else {
-                    setNull[0] = true;
-                }
-                copyStoreOwner(store);
-            }
-        });
-
+    public String getName() {
+        return Name;
     }
 
-    public StoreOwner() {
-
+    public String getEmail() {
+        return Email;
     }
 
-    public StoreOwner(String _name, String _email, String _UID, String _StoreName, String _StoreAddr) {
-        User user = new User(_name, _email, _UID);
-        String id = user.getStore();
-        if (!TextUtils.isEmpty(id)) {
-            createNew(user, _StoreName, _StoreAddr);
-        }
-        getStore(id);
+    public ArrayList<DocumentReference> getOrders() {
+        return Orders;
     }
 
-    public StoreOwner(String _StoreID) {
-        getStore(_StoreID);
-
+    public ArrayList<DocumentReference> getItems() {
+        return Items;
     }
 
-    public static StoreOwner create(DocumentReference doc) {
-        FirebaseFirestore dbs = FirebaseFirestore.getInstance();
-        final StoreOwner[] newOwner = {new StoreOwner()};
-        dbs.collection("Store Owners").document(doc.getId()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                Map<String, Object> data = documentSnapshot.getData();
-                newOwner[0] = new StoreOwner(String.valueOf(data.get("Name")), String.valueOf(data.get("Email")), String.valueOf(data.get("UID")), String.valueOf(data.get("Store Name")), String.valueOf(data.get("Address")));
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                newOwner[0] = null;
-            }
-        });
-        return newOwner[0];
+    public StoreOwner(String UID, String storeName, String address, String name, String email, ArrayList<DocumentReference> orders, ArrayList<DocumentReference> items, FirebaseFirestore db) {
+        this.UID = UID;
+        StoreName = storeName;
+        Address = address;
+        Name = name;
+        Email = email;
+        Orders = orders;
+        Items = items;
+        this.db = db;
+    }
+
+    public StoreOwner() {}
+
+    public void setUID(String UID) {
+        this.UID = UID;
+    }
+    public void setStoreName(String StoreName) {
+        this.StoreName = StoreName;
+    }
+    public void setName(String Name) {
+        this.Name = Name;
+    }
+    public void setEmail(String Email) {
+        this.Email = Email;
+    }
+    public void setAddress(String Address) {
+        this.Address = Address;
+    }
+    public void setOrders(ArrayList<DocumentReference> Orders) {
+        this.Orders = Orders;
+    }
+    public void setItems(ArrayList<DocumentReference> Items) {
+        this.Items = Items;
     }
 
 

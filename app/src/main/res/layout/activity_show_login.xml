@@ -7,7 +7,7 @@
     android:layout_margin="10dp"
     android:layout_marginStart="10dp"
     android:layout_marginEnd="10dp"
-    tools:context=".ShowLoginActivity">
+    tools:context=".Auth.ShowLoginActivity">
 
     <TextView
         android:id="@+id/textView2"

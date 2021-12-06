@@ -3,7 +3,6 @@ package com.example.groceryapp.ui.account;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -14,20 +13,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.groceryapp.CustomerNav;
+import Navigation.CustomerNav;
 import com.example.groceryapp.MainActivity;
 import com.example.groceryapp.R;
-import com.example.groceryapp.SetupStore;
-import com.example.groceryapp.StoreNav;
+import com.example.groceryapp.Auth.SetupStore;
+import Navigation.StoreNav;
 import com.example.groceryapp.databinding.FragmentAcountBinding;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -38,304 +32,256 @@ public class AccountFragment extends Fragment {
 
     AccountViewModel accountViewModel;
     private FragmentAcountBinding binding;
-    Button deleteAcc;
+    View root;
+    Button deleteAcc, logout, otherbtn;
     Activity host;
     Context context;
+    String username, account, uid;
     FirebaseUser current;
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    TextView textAccountName, accountEmail, accounttype, storename, storeaddress;
+    final static int GO_TO_STORE = 0;
+    final static int GO_TO_NEW_STORE = 1;
+    final static int GO_TO_CUST = 2;
 
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
+    public void initViewsAndVars(@NonNull LayoutInflater inflater,
+                                 ViewGroup container) {
         accountViewModel =
                 new ViewModelProvider(this).get(AccountViewModel.class);
 
+        //from view
         binding = FragmentAcountBinding.inflate(inflater, container, false);
-        View root = binding.getRoot();
+        root = binding.getRoot();
 
-        final TextView textAccountName = binding.textAccountName;
-        TextView accountEmail = binding.textAccountEmail;
-        TextView accountype = binding.textAccountType;
-        TextView storename = binding.textAccountOwner;
-        TextView storeaddress = binding.textAccountAddress;
+        textAccountName = binding.textAccountName;
+        accountEmail = binding.textAccountEmail;
+        accounttype = binding.textAccountType;
+        storename = binding.textAccountOwner;
+        storeaddress = binding.textAccountAddress;
 
-        Button logout = binding.btnLogout;
-        accountViewModel.getText().observe(getViewLifecycleOwner(), s -> {
-            host = getActivity();
-            context = getActivity().getApplicationContext();
-            Bundle extras = getActivity().getIntent().getExtras();
-            current = (FirebaseUser) extras.get("auth");
-            String username;
-            if (current.getDisplayName() == null) username ="User";
-            else username =  current.getDisplayName();
+        logout = binding.btnLogout;
+        deleteAcc = binding.btnDeleteAccount;
+        otherbtn = root.findViewById(R.id.button2);
 
-            String account = extras.getString("account");
-            textAccountName.setText(username);
-            accountEmail.setText(current.getEmail());
+        // from parent
+        host = getActivity();
+        context = getActivity().getApplicationContext();
+        Bundle extras = getActivity().getIntent().getExtras();
+        current = (FirebaseUser) extras.get("auth");
+        account = extras.getString("account");
+        uid = current.getUid();
+        if (current.getDisplayName() == null) username ="User";
+        else username =  current.getDisplayName();
 
+    }
 
+    public void toggleStoreInfo(boolean show) {
+        if (show) {
+            storename.setVisibility(View.VISIBLE);
+            storeaddress.setVisibility(View.VISIBLE);
+        } else {
+            storename.setVisibility(View.GONE);
+            storeaddress.setVisibility(View.GONE);
+        }
+    }
 
-            logout.setOnClickListener(view -> {
-                //logout
-                goToHome();
-            });
-            deleteAcc = binding.btnDeleteAccount;
-            deleteAcc.setOnClickListener(view -> {
-                AlertDialog confirm = new AlertDialog.Builder(getActivity())
-                        .setTitle("Deleting Account")
-                        .setMessage("Are you sure you want to delete your account? All open orders will be deleted as well. This cannot be undone.")
-                        .setIcon(R.drawable.ic_delete)
-                        .setPositiveButton("Delete", (dialogInterface, i) -> {
-                            deleteAccount();
+    public void setTextInfo(String defaultCase) { //for default case
+        accountEmail.setText(current.getEmail());
+        accounttype.setText(account);
+        textAccountName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_customer, 0, 0, 0);
+        textAccountName.setText(defaultCase);
+        toggleStoreInfo(false);
+    }
 
-                        }).setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.dismiss()).create();
-                confirm.show();
+    public void setTextInfo() { //for customer case
+        accountEmail.setText(current.getEmail());
+        accounttype.setText(account);
+        textAccountName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_customer, 0, 0, 0);
+        textAccountName.setText(username);
+        toggleStoreInfo(false);
 
-            });
+    }
 
+    public void setTextInfo(String storeNameText, String storeAddressText) { // for store case
+        accountEmail.setText(current.getEmail());
+        accounttype.setText(account);
+        textAccountName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_store, 0, 0, 0);
+        textAccountName.setText(storeNameText);
+        toggleStoreInfo(true);
+        storename.setText(username);
+        storeaddress.setText(storeAddressText);
+    }
 
-            Button otherbtn = root.findViewById(R.id.button2);
-            FirebaseFirestore db = FirebaseFirestore.getInstance();
+    public void setButtonInfo() {
+        otherbtn.setVisibility(View.GONE);
+        deleteAcc.setVisibility(View.GONE);
+        setListeners(GO_TO_CUST);
+    }
 
-            accountype.setText(account);
-            switch (account) {
-                case "Customer":
-                    textAccountName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_customer, 0, 0, 0);
-                    storename.setVisibility(View.GONE);
-                    storeaddress.setVisibility(View.GONE);
+    public void setButtonInfo(String newStore, int icon_id, int listener_switch) {
+        otherbtn.setText(newStore);
+        otherbtn.setCompoundDrawablesWithIntrinsicBounds(icon_id, 0,0,0);
+        setListeners(listener_switch);
+    }
 
-                    db.collection("Store Owners").document(current.getUid()).get().addOnCompleteListener(task -> {
-                        if (task.isSuccessful() && task.getResult() != null) {
-                            DocumentSnapshot doc = task.getResult();
-                            otherbtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_store, 0, 0, 0);
+    public void setListeners(int listener_switch) {
 
-                            if (doc.exists()) {
+        logout.setOnClickListener(view -> goToHome());
 
-                                otherbtn.setText("Switch to Store Account : " + doc.get("Store Name"));
+        deleteAcc.setOnClickListener(view -> {
+            AlertDialog confirm = new AlertDialog.Builder(getActivity())
+                    .setTitle("Deleting Account")
+                    .setMessage("Are you sure you want to delete your account? All open orders will be deleted as well. This cannot be undone.")
+                    .setIcon(R.drawable.ic_delete)
+                    .setPositiveButton("Delete", (dialogInterface, i) -> {
+                        deleteAccount();
 
-                                otherbtn.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View view) {
-                                        goToStoreView();
-                                    }
-                                });
-                            } else {
-                                otherbtn.setText(current.getUid());
-                                otherbtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_new_store, 0, 0, 0);
-                                otherbtn.setText("Set up store account");
-                                otherbtn.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View view) {
-                                        gotoStoreSetup();
-                                    }
-                                });
-                            }
-                        } else {
-                            otherbtn.setClickable(false);
-                            otherbtn.setText("Please refresh to access store account.");
-                        }
-                    });
+                    }).setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.dismiss()).create();
+            confirm.show();
+        });
 
+        otherbtn.setOnClickListener(view -> {
+            switch (listener_switch) {
+                case GO_TO_STORE:
+                    goToStoreView();
                     break;
-                case "Store":
-                    storename.setVisibility(View.VISIBLE);
-                    storeaddress.setVisibility(View.VISIBLE);
-                    db.collection("Store Owners").document(current.getUid()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                            if (!task.isSuccessful() || task.getResult() == null) {
-                                storename.setText("Please refresh to access store information");
-                                storeaddress.setText("");
-                            } else {
-                                DocumentSnapshot doc = task.getResult();
-
-                                if (doc.exists()) {
-
-                                    textAccountName.setText(doc.getString("Store Name"));
-                                    storename.setText(username);
-                                    storeaddress.setText(doc.getString("Address"));
-//                        goToStoreView();
-                                } else {
-                                    storename.setText("Not found");
-                                    storeaddress.setText("Not found");
-//                        gotoStoreSetup();
-                                }
-                            }
-                        }
-                    });
-                    textAccountName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_store, 0, 0, 0);
-//                    textAccountName.setText();
-
-                    otherbtn.setText("Switch to Customer Account : " + username);
-                    otherbtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_customer, 0, 0, 0);
-
-                    otherbtn.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            goToCustView();
-                        }
-                    });
+                case GO_TO_NEW_STORE:
+                    gotoStoreSetup();
                     break;
-
+                case GO_TO_CUST:
+                    goToCustView();
+                    break;
                 default:
-                    storename.setVisibility(View.GONE);
-                    storeaddress.setVisibility(View.GONE);
-                    otherbtn.setText("Go to Customer Account");
-                    otherbtn.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            goToCustView();
-                        }
-                    });
+                    goToCustView();
                     break;
             }
-
         });
 
 
+    }
 
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             ViewGroup container, Bundle savedInstanceState) {
+        initViewsAndVars(inflater, container);
+        switch (account) {
+            case "Customer":
+                setTextInfo();
+                db.collection("Store Owners").document(current.getUid()).get().addOnCompleteListener(task -> {
+                    if (task.isSuccessful() && task.getResult() != null) {
+                        DocumentSnapshot doc = task.getResult();
+                        if (doc.exists()) {
+                            setButtonInfo("Switch to Store Account : " + doc.get("Store Name"), R.drawable.ic_store, GO_TO_STORE);
+                        } else {
+                            setButtonInfo("Set up store account", R.drawable.ic_new_store, GO_TO_NEW_STORE);
+                        }
+                    } else {
+                        setButtonInfo();
+                    }
+                });
+                break;
 
+            case "Store":
+                db.collection("Store Owners").document(current.getUid()).get().addOnCompleteListener(task -> {
+                    if (!task.isSuccessful() || task.getResult() == null) {
+                        setTextInfo("Please refresh to access account information");
+                        setButtonInfo();
+                    } else {
+                        DocumentSnapshot doc = task.getResult();
+                        if (doc.exists()) {
+                            setTextInfo(doc.getString("Store Name"), doc.getString("Address"));
+                        } else {
+                            setTextInfo("Please refresh to access account information");
+                            setButtonInfo();
+                        }
+                    }
+                });
 
+                setButtonInfo("Switch to Customer Account: " + username, R.drawable.ic_customer, GO_TO_CUST);
+                break;
+
+            default:
+                setButtonInfo("Go to Customer Account", R.drawable.ic_customer, GO_TO_CUST);
+                break;
+        }
         return root;
     }
 
-    public void deleteAccount() {
+    public void toast(String msg) {
+        Toast.makeText(context,  msg, Toast.LENGTH_SHORT).show();
+    }
 
+    public void deleteAccount() {
         deleteStore();
         deleteCustomer();
         deleteUser();
-
     }
 
     public void deleteUser() {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
         if (current != null) {
-            String uid = current.getUid();
-            current.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-                @Override
-                public void onSuccess(Void unused) {
-                    Toast.makeText(context, "Deleting user "  + uid, Toast.LENGTH_SHORT).show();
+            current.delete().addOnSuccessListener(unused -> {
+                    toast("Deleting user "  + uid);
                     goToHome();
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(context, "Unable to delete user "+ uid, Toast.LENGTH_SHORT).show();
-                }
-            });
+            }).addOnFailureListener(e ->
+                    toast("Unable to delete user "+ uid));
         } else {
-            Toast.makeText(context, "No user signed in", Toast.LENGTH_SHORT).show();
+            toast("No user signed in");
         }
-
     }
 
     public void deleteStore() {
 
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
         if (current != null) {
-
-            //delete orders
-            String uid = current.getUid();
             DocumentReference storedoc = db.collection("Store Owners").document(uid);
-
-            storedoc.get().addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(context, "Unable to find store for " + uid, Toast.LENGTH_SHORT);
-                }
-            }).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                @Override
-                public void onSuccess(DocumentSnapshot documentSnapshot) {
-
+            storedoc.get()
+                .addOnFailureListener(e ->
+                        toast("Unable to find store for "))
+                .addOnSuccessListener(documentSnapshot -> {
+                    //check if store exists
                     if (documentSnapshot.exists()){
-                        db.collection("Orders")
-                                .whereEqualTo("Store", storedoc)
-                                .get()
-                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                        if (task.isSuccessful() && task.getResult() != null) {
 
-                                            QuerySnapshot docs = task.getResult();
-                                            if (docs.isEmpty()) {
-                                                Toast.makeText(context, "No orders for store", Toast.LENGTH_SHORT).show();
-                                            } else {
-                                                for (DocumentSnapshot doc : docs) {
-                                                    db.collection("Orders").document(doc.getId()).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                        @Override
-                                                        public void onSuccess(Void unused) {
-                                                            Toast.makeText(context, "Deleted store order " + doc.getId(), Toast.LENGTH_SHORT).show();
-                                                        }
-                                                    }).addOnFailureListener(new OnFailureListener() {
-                                                        @Override
-                                                        public void onFailure(@NonNull Exception e) {
-                                                            Toast.makeText(context, "Unable to delete store order " + doc.getId(), Toast.LENGTH_SHORT).show();
-                                                        }
-                                                    });
-                                                }
-                                            }
-                                        } else {
-                                            Toast.makeText(context, "Could not get orders for store", Toast.LENGTH_SHORT).show();
-                                        }
-                                    }
-                                });
+                        //find and delete orders
+                        deleteCollectionForAccount("Orders", "Store", storedoc);
 
 
-                        //delete items
-                        db.collection("Items")
-                                .whereEqualTo("Store", storedoc)
-                                .get()
-                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                        if (task.isSuccessful() && task.getResult()!=null) {
-
-                                            QuerySnapshot docs = task.getResult();
-                                            if (docs.isEmpty()) {
-                                                Toast.makeText(context, "No items for store", Toast.LENGTH_SHORT).show();
-                                            } else {
-                                                for (DocumentSnapshot doc : docs) {
-                                                    db.collection("Items").document(doc.getId()).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                        @Override
-                                                        public void onSuccess(Void unused) {
-                                                            Toast.makeText(context, "Deleted store item " + doc.getId(), Toast.LENGTH_SHORT).show();
-                                                        }
-                                                    }).addOnFailureListener(new OnFailureListener() {
-                                                        @Override
-                                                        public void onFailure(@NonNull Exception e) {
-                                                            Toast.makeText(context, "Unable to delete store item " + doc.getId(), Toast.LENGTH_SHORT).show();
-                                                        }
-                                                    });
-                                                }
-                                            }
-                                        } else {
-                                            Toast.makeText(context, "Could not get items for store", Toast.LENGTH_SHORT).show();
-                                        }
-                                    }
-                                });
+                        //find and delete items
+                        deleteCollectionForAccount("Items", "Store", storedoc);
 
                         //delete store
                         db.collection("Store Owners")
                                 .document(uid)
                                 .delete()
-                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void unused) {
-                                        Toast.makeText(context, "Deleting store account " + uid, Toast.LENGTH_SHORT).show();
-                                    }
-                                }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(context, "Unable to eleting store account " + uid, Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                    }else {
-                        Toast.makeText(context, "No store for " + uid, Toast.LENGTH_SHORT);
-                    }
-
-                }
+                                .addOnSuccessListener(unused ->
+                                        toast("Deleting store account " + uid))
+                                .addOnFailureListener(e ->
+                                        toast("Unable to eleting store account " + uid));
+                    } else toast( "No store for " + uid);
             });
-
         }
+    }
 
+    public void deleteCollectionForAccount(String collection, String account, DocumentReference docref) {
+        db.collection(collection)
+                .whereEqualTo(account, docref)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful() && task.getResult() != null) {
+
+                        QuerySnapshot docs = task.getResult();
+                        if (docs.isEmpty()) {
+                            toast( "No "+collection+" for "+account);
+                        } else {
+                            for (DocumentSnapshot doc : docs) {
+                                db.collection(collection).document(doc.getId()).delete()
+                                        .addOnSuccessListener(unused ->
+                                                toast( "Deleted "+collection+" "+account+": " + doc.getId()))
+                                        .addOnFailureListener(e ->
+                                                toast("Unable to delete "+account+" "+collection+": " + doc.getId()));
+                            }
+                        }
+                    } else {
+                        toast("Could not get "+collection+" for "+account);
+                    }
+                });
     }
 
     public void deleteCustomer() {
@@ -345,71 +291,27 @@ public class AccountFragment extends Fragment {
             String uid = current.getUid();
             DocumentReference custdoc = db.collection("Customers").document(uid);
 
-            custdoc.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                @Override
-                public void onSuccess(DocumentSnapshot documentSnapshot) {
+            custdoc.get().addOnSuccessListener(documentSnapshot -> {
 
-                    if (documentSnapshot.exists()){
-                        // customer exists
-                        db.collection("Orders")
-                                .whereEqualTo("Customer", custdoc)
-                                .get()
-                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                        if (task.isSuccessful() && task.getResult() != null) {
+                if (documentSnapshot.exists()){
+                    // customer exists
+                    deleteCollectionForAccount("Orders", "Customer", custdoc);
 
-                                            QuerySnapshot docs = task.getResult();
-                                            if (docs.isEmpty()) {
-                                                Toast.makeText(context, "No orders for customer", Toast.LENGTH_SHORT).show();
-                                            } else {
-                                                for (DocumentSnapshot doc : docs) {
-                                                    db.collection("Orders").document(doc.getId()).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                        @Override
-                                                        public void onSuccess(Void unused) {
-                                                            Toast.makeText(context, "Deleted customer order " + doc.getId(), Toast.LENGTH_SHORT).show();
-                                                        }
-                                                    }).addOnFailureListener(new OnFailureListener() {
-                                                        @Override
-                                                        public void onFailure(@NonNull Exception e) {
-                                                            Toast.makeText(context, "Unable to delete customer order " + doc.getId(), Toast.LENGTH_SHORT).show();
-                                                        }
-                                                    });
-                                                }
-                                            }
-                                        } else {
-                                            Toast.makeText(context, "Could not get orders for customer", Toast.LENGTH_SHORT).show();
-                                        }
-                                    }
-                                });
+                    //delete customer
+                    db.collection("Customers")
+                            .document(uid)
+                            .delete()
+                            .addOnSuccessListener(unused -> {
+                                toast( "Deleting Customer account " + uid);
+                            }).addOnFailureListener(e ->
+                                toast( "Unable to delete Customer account " + uid));
 
-                        //delete customer
-                        db.collection("Customers")
-                                .document(uid)
-                                .delete()
-                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void unused) {
-                                        Toast.makeText(context, "Deleting Customer account " + uid, Toast.LENGTH_SHORT).show();
-//                            deleteAcc.setText("Deleting customer account " + uid);
-                                    }
-                                }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(context, "Unable to delete Customer account " + uid, Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                    } else {
-                        //customer does not exist
-                        Toast.makeText(context, "No Customer account found for " + uid, Toast.LENGTH_SHORT);
-                    }
+                } else {
+                    //customer does not exist
+                    toast( "No Customer account found for " + uid);
                 }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(context, "Could not find customer " + uid, Toast.LENGTH_SHORT);
-                }
-            });
+
+            }).addOnFailureListener(e -> toast( "Could not find customer " + uid));
         }
     }
 

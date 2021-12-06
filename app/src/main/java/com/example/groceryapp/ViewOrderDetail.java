@@ -28,6 +28,8 @@ public class ViewOrderDetail extends AppCompatActivity implements AdapterView.On
     private final DocumentReference docRef = FirebaseFirestore.getInstance().collection("Orders")
             .document(getIntent().getParcelableExtra("docId").toString());
 
+
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,8 +48,8 @@ public class ViewOrderDetail extends AppCompatActivity implements AdapterView.On
 
         Order order = getIntent().getParcelableExtra("order");
         orderId.setText(getIntent().getParcelableExtra("docId").toString());
-        store.setText(order.store.getStore());
-        storeAddress.setText(order.store.store.StoreAddr);
+        store.setText(order.store.getStoreName());
+        storeAddress.setText(order.store.getAddress());
         customer.setText(order.customer.name);
         dateTime.setText(String.valueOf(order.placed));
         itemCount.setText(order.count);
