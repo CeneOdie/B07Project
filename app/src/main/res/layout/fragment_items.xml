@@ -23,11 +23,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
+        android:backgroundTint="@color/colorPrimary"
+        android:contentDescription="@string/add_product"
         android:src="@drawable/ic_add"
-        android:backgroundTint="@color/purple_500"
+        android:tooltipText="Add a product"
+        app:backgroundTint="@color/colorPrimaryDark"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:tooltipText="Add a product"
-        android:contentDescription="@string/add_product"
         tools:ignore="UnusedAttribute" />
 </androidx.constraintlayout.widget.ConstraintLayout>
