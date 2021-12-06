@@ -36,8 +36,10 @@ public class StoreNav extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.navStoreView, navController);
 
-        Button additem = findViewById(R.id.addItemBtn);
-        additem.setVisibility(View.GONE);
+
+    }
+
+    public void goToAddItem() {
 
     }
 

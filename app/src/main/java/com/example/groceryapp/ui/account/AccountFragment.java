@@ -51,9 +51,6 @@ public class AccountFragment extends Fragment {
         binding = FragmentAcountBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-
-
-
         final TextView textAccountName = binding.textAccountName;
         TextView accountEmail = binding.textAccountEmail;
         TextView accountype = binding.textAccountType;
@@ -88,7 +85,7 @@ public class AccountFragment extends Fragment {
                         .setIcon(R.drawable.ic_delete)
                         .setPositiveButton("Delete", (dialogInterface, i) -> {
                             deleteAccount();
-                            goToHome();
+
                         }).setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.dismiss()).create();
                 confirm.show();
 
@@ -200,19 +197,15 @@ public class AccountFragment extends Fragment {
         return root;
     }
 
-    public boolean deleteAccount() {
+    public void deleteAccount() {
 
         deleteStore();
         deleteCustomer();
-        boolean userdeleted = deleteUser();
-
-        //notify affected users?
-
-        return userdeleted;
+        deleteUser();
 
     }
 
-    public boolean deleteUser() {
+    public void deleteUser() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         if (current != null) {
             String uid = current.getUid();
@@ -220,6 +213,7 @@ public class AccountFragment extends Fragment {
                 @Override
                 public void onSuccess(Void unused) {
                     Toast.makeText(context, "Deleting user "  + uid, Toast.LENGTH_SHORT).show();
+                    goToHome();
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
@@ -228,9 +222,9 @@ public class AccountFragment extends Fragment {
                 }
             });
         } else {
-            return false;
+            Toast.makeText(context, "No user signed in", Toast.LENGTH_SHORT).show();
         }
-        return true;
+
     }
 
     public void deleteStore() {
@@ -238,98 +232,107 @@ public class AccountFragment extends Fragment {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         if (current != null) {
 
-
             //delete orders
             String uid = current.getUid();
             DocumentReference storedoc = db.collection("Store Owners").document(uid);
 
-            boolean found = storedoc.get().isSuccessful();
-            if (found) {
-                //delete orders
-                db.collection("Orders")
-                        .whereEqualTo("Store", storedoc)
-                        .get()
-                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                if (task.isSuccessful() && task.getResult() != null) {
+            storedoc.get().addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(context, "Unable to find store for " + uid, Toast.LENGTH_SHORT);
+                }
+            }).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                @Override
+                public void onSuccess(DocumentSnapshot documentSnapshot) {
 
-                                    QuerySnapshot docs = task.getResult();
-                                    if (docs.isEmpty()) {
-                                        Toast.makeText(context, "No orders for store", Toast.LENGTH_SHORT).show();
-                                    } else {
-                                        for (DocumentSnapshot doc : docs) {
-                                            db.collection("Orders").document(doc.getId()).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                @Override
-                                                public void onSuccess(Void unused) {
-                                                    Toast.makeText(context, "Deleted store order " + doc.getId(), Toast.LENGTH_SHORT).show();
+                    if (documentSnapshot.exists()){
+                        db.collection("Orders")
+                                .whereEqualTo("Store", storedoc)
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful() && task.getResult() != null) {
+
+                                            QuerySnapshot docs = task.getResult();
+                                            if (docs.isEmpty()) {
+                                                Toast.makeText(context, "No orders for store", Toast.LENGTH_SHORT).show();
+                                            } else {
+                                                for (DocumentSnapshot doc : docs) {
+                                                    db.collection("Orders").document(doc.getId()).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                        @Override
+                                                        public void onSuccess(Void unused) {
+                                                            Toast.makeText(context, "Deleted store order " + doc.getId(), Toast.LENGTH_SHORT).show();
+                                                        }
+                                                    }).addOnFailureListener(new OnFailureListener() {
+                                                        @Override
+                                                        public void onFailure(@NonNull Exception e) {
+                                                            Toast.makeText(context, "Unable to delete store order " + doc.getId(), Toast.LENGTH_SHORT).show();
+                                                        }
+                                                    });
                                                 }
-                                            }).addOnFailureListener(new OnFailureListener() {
-                                                @Override
-                                                public void onFailure(@NonNull Exception e) {
-                                                    Toast.makeText(context, "Unable to delete store order " + doc.getId(), Toast.LENGTH_SHORT).show();
-                                                }
-                                            });
+                                            }
+                                        } else {
+                                            Toast.makeText(context, "Could not get orders for store", Toast.LENGTH_SHORT).show();
                                         }
                                     }
-                                } else {
-                                    Toast.makeText(context, "Could not get orders for store", Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        });
+                                });
 
 
-                //delete items
-                db.collection("Items")
-                        .whereEqualTo("Store", storedoc)
-                        .get()
-                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                if (task.isSuccessful() && task.getResult()!=null) {
+                        //delete items
+                        db.collection("Items")
+                                .whereEqualTo("Store", storedoc)
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful() && task.getResult()!=null) {
 
-                                    QuerySnapshot docs = task.getResult();
-                                    if (docs.isEmpty()) {
-                                        Toast.makeText(context, "No items for store", Toast.LENGTH_SHORT).show();
-                                    } else {
-                                        for (DocumentSnapshot doc : docs) {
-                                            db.collection("Items").document(doc.getId()).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                @Override
-                                                public void onSuccess(Void unused) {
-                                                    Toast.makeText(context, "Deleted store item " + doc.getId(), Toast.LENGTH_SHORT).show();
+                                            QuerySnapshot docs = task.getResult();
+                                            if (docs.isEmpty()) {
+                                                Toast.makeText(context, "No items for store", Toast.LENGTH_SHORT).show();
+                                            } else {
+                                                for (DocumentSnapshot doc : docs) {
+                                                    db.collection("Items").document(doc.getId()).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                        @Override
+                                                        public void onSuccess(Void unused) {
+                                                            Toast.makeText(context, "Deleted store item " + doc.getId(), Toast.LENGTH_SHORT).show();
+                                                        }
+                                                    }).addOnFailureListener(new OnFailureListener() {
+                                                        @Override
+                                                        public void onFailure(@NonNull Exception e) {
+                                                            Toast.makeText(context, "Unable to delete store item " + doc.getId(), Toast.LENGTH_SHORT).show();
+                                                        }
+                                                    });
                                                 }
-                                            }).addOnFailureListener(new OnFailureListener() {
-                                                @Override
-                                                public void onFailure(@NonNull Exception e) {
-                                                    Toast.makeText(context, "Unable to delete store item " + doc.getId(), Toast.LENGTH_SHORT).show();
-                                                }
-                                            });
+                                            }
+                                        } else {
+                                            Toast.makeText(context, "Could not get items for store", Toast.LENGTH_SHORT).show();
                                         }
                                     }
-                                } else {
-                                    Toast.makeText(context, "Could not get items for store", Toast.LENGTH_SHORT).show();
-                                }
+                                });
+
+                        //delete store
+                        db.collection("Store Owners")
+                                .document(uid)
+                                .delete()
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void unused) {
+                                        Toast.makeText(context, "Deleting store account " + uid, Toast.LENGTH_SHORT).show();
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Toast.makeText(context, "Unable to eleting store account " + uid, Toast.LENGTH_SHORT).show();
                             }
                         });
-
-                //delete store
-                db.collection("Store Owners")
-                        .document(uid)
-                        .delete()
-                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void unused) {
-                                Toast.makeText(context, "Deleting store account " + uid, Toast.LENGTH_SHORT).show();
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(context, "Unable to eleting store account " + uid, Toast.LENGTH_SHORT).show();
+                    }else {
+                        Toast.makeText(context, "No store for " + uid, Toast.LENGTH_SHORT);
                     }
-                });
-            } else {
-                Toast.makeText(context, "No store for " + uid, Toast.LENGTH_SHORT);
-            }
+
+                }
+            });
 
         }
 
@@ -342,69 +345,73 @@ public class AccountFragment extends Fragment {
             String uid = current.getUid();
             DocumentReference custdoc = db.collection("Customers").document(uid);
 
-            boolean found = custdoc.get().isSuccessful();
+            custdoc.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                @Override
+                public void onSuccess(DocumentSnapshot documentSnapshot) {
 
-            if (!found) {
-                Toast.makeText(context, "No Customer account found for " + uid, Toast.LENGTH_SHORT);
-            } else {
-                //delete orders
-                db.collection("Orders")
-                        .whereEqualTo("Customer", custdoc)
-                        .get()
-                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                if (task.isSuccessful() && task.getResult() != null) {
+                    if (documentSnapshot.exists()){
+                        // customer exists
+                        db.collection("Orders")
+                                .whereEqualTo("Customer", custdoc)
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful() && task.getResult() != null) {
 
-                                    QuerySnapshot docs = task.getResult();
-                                    if (docs.isEmpty()) {
-                                        Toast.makeText(context, "No orders for customer", Toast.LENGTH_SHORT).show();
-                                    } else {
-                                        for (DocumentSnapshot doc : docs) {
-                                            db.collection("Orders").document(doc.getId()).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                @Override
-                                                public void onSuccess(Void unused) {
-                                                    Toast.makeText(context, "Deleted customer order " + doc.getId(), Toast.LENGTH_SHORT).show();
+                                            QuerySnapshot docs = task.getResult();
+                                            if (docs.isEmpty()) {
+                                                Toast.makeText(context, "No orders for customer", Toast.LENGTH_SHORT).show();
+                                            } else {
+                                                for (DocumentSnapshot doc : docs) {
+                                                    db.collection("Orders").document(doc.getId()).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                        @Override
+                                                        public void onSuccess(Void unused) {
+                                                            Toast.makeText(context, "Deleted customer order " + doc.getId(), Toast.LENGTH_SHORT).show();
+                                                        }
+                                                    }).addOnFailureListener(new OnFailureListener() {
+                                                        @Override
+                                                        public void onFailure(@NonNull Exception e) {
+                                                            Toast.makeText(context, "Unable to delete customer order " + doc.getId(), Toast.LENGTH_SHORT).show();
+                                                        }
+                                                    });
                                                 }
-                                            }).addOnFailureListener(new OnFailureListener() {
-                                                @Override
-                                                public void onFailure(@NonNull Exception e) {
-                                                    Toast.makeText(context, "Unable to delete customer order " + doc.getId(), Toast.LENGTH_SHORT).show();
-                                                }
-                                            });
+                                            }
+                                        } else {
+                                            Toast.makeText(context, "Could not get orders for customer", Toast.LENGTH_SHORT).show();
                                         }
                                     }
-                                } else {
-                                    Toast.makeText(context, "Could not get orders for customer", Toast.LENGTH_SHORT).show();
-                                }
+                                });
+
+                        //delete customer
+                        db.collection("Customers")
+                                .document(uid)
+                                .delete()
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void unused) {
+                                        Toast.makeText(context, "Deleting Customer account " + uid, Toast.LENGTH_SHORT).show();
+//                            deleteAcc.setText("Deleting customer account " + uid);
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Toast.makeText(context, "Unable to delete Customer account " + uid, Toast.LENGTH_SHORT).show();
                             }
                         });
-
-                //delete customer
-                db.collection("Customers")
-                        .document(uid)
-                        .delete()
-                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void unused) {
-                                Toast.makeText(context, "Deleting Customer account " + uid, Toast.LENGTH_SHORT).show();
-//                            deleteAcc.setText("Deleting customer account " + uid);
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(context, "Unable to delete Customer account " + uid, Toast.LENGTH_SHORT).show();
+                    } else {
+                        //customer does not exist
+                        Toast.makeText(context, "No Customer account found for " + uid, Toast.LENGTH_SHORT);
                     }
-                });
-            }
-
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(context, "Could not find customer " + uid, Toast.LENGTH_SHORT);
+                }
+            });
         }
-
     }
-
-
-
-
 
     public void goToCustView() {
         Intent intent = new Intent(getActivity(), CustomerNav.class);

@@ -118,7 +118,7 @@ public class SetupStore extends AppCompatActivity {
         db.collection("Store Owners").document(current.getUid()).set(data).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void unused) {
-                Toast.makeText(context, "Store created! Redirecting. Welcome to your Store Account! Start by adding some items to your store.", Toast.LENGTH_LONG).show();
+                Toast.makeText(context, "Welcome to your Store Account! Get started by adding some items to your store.", Toast.LENGTH_LONG).show();
                 goToStoreView();
             }
         }).addOnFailureListener(new OnFailureListener() {
