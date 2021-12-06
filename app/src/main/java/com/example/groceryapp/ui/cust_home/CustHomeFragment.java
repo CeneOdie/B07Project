@@ -109,8 +109,8 @@ public class CustHomeFragment extends Fragment {
                 .setQuery(query, StoreOwner.class)
                 .build();
 
-        Toast.makeText(getContext(),  "got query", Toast.LENGTH_SHORT).show();
-        showStores(stores);
+//        Toast.makeText(getContext(),  "got query", Toast.LENGTH_SHORT).show();
+//        showStores(stores);
 
     }
 
