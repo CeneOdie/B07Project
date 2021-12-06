@@ -3,21 +3,33 @@ package com.example.groceryapp;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.type.DateTime;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Order implements Parcelable {
 
-    int count;
+    long count;
     Customer customer;
     DateTime placed;
     HashMap<Item, Integer> items;
     boolean archived, completed;
-    String status;
+    String status, orderid;
     StoreOwner store;
     double subtotal, total;
+    DocumentReference storeRef, customerRef;
+    HashMap<DocumentReference, Integer> itemRefs;
+    Timestamp fromDateTime;
+
+    ArrayList<Object> itemsfromdb;
 
     public Order() { }
 
@@ -34,8 +46,41 @@ public class Order implements Parcelable {
         this.total = calculateSubtotal() * 1.13;
     }
 
+    public static String getTimeDate(long timestamp){
+        try{
+            DateFormat dateFormat = DateFormat.getDateTimeInstance();
+            Date netDate = (new Date(timestamp));
+            return dateFormat.format(netDate);
+        } catch(Exception e) {
+            return "date";
+        }
+    }
+
+    public Order(Map<String, Object> data, String id) {
+        orderid = id;
+        count = ((Long) data.get("Count")).intValue();
+        customerRef = (DocumentReference) data.get("Customer");
+        customer = new Customer(customerRef);
+        storeRef = (DocumentReference) data.get("Store");
+        fromDateTime = (Timestamp) data.get("DateTime");
+        archived = (boolean) data.get("Archived");
+        fromDateTime = (Timestamp) data.get("DateTime");
+
+//        DateTime placed;
+
+        completed = (boolean) data.get("Completed");
+
+//        itemRefs -
+        itemsfromdb = (ArrayList<Object>) data.get("Items");
+//        itemRefs = (HashMap<DocumentReference, Integer>) data.get("Items");
+        status = (String) data.get("Status");
+
+        subtotal=((Long) data.get("Subtotal")).doubleValue();
+        total = ((Long) data.get("Total")).doubleValue();
+    }
+
     protected Order(Parcel in) {
-        count = in.readInt();
+        count = in.readLong();
         archived = in.readByte() != 0;
         completed = in.readByte() != 0;
         status = in.readString();
@@ -63,7 +108,7 @@ public class Order implements Parcelable {
         return result;
     }
 
-    public int getCount() {
+    public long getCount() {
         return count;
     }
 
@@ -150,7 +195,7 @@ public class Order implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(count);
+        dest.writeLong(count);
         dest.writeByte((byte) (archived ? 1 : 0));
         dest.writeByte((byte) (completed ? 1 : 0));
         dest.writeString(status);

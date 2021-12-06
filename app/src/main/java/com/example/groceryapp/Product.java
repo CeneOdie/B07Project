@@ -3,10 +3,16 @@ package com.example.groceryapp;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.firebase.firestore.DocumentReference;
+
+import java.util.ArrayList;
+import java.util.Map;
+
 public class Product implements Parcelable {
 
-    String name, brand, description, store, qs;
+    String name, brand, description, store, qs, itemid;
     double price;
+    DocumentReference storeRef;
 
     public Product() {
     }
@@ -18,6 +24,15 @@ public class Product implements Parcelable {
         this.store = store;
         this.qs = qs;
         this.price = price;
+    }
+
+    public Product(Map<String, Object> data, String id) {
+        itemid = id;
+        name = (String) data.get("Name");
+        brand = (String) data.get("Brand");
+        description = (String) data.get("Description");
+        qs = (String) data.get("Quantity");
+        storeRef = (DocumentReference) data.get("Store");
     }
 
     protected Product(Parcel in) {

@@ -34,10 +34,10 @@
                 android:id="@+id/cardOrderID"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="7dp"
                 android:text="@string/order_id"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                android:layout_marginStart="7dp"
                 app:layout_constraintStart_toEndOf="@+id/cardOrder"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -45,9 +45,9 @@
                 android:id="@+id/cardOrderCustomer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="18dp"
                 android:text="@string/order_customer"
                 android:textStyle="italic"
-                android:layout_marginStart="18dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/cardOrder" />
 
@@ -56,8 +56,8 @@
                 android:layout_width="wrap_content"
 
                 android:layout_height="wrap_content"
-                android:text="@string/order_time"
                 android:layout_marginStart="18dp"
+                android:text="@string/order_time"
 
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/cardOrderCustomer" />
@@ -66,9 +66,9 @@
                 android:id="@+id/cardOrderStatus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="14dp"
                 android:text="@string/order_status"
                 android:textStyle="bold"
-                android:layout_marginEnd="14dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
 
@@ -79,8 +79,8 @@
                 android:layout_marginStart="18dp"
 
                 android:text="@string/order_price"
-                app:layout_constraintTop_toBottomOf="@+id/cardOrderDateTime"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/cardOrderDateTime" />
 
             <Button
                 android:id="@+id/buttonArchive"

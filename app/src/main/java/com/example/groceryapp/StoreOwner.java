@@ -23,8 +23,39 @@ import java.util.Map;
 
 public class StoreOwner {
     String UID, StoreName, Address, Name, Email;
-    ArrayList<DocumentReference> Orders;
-    ArrayList<DocumentReference> Items;
+    ArrayList<Order> Orders;
+    ArrayList<Product> Products;
+    ArrayList<DocumentReference> OrderRefs;
+
+    public void setOrders(ArrayList<Order> orders) {
+        Orders = orders;
+    }
+
+    public ArrayList<Product> getProducts() {
+        return Products;
+    }
+
+    public void setProducts(ArrayList<Product> products) {
+        Products = products;
+    }
+
+    public ArrayList<DocumentReference> getOrderRefs() {
+        return OrderRefs;
+    }
+
+    public void setOrderRefs(ArrayList<DocumentReference> orderRefs) {
+        OrderRefs = orderRefs;
+    }
+
+    public ArrayList<DocumentReference> getItemRefs() {
+        return ItemRefs;
+    }
+
+    public void setItemRefs(ArrayList<DocumentReference> itemRefs) {
+        ItemRefs = itemRefs;
+    }
+
+    ArrayList<DocumentReference> ItemRefs;
     FirebaseFirestore db;
 
 
@@ -49,11 +80,11 @@ public class StoreOwner {
     }
 
     public ArrayList<DocumentReference> getOrders() {
-        return Orders;
+        return OrderRefs;
     }
 
     public ArrayList<DocumentReference> getItems() {
-        return Items;
+        return ItemRefs;
     }
 
     public StoreOwner(Map<String, Object> data) {
@@ -62,9 +93,22 @@ public class StoreOwner {
         Address = (String) data.get("Address");
         Name = (String) data.get("Name");
         Email = (String) data.get("Email");
-        Orders = (ArrayList<DocumentReference>) data.get("Orders");
-        Items = (ArrayList<DocumentReference>) data.get("Items");
+        OrderRefs = (ArrayList<DocumentReference>) data.get("Orders");
+        ItemRefs = (ArrayList<DocumentReference>) data.get("Items");
     }
+
+    public StoreOwner(DocumentReference doc) {
+        doc.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful() && task.getResult() != null) {
+                UID = doc.getId();
+                Name = (String) task.getResult().get("Name");
+                StoreName = (String) task.getResult().get("Store Name");
+                Email = (String) task.getResult().get("Email");
+                OrderRefs = (ArrayList<DocumentReference>) task.getResult().get("Orders");
+            }
+        });
+    }
+
 
     public StoreOwner(String UID, String storeName, String address, String name, String email, ArrayList<DocumentReference> orders, ArrayList<DocumentReference> items, FirebaseFirestore db) {
         this.UID = UID;
@@ -72,8 +116,8 @@ public class StoreOwner {
         this.Address = address;
         this.Name = name;
         this.Email = email;
-        this.Orders = orders;
-        this.Items = items;
+        this.OrderRefs = orders;
+        this.ItemRefs = items;
         this.db = db;
     }
 
@@ -94,12 +138,7 @@ public class StoreOwner {
     public void setAddress(String Address) {
         this.Address = Address;
     }
-    public void setOrders(ArrayList<DocumentReference> Orders) {
-        this.Orders = Orders;
-    }
-    public void setItems(ArrayList<DocumentReference> Items) {
-        this.Items = Items;
-    }
+
 
 
 }

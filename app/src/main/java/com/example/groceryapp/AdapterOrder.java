@@ -30,7 +30,7 @@ public class AdapterOrder extends FirestoreRecyclerAdapter<Order, AdapterOrder.O
     @Override
     protected void onBindViewHolder(@NonNull OrderViewHolder holder, int position, @NonNull Order model) {
         holder.orderID.setText(getSnapshots().getSnapshot(position).getId());
-        holder.customer.setText(model.getCustomer().name);
+        holder.customer.setText(model.customer.Name);
         holder.timeStamp.setText(String.valueOf(model.getPlaced()));
         holder.status.setVisibility(View.GONE);
         holder.subtotal.setText(String.valueOf(model.getSubtotal()));

@@ -50,9 +50,9 @@ public class ViewOrderDetail extends AppCompatActivity implements AdapterView.On
         orderId.setText(getIntent().getParcelableExtra("docId").toString());
         store.setText(order.store.getStoreName());
         storeAddress.setText(order.store.getAddress());
-        customer.setText(order.customer.name);
+        customer.setText(order.customer.Name);
         dateTime.setText(String.valueOf(order.placed));
-        itemCount.setText(order.count);
+        itemCount.setText(String.valueOf(order.count));
         subtotal.setText(String.valueOf(order.getSubtotal()));
         total.setText(String.valueOf(order.getTotal()));
 

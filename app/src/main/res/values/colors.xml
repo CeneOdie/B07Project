@@ -3,6 +3,8 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="colorBackground">#CFCFCF</color>
+    <color name="colorBackgroundDark">#838383</color>
+
     <!--   color for the app bar and other primary UI elements -->
     <color name="colorPrimary">#60CE4C</color>
 

@@ -98,7 +98,7 @@
         android:layout_marginTop="56dp"
         android:text=" Forgot password? Click here"
         android:textAlignment="textEnd"
-        android:textColor="#174DF3"
+        android:textColor="@color/colorAccent"
         android:textStyle="italic"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.496"

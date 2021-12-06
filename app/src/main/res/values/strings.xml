@@ -70,7 +70,7 @@
     <string name="menu_cart">Cart</string>
     <string name="nav_switchStore">Switch to Store</string>
     <string name="nav_switchCustomer">Switch to Customer</string>
-    <string name="nav_items">Items</string>
+    <string name="nav_items">Products</string>
     <string name="nav_orders_done">Completed Orders</string>
     <string name="nav_open_orders">Open Orders</string>
     <string name="cartText">cartText</string>

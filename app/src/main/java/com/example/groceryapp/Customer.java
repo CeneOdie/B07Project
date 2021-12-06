@@ -5,29 +5,38 @@ import android.text.TextUtils;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Customer extends User{
+public class Customer {
     String CustID;
-    Order[] orders;
+    Order[] Orders;
+    String Name;
+    String Email;
+    String UID;
+    ArrayList<DocumentReference> OrderRefs;
 
-    @Override
+
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
+
     public void save() {
         Map<String, Object> data = new HashMap<>();
-        data.put("Name", name);
-        data.put("Email", email);
+        data.put("Name", Name);
+        data.put("Email", Email);
         data.put("UID", UID);
-        data.put("Orders", orders);
+        data.put("Orders", Orders);
 
         db.collection("Customers").document(CustID).set(data);
 
@@ -35,6 +44,18 @@ public class Customer extends User{
 
     public Customer() {
 
+    }
+
+
+    public Customer(DocumentReference doc) {
+        doc.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful() && task.getResult() != null) {
+                UID = doc.getId();
+                Name = (String) task.getResult().get("Name");
+                Email = (String) task.getResult().get("Email");
+                OrderRefs = (ArrayList<DocumentReference>) task.getResult().get("Orders");
+            }
+        });
     }
 
     public Customer(String _name, String _email, String _UID) {
@@ -58,9 +79,9 @@ public class Customer extends User{
     public void copyCustomer(Customer cust) {
         CustID = cust.CustID;
         UID = cust.UID;
-        name = cust.name;
-        email = cust.email;
-        orders = cust.orders;
+        Name = cust.Name;
+        Email = cust.Email;
+        Orders = cust.Orders;
     }
 
     public void getCustomer(String _CustID) {
@@ -76,8 +97,8 @@ public class Customer extends User{
                 }
                 if (value != null && value.exists()) {
                     cust.CustID = _CustID;
-                    cust.name = value.getString("Name");
-                    cust.email = value.getString("Email");
+                    cust.Name = value.getString("Name");
+                    cust.Email = value.getString("Email");
                     cust.UID = value.getString("UID");
 
                     //get orders
