@@ -31,6 +31,7 @@ import com.example.groceryapp.databinding.FragmentCustHomeBinding;
 import com.example.groceryapp.ui.cart.CartViewModel;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -81,36 +82,41 @@ public class CustHomeFragment extends Fragment {
         return root;
     }
 
-    public void showStores(FirestoreRecyclerOptions<StoreOwner> stores) {
-//        viewer.setLayoutManager(new LinearLayoutManager(getContext()));
-        StoreAdapter adapter = new StoreAdapter(stores);
+    public void showStores(ArrayList<StoreOwner> stores) {
+        StoreAdapter adapter = new StoreAdapter(getActivity(), stores);
         viewer.setAdapter(adapter);
 
         viewer.setHasFixedSize(true);
 
-
-//        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
-//            @Override
-//            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
-//                return false;
-//            }
-//
-//            @Override
-//            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-////                adapter.deleteItem(viewHolder.getBindingAdapterPosition());
-//            }
-//        }).attachToRecyclerView(viewer);
+        progress.setVisibility(View.GONE);
     }
 
     public void fetchStores() {
 
-        Query query = db.collection("Store Owners").orderBy("Store Name", Query.Direction.ASCENDING);
-        FirestoreRecyclerOptions<StoreOwner> stores = new FirestoreRecyclerOptions.Builder<StoreOwner>()
-                .setQuery(query, StoreOwner.class)
-                .build();
+        ArrayList<StoreOwner> stores = new ArrayList<>();
 
-//        Toast.makeText(getContext(),  "got query", Toast.LENGTH_SHORT).show();
-//        showStores(stores);
+
+        db.collection("Store Owners").orderBy("Store Name", Query.Direction.ASCENDING)
+                .addSnapshotListener((value, error) -> {
+                    if (error != null) {
+                        err.setText(error.getMessage());
+                        return;
+                    }
+                    if(value.isEmpty()) {
+                        err.setText("No stores to display.Check back later.");
+                    } else {
+                        for(DocumentSnapshot doc : value.getDocuments()) {
+                            StoreOwner newstore = new StoreOwner(doc.getData());
+                            if (!stores.contains(newstore)) stores.add(newstore);
+
+
+                        }
+                        err.setText("Showing " + stores.size() + " stores");
+                        showStores(stores);
+                    }
+
+                });
+
 
     }
 

@@ -56,14 +56,24 @@ public class StoreOwner {
         return Items;
     }
 
+    public StoreOwner(Map<String, Object> data) {
+        UID = (String) data.get("UID");
+        StoreName = (String) data.get("Store Name");
+        Address = (String) data.get("Address");
+        Name = (String) data.get("Name");
+        Email = (String) data.get("Email");
+        Orders = (ArrayList<DocumentReference>) data.get("Orders");
+        Items = (ArrayList<DocumentReference>) data.get("Items");
+    }
+
     public StoreOwner(String UID, String storeName, String address, String name, String email, ArrayList<DocumentReference> orders, ArrayList<DocumentReference> items, FirebaseFirestore db) {
         this.UID = UID;
-        StoreName = storeName;
-        Address = address;
-        Name = name;
-        Email = email;
-        Orders = orders;
-        Items = items;
+        this.StoreName = storeName;
+        this.Address = address;
+        this.Name = name;
+        this.Email = email;
+        this.Orders = orders;
+        this.Items = items;
         this.db = db;
     }
 
