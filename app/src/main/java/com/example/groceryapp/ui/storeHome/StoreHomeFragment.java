@@ -41,7 +41,7 @@ public class StoreHomeFragment extends Fragment {
 
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
-    AdapterProduct adapter;
+    OrderAdapter adapter;
 
     RecyclerView viewer;
     TextView err;
@@ -71,14 +71,14 @@ public class StoreHomeFragment extends Fragment {
             public void onChanged(@Nullable String s) {
 //                textView.setText(s);
                 progress.setVisibility(View.VISIBLE);
-                getOrders();
+//                getOrders();
             }
         });
         return root;
     }
 
     public void showOrders(ArrayList<Order> orders) {
-        OrderAdapter adapter = new OrderAdapter(getActivity(), orders);
+        adapter = new OrderAdapter(getActivity(), orders);
         viewer.setAdapter(adapter);
 
         viewer.setHasFixedSize(true);

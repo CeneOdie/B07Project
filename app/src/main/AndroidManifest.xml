@@ -27,15 +27,6 @@
             android:name=".listStoreOrders"
             android:exported="false" />
         <activity
-            android:name=".showCart"
-            android:exported="false" />
-        <activity
-            android:name=".listOrders"
-            android:exported="false" />
-        <activity
-            android:name=".StoreList"
-            android:exported="false" />
-        <activity
             android:name=".ListProducts"
             android:exported="false" />
         <activity

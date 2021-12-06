@@ -20,7 +20,7 @@ public class Order implements Parcelable {
     long count;
     Customer customer;
     DateTime placed;
-    HashMap<Item, Integer> items;
+    HashMap<Product, Integer> items;
     boolean archived, completed;
     String status, orderid;
     StoreOwner store;
@@ -33,17 +33,17 @@ public class Order implements Parcelable {
 
     public Order() { }
 
-    public Order(int count, Customer customer, DateTime placed, HashMap<Item, Integer> items, boolean archived, boolean completed, String status, StoreOwner store, double subtotal, double total) {
+    public Order(int count, Customer customer, DateTime placed, HashMap<Product, Integer> items, boolean archived, boolean completed, String status, StoreOwner store, double subtotal, double total) {
         this.count = items.size();
         this.customer = customer;
         this.placed = placed;
-        this.items = (HashMap<Item, Integer>) items.clone();
+        this.items = (HashMap<Product, Integer>) items.clone();
         this.archived = archived;
         this.completed = completed;
         this.status = status;
         this.store = store;
-        this.subtotal = calculateSubtotal();
-        this.total = calculateSubtotal() * 1.13;
+//        this.subtotal = calculateSubtotal();
+//        this.total = calculateSubtotal() * 1.13;
     }
 
     public static String getTimeDate(long timestamp){
@@ -75,6 +75,13 @@ public class Order implements Parcelable {
 //        itemRefs = (HashMap<DocumentReference, Integer>) data.get("Items");
         status = (String) data.get("Status");
 
+        Object subtotalimport = data.get("Subtotal");
+//        if (subtotalimport.getClass() == Long.class) subtotal=((Long) data.get("Subtotal")).doubleValue();
+//        else if (subtotalimport.getClass() == Double.class) subtotal = (Double) data.get("Subtotal");
+//        Object totalimport = data.get("Total");
+//        if (totalimport.getClass() == Long.class) total = ((Long) data.get("Total")).doubleValue();
+//        else if (totalimport.getClass() == Double.class) total = (Double) data.get("Total");
+
         subtotal=((Long) data.get("Subtotal")).doubleValue();
         total = ((Long) data.get("Total")).doubleValue();
     }
@@ -100,13 +107,13 @@ public class Order implements Parcelable {
         }
     };
 
-    public double calculateSubtotal(){
-        double result = 0;
-        for (Item key: items.keySet()) {
-            result += key.price * items.get(key);
-        }
-        return result;
-    }
+//    public double calculateSubtotal(){
+//        double result = 0;
+//        for (Item key: items.keySet()) {
+//            result += key.price * items.get(key);
+//        }
+//        return result;
+//    }
 
     public long getCount() {
         return count;
@@ -132,11 +139,11 @@ public class Order implements Parcelable {
         this.placed = placed;
     }
 
-    public HashMap<Item, Integer> getItems() {
+    public HashMap<Product, Integer> getItems() {
         return items;
     }
 
-    public void setItems(HashMap<Item, Integer> items) {
+    public void setItems(HashMap<Product, Integer> items) {
         this.items = items;
     }
 
