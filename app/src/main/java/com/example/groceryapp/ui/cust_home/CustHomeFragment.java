@@ -7,21 +7,34 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.groceryapp.Display_empty_store_page;
+import com.example.groceryapp.Product;
 import com.example.groceryapp.R;
+import com.example.groceryapp.StoreAdapter;
+import com.example.groceryapp.StoreOwner;
+import com.example.groceryapp.databinding.FragmentCartBinding;
 import com.example.groceryapp.databinding.FragmentCustHomeBinding;
+import com.example.groceryapp.ui.cart.CartViewModel;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -34,13 +47,12 @@ public class CustHomeFragment extends Fragment {
     private CustHomeViewModel custHomeViewModel;
     private FragmentCustHomeBinding binding;
 
-    public static final String storeKey = "Store Name";
-    public static final String ownerKey = "Name";
-    public static final String addressKey = "Address";
-    public static final String TAG = "stores";
-    private List<HashMap<String,String>> stores = new ArrayList<>();
-    private SimpleAdapter sa;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+    RecyclerView viewer;
+    TextView err;
+    ProgressBar progress;
+
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -51,61 +63,55 @@ public class CustHomeFragment extends Fragment {
         binding = FragmentCustHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
+        viewer = binding.viewStores;
+        err = binding.textCustHome;
+        progress = binding.storesProgress;
 
-        sa = new SimpleAdapter(getActivity(), stores,
-                R.layout.view_store_format,
-                new String[] { "line 1","line 2","line 3" },
-                new int[] {R.id.line_a, R.id.line_b, R.id.line_c});
-        listeningChanges();
+
 
         final TextView textView = binding.textCustHome;
         custHomeViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
                 textView.setText(s);
+                progress.setVisibility(View.VISIBLE);
+                fetchStores();
             }
         });
         return root;
     }
 
-    public void listeningChanges() {
-        db.collection("Stores Owners")
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException e) {
-                        if (e != null) {
-                            Log.w(TAG, "Listen failed.", e);
-                            return;
-                        }
-                        stores.clear();
-                        for (QueryDocumentSnapshot doc : value) {
-                            if (doc.get(storeKey) != null && doc.get(ownerKey) != null && doc.get(addressKey) != null) {
-                                if (doc.get(storeKey) != "" && doc.get(ownerKey) != "" && doc.get(addressKey) != "") {
+    public void showStores(FirestoreRecyclerOptions<StoreOwner> stores) {
+//        viewer.setLayoutManager(new LinearLayoutManager(getContext()));
+        StoreAdapter adapter = new StoreAdapter(stores);
+        viewer.setAdapter(adapter);
 
-                                    HashMap<String, String> temp;
-                                    temp = new HashMap<>();
-                                    temp.put("line 1", doc.getString(storeKey));
-                                    temp.put("line 2", doc.getString(ownerKey));
-                                    temp.put("line 3", doc.getString(addressKey));
-                                    doc.getData();
+        viewer.setHasFixedSize(true);
 
-                                    stores.add(temp);
-                                    ((ListView) binding.storeListView).setAdapter(sa);
-                                }
-                            }
 
-                            if (stores.isEmpty() == true) {
-                                empty_page();
-                            }
-                        }
-
-                    }
-                });
+//        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
+//            @Override
+//            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+//                return false;
+//            }
+//
+//            @Override
+//            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+////                adapter.deleteItem(viewHolder.getBindingAdapterPosition());
+//            }
+//        }).attachToRecyclerView(viewer);
     }
 
-    public void empty_page(){
-        Intent intent = new Intent(getActivity(), Display_empty_store_page.class);
-        startActivity(intent);
+    public void fetchStores() {
+
+        Query query = db.collection("Store Owners").orderBy("Store Name", Query.Direction.ASCENDING);
+        FirestoreRecyclerOptions<StoreOwner> stores = new FirestoreRecyclerOptions.Builder<StoreOwner>()
+                .setQuery(query, StoreOwner.class)
+                .build();
+
+        Toast.makeText(getContext(),  "got query", Toast.LENGTH_SHORT).show();
+        showStores(stores);
+
     }
 
     @Override
