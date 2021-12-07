@@ -4,7 +4,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -13,8 +16,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -24,6 +27,10 @@ import java.util.List;
 import java.util.Map;
 
 public class ViewOrderDetail extends AppCompatActivity implements AdapterView.OnItemClickListener {
+
+    FirebaseUser current;
+    String account;
+
 
     TextView orderId, store, storeAddress, customer, dateTime, itemCount, subtotal, total;
     ListView itemList;
@@ -35,6 +42,13 @@ public class ViewOrderDetail extends AppCompatActivity implements AdapterView.On
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+        Bundle extras = getIntent().getExtras();
+        current = (FirebaseUser) extras.get("auth");
+        account = extras.getString("account");
+
+
         setContentView(R.layout.activity_view_order_detail);
 
         // Assign TextViews & ListView
@@ -48,7 +62,7 @@ public class ViewOrderDetail extends AppCompatActivity implements AdapterView.On
         total = findViewById(R.id.detailTotalPrice);
         itemList = findViewById(R.id.allItemList);
 
-        OrderParcel order = getIntent().getParcelableExtra("order");
+        Order order = getIntent().getParcelableExtra("order");
         orderId.setText(getIntent().getParcelableExtra("docId").toString());
         store.setText(order.store.getStoreName());
         storeAddress.setText(order.store.getAddress());
@@ -97,6 +111,57 @@ public class ViewOrderDetail extends AppCompatActivity implements AdapterView.On
                 break;
         }
         spinner.setOnItemClickListener(this);
+
+
+
+        BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.main_navig);
+        BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
+        Menu menu = bottomNavigationView.getMenu();
+
+        MenuItem menuItem = menu.getItem(0);
+        menuItem.setChecked(true);
+
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()) {
+
+                    case R.id.nav_orders:
+//                        Intent intent = new Intent(ViewOrderDetail.this, listStoreOrders.class);
+//                        intent.putExtra("account", "store");
+//                        intent.putExtra("auth", current);
+//                        startActivity(intent);
+                        break;
+
+                    case R.id.nav_products:
+//                        Intent intent2 = new Intent(ViewOrderDetail.this, ListProducts.class);
+//                        intent2.putExtra("account", "Store");
+//                        intent2.putExtra("auth", current);
+//                        startActivity(intent2);
+                        break;
+
+
+                    case R.id.nav_history:
+//                        Intent intent3 = new Intent(ViewOrderDetail.this, Archived.class);
+//                        intent3.putExtra("account", "Store");
+//                        intent3.putExtra("auth", current);
+//                        startActivity(intent3);
+                        break;
+
+
+                    case R.id.nav_account:
+//                        Intent intent4 = new Intent(ViewOrderDetail.this, AccountActivity.class);
+//                        intent4.putExtra("account", "Store");
+//                        intent4.putExtra("auth", current);
+//                        startActivity(intent4);
+                        break;
+
+                }
+                return false;
+            }
+        });
+
+
     }
 
     @Override

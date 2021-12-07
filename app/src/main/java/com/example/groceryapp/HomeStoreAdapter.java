@@ -29,17 +29,15 @@ public class HomeStoreAdapter extends RecyclerView.Adapter<HomeStoreAdapter.Stor
     @NonNull
     @Override
     public StoreViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_store_format, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.home_store_format, parent, false);
         return new StoreViewHolder(v);
     }
 
     @Override
     public void onBindViewHolder(@NonNull StoreViewHolder holder, int position) {
         StoreOwner model = stores.get(position);
-        holder.storename.setText(model.getStoreName());
-        holder.address.setText("Address: " + model.getAddress());
-        holder.owner.setText(("Owner: " + model.getName()));
-        holder.openStore.setVisibility(GONE);
+        holder.storename.setText("\t" + model.getStoreName());
+        holder.address.setText(model.getAddress());
     }
 
 
@@ -51,15 +49,12 @@ public class HomeStoreAdapter extends RecyclerView.Adapter<HomeStoreAdapter.Stor
 
     public static class StoreViewHolder extends RecyclerView.ViewHolder {
 
-        TextView storename, owner, address;
-        Button openStore;
+        TextView storename, address;
 
         public StoreViewHolder(@NonNull View itemView) {
             super(itemView);
-            storename = itemView.findViewById(R.id.line_a);
-            owner = itemView.findViewById(R.id.line_b);
-            address = itemView.findViewById(R.id.line_c);
-            openStore = itemView.findViewById(R.id.see_items);
+            storename = itemView.findViewById(R.id.homeStoreName);
+            address = itemView.findViewById(R.id.homeStoreAddress);
         }
     }
 

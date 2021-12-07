@@ -64,35 +64,39 @@ public class StoreList extends AppCompatActivity {
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()){
+                switch (item.getItemId()) {
 
                     case R.id.nav_stores:
-
+//                        Intent intent = new Intent(StoreList.this, StoreList.class);
+//                        intent.putExtra("account", "Customer");
+//                        intent.putExtra("auth", current);
+//                        startActivity(intent);
                         break;
 
                     case R.id.nav_cart:
-//                        Intent intent2 = new Intent(StoreList.this, CartActivity.class);
-//                        startActivity(intent2);
+                        Intent intent2 = new Intent(StoreList.this, CartActivity.class);
+                        intent2.putExtra("account", "Customer");
+                        intent2.putExtra("auth", current);
+                        startActivity(intent2);
                         break;
-
 
 
                     case R.id.nav_history:
-//                        Intent intent3 = new Intent(StoreList.this, CustomerHistoryActivity.class);
-//                        startActivity(intent3);
+                        Intent intent3 = new Intent(StoreList.this, CustomerHistoryActivity.class);
+                        intent3.putExtra("account", "Customer");
+                        intent3.putExtra("auth", current);
+                        startActivity(intent3);
                         break;
-
 
 
                     case R.id.nav_account:
                         Intent intent4 = new Intent(StoreList.this, AccountActivity.class);
-                        intent4.putExtra("auth", current);
                         intent4.putExtra("account", "Customer");
+                        intent4.putExtra("auth", current);
                         startActivity(intent4);
                         break;
 
                 }
-
                 return false;
             }
         });

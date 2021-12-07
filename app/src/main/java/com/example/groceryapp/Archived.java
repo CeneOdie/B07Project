@@ -8,9 +8,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
@@ -19,10 +23,18 @@ public class Archived extends AppCompatActivity {
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     AdapterOrder adapter;
 
+    FirebaseUser current;
+    String account;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_archived);
+
+        Bundle extras = getIntent().getExtras();
+        current = (FirebaseUser) extras.get("auth");
+        account = extras.getString("account");
+
 
         //Hide default toolbar and its title
         // Display custom toolbar
@@ -35,6 +47,56 @@ public class Archived extends AppCompatActivity {
         FloatingActionButton btnBack = findViewById(R.id.backbtn);
         btnBack.setOnClickListener(v -> startActivity(new Intent(Archived.this, listStoreOrders.class)));
         setupRecyclerView();
+
+
+
+        BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.main_navig);
+        BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
+        Menu menu = bottomNavigationView.getMenu();
+        MenuItem menuItem = menu.getItem(2);
+        menuItem.setChecked(true);
+
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()) {
+
+                    case R.id.nav_orders:
+                        Intent intent = new Intent(Archived.this, listStoreOrders.class);
+                        intent.putExtra("account", "store");
+                        intent.putExtra("auth", current);
+                        startActivity(intent);
+                        break;
+
+                    case R.id.nav_products:
+                        Intent intent2 = new Intent(Archived.this, ListProducts.class);
+                        intent2.putExtra("account", "Store");
+                        intent2.putExtra("auth", current);
+                        startActivity(intent2);
+                        break;
+
+
+                    case R.id.nav_history:
+//                        Intent intent3 = new Intent(Archived.this, Archived.class);
+//                        intent3.putExtra("account", "Store");
+//                        intent3.putExtra("auth", current);
+//                        startActivity(intent3);
+                        break;
+
+
+                    case R.id.nav_account:
+                        Intent intent4 = new Intent(Archived.this, AccountActivity.class);
+                        intent4.putExtra("account", "Store");
+                        intent4.putExtra("auth", current);
+                        startActivity(intent4);
+                        break;
+
+                }
+                return false;
+            }
+        });
+
+
     }
 
     public void setupRecyclerView() {
@@ -43,8 +105,8 @@ public class Archived extends AppCompatActivity {
                 .orderBy("DateTime", Query.Direction.ASCENDING)
                 .whereEqualTo("Archived", true);
 
-        FirestoreRecyclerOptions<OrderParcel> options = new FirestoreRecyclerOptions.Builder<OrderParcel>()
-                .setQuery(query, OrderParcel.class).build();
+        FirestoreRecyclerOptions<Order> options = new FirestoreRecyclerOptions.Builder<Order>()
+                .setQuery(query, Order.class).build();
 
         adapter = new AdapterOrder(options);
         RecyclerView recyclerView = findViewById(R.id.archivedRecyclerView);

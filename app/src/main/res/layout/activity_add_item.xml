@@ -73,33 +73,36 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/product_name"
+            android:importantForAutofill="no"
             android:inputType="text"
+            android:minHeight="48dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/appBarLayout"
-            android:importantForAutofill="no" />
+            app:layout_constraintTop_toBottomOf="@id/appBarLayout" />
 
         <EditText
             android:id="@+id/newProductBrand"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/product_brand"
+            android:importantForAutofill="no"
             android:inputType="text"
+            android:minHeight="48dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/newProductName"
-            android:importantForAutofill="no" />
+            app:layout_constraintTop_toBottomOf="@+id/newProductName" />
 
         <EditText
             android:id="@+id/newProductDescription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/product_description"
+            android:importantForAutofill="no"
             android:inputType="textMultiLine"
+            android:minHeight="48dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/newProductBrand"
-            android:importantForAutofill="no" />
+            app:layout_constraintTop_toBottomOf="@+id/newProductBrand" />
 
         <EditText
             android:id="@+id/newProductQuantitySize"
@@ -107,22 +110,24 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:hint="@string/add_QS"
+            android:importantForAutofill="no"
             android:inputType="numberDecimal"
+            android:minHeight="48dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.009"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/newProductDescription"
-            android:importantForAutofill="no" />
+            app:layout_constraintTop_toBottomOf="@+id/newProductDescription" />
 
         <EditText
             android:id="@+id/newProductPrice"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:hint="@string/price"
+            android:importantForAutofill="no"
             android:inputType="numberDecimal"
+            android:minHeight="48dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/newProductQuantitySize"
-            android:importantForAutofill="no" />
+            app:layout_constraintTop_toBottomOf="@+id/newProductQuantitySize" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -180,7 +185,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:menu="@menu/customer_menu"/>
+            app:menu="@menu/store_menu"/>
 
     </RelativeLayout>
 

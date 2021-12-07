@@ -6,17 +6,17 @@
     style="@style/Theme.GroceryApp"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorBackground"
+    android:background="@color/colorBackgroundDark"
     tools:context=".MainActivity">
 
 
     <TextView
         android:id="@+id/textView"
-        android:layout_width="193dp"
-        android:layout_height="63dp"
+        android:layout_width="281dp"
+        android:layout_height="79dp"
         android:text="@string/WelcomeString"
         android:textAlignment="center"
-        android:textSize="24sp"
+        android:textSize="34sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -78,6 +78,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="Our biggest stores:"
+        android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@+id/bottomBar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -101,10 +102,12 @@
             android:id="@+id/main_navig"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:backgroundTint="@color/colorBackgroundDark"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:menu="@menu/master_menu" />
+            app:menu="@menu/master_menu"
+    />
 
     </RelativeLayout>
 
@@ -114,7 +117,6 @@
         android:layout_height="396dp"
         app:layout_constraintBottom_toTopOf="@+id/mainText"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@mipmap/ic_custom_design" />
 
@@ -123,14 +125,14 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@drawable/rounded_corners"
-        android:backgroundTint="@color/colorBackground"
+        android:backgroundTint="@color/colorBackgroundDark"
         android:padding="10dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toTopOf="@+id/bottomBar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/mainText"
-        tools:listitem="@layout/view_store_format" />
+        tools:listitem="@layout/home_store_format" />
 
     <ProgressBar
         android:id="@+id/mainProgress"
@@ -139,6 +141,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

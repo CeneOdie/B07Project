@@ -2,23 +2,19 @@ package com.example.groceryapp;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProvider;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.groceryapp.POGO.Customer;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -30,7 +26,6 @@ import java.util.ArrayList;
 public class AccountActivity extends AppCompatActivity {
 
     Button deleteAcc, logout, otherbtn;
-    Activity host;
     Context context;
     String username, account, uid;
     FirebaseUser current;
@@ -63,50 +58,128 @@ public class AccountActivity extends AppCompatActivity {
         if (current.getDisplayName() == null) username ="User";
         else username =  current.getDisplayName();
 
+        logout.setOnClickListener(view -> goToHome());
+
+        deleteAcc.setOnClickListener(view -> {
+            AlertDialog confirm = new AlertDialog.Builder(AccountActivity.this)
+                    .setTitle("Deleting Account")
+                    .setMessage("Are you sure you want to delete your account? All open orders will be deleted as well. This cannot be undone.")
+                    .setIcon(R.drawable.ic_delete)
+                    .setPositiveButton("Delete", (dialogInterface, i) -> {
+                        deleteAccount();
+
+                    }).setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.dismiss()).create();
+            confirm.show();
+        });
+
+
         switch (account) {
+
             case "Customer":
-                setTextInfo();
+
+                accountEmail.setText(current.getEmail());
+                accounttype.setText(account);
+                textAccountName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_customer, 0, 0, 0);
+                textAccountName.setText(username);
+                toggleStoreInfo(false);
 
                 db.collection("Store Owners").document(current.getUid()).get().addOnCompleteListener(task -> {
                     if (task.isSuccessful() && task.getResult() != null) {
                         DocumentSnapshot doc = task.getResult();
                         StoreOwner store = doc.toObject(StoreOwner.class);
                         if (store != null) {
-                            setButtonInfo("Switch to Store Account : " + store.getStoreName(), R.drawable.ic_store, GO_TO_STORE);
+                            otherbtn.setText("Switch to Store Account : " + store.getStoreName());
+                            otherbtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_store, 0,0,0);
+                            otherbtn.setOnClickListener(view -> {
+
+                                Intent intent1 = new Intent(AccountActivity.this, listStoreOrders.class);
+                                intent1.putExtra("account", "Store");
+                                intent1.putExtra("auth", current);
+                                startActivity(intent1);
+                            });
                         } else {
-                            setButtonInfo("Set up store account", R.drawable.ic_new_store, GO_TO_NEW_STORE);
+                            otherbtn.setText("Set up store account");
+                            otherbtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_new_store, 0,0,0);
+                            otherbtn.setOnClickListener(view -> {
+
+                                Intent intent2 = new Intent(AccountActivity.this, SetupStore.class);
+                                intent2.putExtra("account", "Customer");
+                                intent2.putExtra("auth", current);
+                                startActivity(intent2);
+                            });
                         }
                     } else {
-                        setButtonInfo();
+                        otherbtn.setVisibility(View.GONE);
+                        deleteAcc.setVisibility(View.GONE);
+                        otherbtn.setOnClickListener(view -> {
+
+                            Intent intent3 = new Intent(AccountActivity.this, StoreList.class);
+                            intent3.putExtra("account", "Customer");
+                            intent3.putExtra("auth", current);
+                            startActivity(intent3);
+                        });
                     }
                 });
                 break;
 
             case "Store":
+
                 db.collection("Store Owners").document(current.getUid()).get().addOnCompleteListener(task -> {
                     if (!task.isSuccessful() || task.getResult() == null) {
-                        setTextInfo("Please refresh to access account information");
-                        setButtonInfo();
+                        accountEmail.setText(current.getEmail());
+                        accounttype.setText(account);
+                        textAccountName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_customer, 0, 0, 0);
+                        textAccountName.setText("Please refresh to access account information");
+                        toggleStoreInfo(false);
+                        otherbtn.setVisibility(View.GONE);
+                        deleteAcc.setVisibility(View.GONE);
                     } else {
                         DocumentSnapshot doc = task.getResult();
                         StoreOwner store = doc.toObject(StoreOwner.class);
                         if (store != null) {
-                            setTextInfo(store.getStoreName(), store.getAddress());
-                        }
-                        else {
-                            setTextInfo("Please refresh to access account information");
-                            setButtonInfo();
+                            accountEmail.setText(current.getEmail());
+                            accounttype.setText(account);
+                            textAccountName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_store, 0, 0, 0);
+                            textAccountName.setText(store.getStoreName());
+                            toggleStoreInfo(true);
+                            storename.setText(username);
+                            storeaddress.setText(store.getAddress());
+                        } else {
+                            accountEmail.setText(current.getEmail());
+                            accounttype.setText(account);
+                            textAccountName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_customer, 0, 0, 0);
+                            textAccountName.setText("Please refresh to access account information");
+                            toggleStoreInfo(false);
+                            otherbtn.setVisibility(View.GONE);
+                            deleteAcc.setVisibility(View.GONE);
                         }
                     }
                 });
 
-                setButtonInfo("Switch to Customer Account: " + username, R.drawable.ic_customer, GO_TO_CUST);
+                otherbtn.setText("Switch to Customer Account: " + username);
+                otherbtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_customer, 0,0,0);
+                otherbtn.setOnClickListener(view -> {
+
+                    Intent intent3 = new Intent(AccountActivity.this, StoreList.class);
+                    intent3.putExtra("account", "Customer");
+                    intent3.putExtra("auth", current);
+                    startActivity(intent3);
+                });
                 break;
 
             default:
-                setButtonInfo("Go to Customer Account", R.drawable.ic_customer, GO_TO_CUST);
+                otherbtn.setText("Go to Customer Account");
+                otherbtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_customer, 0,0,0);
+                otherbtn.setOnClickListener(view -> {
+
+                    Intent intent3 = new Intent(AccountActivity.this, StoreList.class);
+                    intent3.putExtra("account", "Customer");
+                    intent3.putExtra("auth", current);
+                    startActivity(intent3);
+                });
                 break;
         }
+
 
 
 
@@ -119,32 +192,39 @@ public class AccountActivity extends AppCompatActivity {
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()){
+                switch (item.getItemId()) {
 
                     case R.id.nav_stores:
-                        goToCustView();
+                        Intent intent = new Intent(AccountActivity.this, StoreList.class);
+                        intent.putExtra("account", "Customer");
+                        intent.putExtra("auth", current);
+                        startActivity(intent);
                         break;
 
                     case R.id.nav_cart:
-//                        Intent intent2 = new Intent(StoreList.this, CartActivity.class);
-//                        startActivity(intent2);
+                        Intent intent2 = new Intent(AccountActivity.this, CartActivity.class);
+                        intent2.putExtra("account", "Customer");
+                        intent2.putExtra("auth", current);
+                        startActivity(intent2);
                         break;
-
 
 
                     case R.id.nav_history:
-//                        Intent intent3 = new Intent(StoreList.this, CustomerHistoryActivity.class);
-//                        startActivity(intent3);
+                        Intent intent3 = new Intent(AccountActivity.this, CustomerHistoryActivity.class);
+                        intent3.putExtra("account", "Customer");
+                        intent3.putExtra("auth", current);
+                        startActivity(intent3);
                         break;
-
 
 
                     case R.id.nav_account:
-
+//                        Intent intent4 = new Intent(AccountActivity.this, AccountActivity.class);
+//                        intent4.putExtra("account", "Customer");
+//                        intent4.putExtra("auth", current);
+//                        startActivity(intent4);
                         break;
 
                 }
-
                 return false;
             }
         });
@@ -161,89 +241,14 @@ public class AccountActivity extends AppCompatActivity {
         }
     }
 
-    public void setTextInfo(String defaultCase) { //for default case
-        accountEmail.setText(current.getEmail());
-        accounttype.setText(account);
-        textAccountName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_customer, 0, 0, 0);
-        textAccountName.setText(defaultCase);
-        toggleStoreInfo(false);
-    }
-
-    public void setTextInfo() { //for customer case
-        accountEmail.setText(current.getEmail());
-        accounttype.setText(account);
-        textAccountName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_customer, 0, 0, 0);
-        textAccountName.setText(username);
-        toggleStoreInfo(false);
-
-    }
-
-    public void setTextInfo(String storeNameText, String storeAddressText) { // for store case
-        accountEmail.setText(current.getEmail());
-        accounttype.setText(account);
-        textAccountName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_store, 0, 0, 0);
-        textAccountName.setText(storeNameText);
-        toggleStoreInfo(true);
-        storename.setText(username);
-        storeaddress.setText(storeAddressText);
-    }
-
-    public void setButtonInfo() {
-        otherbtn.setVisibility(View.GONE);
-        deleteAcc.setVisibility(View.GONE);
-        setListeners(GO_TO_CUST);
-    }
-
-    public void setButtonInfo(String newStore, int icon_id, int listener_switch) {
-        otherbtn.setText(newStore);
-        otherbtn.setCompoundDrawablesWithIntrinsicBounds(icon_id, 0,0,0);
-        setListeners(listener_switch);
-    }
-
-    public void setListeners(int listener_switch) {
-
-        logout.setOnClickListener(view -> goToHome());
-
-        deleteAcc.setOnClickListener(view -> {
-            AlertDialog confirm = new AlertDialog.Builder(this)
-                    .setTitle("Deleting Account")
-                    .setMessage("Are you sure you want to delete your account? All open orders will be deleted as well. This cannot be undone.")
-                    .setIcon(R.drawable.ic_delete)
-                    .setPositiveButton("Delete", (dialogInterface, i) -> {
-                        deleteAccount();
-
-                    }).setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.dismiss()).create();
-            confirm.show();
-        });
-
-        otherbtn.setOnClickListener(view -> {
-            switch (listener_switch) {
-                case GO_TO_STORE:
-                    goToStoreView();
-                    break;
-                case GO_TO_NEW_STORE:
-                    gotoStoreSetup();
-                    break;
-                case GO_TO_CUST:
-                    goToCustView();
-                    break;
-                default:
-                    goToCustView();
-                    break;
-            }
-        });
-
-
-    }
-
     public void toast(String msg) {
         Toast.makeText(context,  msg, Toast.LENGTH_SHORT).show();
     }
 
     public void deleteAccount() {
-        deleteStore();
-        deleteCustomer();
-        deleteUser();
+//        deleteStore();
+//        deleteCustomer();
+//        deleteUser();
     }
 
     public void deleteUser() {
@@ -299,34 +304,34 @@ public class AccountActivity extends AppCompatActivity {
 
 
     public void deleteCustomer() {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        if (current != null) {
-
-            String uid = current.getUid();
-            DocumentReference custdoc = db.collection("Customers").document(uid);
-
-            custdoc.get()
-                    .addOnFailureListener(e -> toast( "Could not find customer " + uid))
-                    .addOnSuccessListener(documentSnapshot -> {
-
-                        com.example.groceryapp.POGO.Customer cust = documentSnapshot.toObject(Customer.class);
-                        if (cust == null) toast( "No Customer account found for " + uid);
-                        else {
-                            ArrayList<DocumentReference> orders = cust.getOrders();
-                            if (orders.isEmpty()) toast("No orders for customer.");
-                            else deleteRefs(orders, "Deleted order for customer: ", "Unable to delete order for customer: ");
-
-                            custdoc.delete()
-                                    .addOnSuccessListener(unused -> {
-                                        toast( "Deleting Customer account " + uid);
-                                    }).addOnFailureListener(e ->
-                                    toast( "Unable to delete Customer account " + uid));
-
-                        }
-
-
-                    });
-        }
+//        FirebaseFirestore db = FirebaseFirestore.getInstance();
+//        if (current != null) {
+//
+//            String uid = current.getUid();
+//            DocumentReference custdoc = db.collection("Customers").document(uid);
+//
+//            custdoc.get()
+//                    .addOnFailureListener(e -> toast( "Could not find customer " + uid))
+//                    .addOnSuccessListener(documentSnapshot -> {
+//
+//                        Customer cust = documentSnapshot.toObject(Customer.class);
+//                        if (cust == null) toast( "No Customer account found for " + uid);
+//                        else {
+//                            ArrayList<DocumentReference> orders = cust.getOrders();
+//                            if (orders.isEmpty()) toast("No orders for customer.");
+//                            else deleteRefs(orders, "Deleted order for customer: ", "Unable to delete order for customer: ");
+//
+//                            custdoc.delete()
+//                                    .addOnSuccessListener(unused -> {
+//                                        toast( "Deleting Customer account " + uid);
+//                                    }).addOnFailureListener(e ->
+//                                    toast( "Unable to delete Customer account " + uid));
+//
+//                        }
+//
+//
+//                    });
+//        }
     }
 
 
@@ -345,19 +350,6 @@ public class AccountActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void goToStoreView() {
-//        Intent intent = new Intent(this, listStoreOrders.class);
-//        intent.putExtra("account", "Store");
-//        intent.putExtra("auth", current);
-//        startActivity(intent);
-    }
-
-    public void gotoStoreSetup() {
-//        Intent intent = new Intent(this, SetupStore.class);
-//        intent.putExtra("account", "Customer");
-//        intent.putExtra("auth", current);
-//        startActivity(intent);
-    }
 
 
 }

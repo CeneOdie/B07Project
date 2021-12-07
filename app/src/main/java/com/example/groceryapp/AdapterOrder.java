@@ -18,16 +18,16 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 
-public class AdapterOrder extends FirestoreRecyclerAdapter<OrderParcel, AdapterOrder.OrderViewHolder> {
+public class AdapterOrder extends FirestoreRecyclerAdapter<Order, AdapterOrder.OrderViewHolder> {
 
     private OnOrderClickListener listener;
 
-    public AdapterOrder(@NonNull FirestoreRecyclerOptions<OrderParcel> options) {
+    public AdapterOrder(@NonNull FirestoreRecyclerOptions<Order> options) {
         super(options);
     }
 
     @Override
-    protected void onBindViewHolder(@NonNull OrderViewHolder holder, int position, @NonNull OrderParcel model) {
+    protected void onBindViewHolder(@NonNull OrderViewHolder holder, int position, @NonNull Order model) {
         holder.orderID.setText(getSnapshots().getSnapshot(position).getId());
         holder.customer.setText(model.customer.Name);
         holder.timeStamp.setText(String.valueOf(model.getPlaced()));

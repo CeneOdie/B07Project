@@ -32,7 +32,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
     @Override
     public void onBindViewHolder(@NonNull CartViewHolder holder, int position) {
 //
-        OrderFiller orderfilled = new OrderFiller(order);
+//        OrderFiller orderfilled = new OrderFiller(order);
 
 //        if (orderfilled.filled()) {
 //            holder.orderId.setText(orderfilled.);

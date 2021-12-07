@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
         viewer.setAdapter(adapter);
 
         viewer.setHasFixedSize(true);
-        err.setText("Our biggest stores are...");
+        err.setText("Here are our biggest stores");
         progress.setVisibility(View.GONE);
     }
 

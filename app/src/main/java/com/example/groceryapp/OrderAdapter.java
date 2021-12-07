@@ -15,10 +15,10 @@ import java.util.ArrayList;
 public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHolder> {
 
     Context context;
-    ArrayList<OrderParcel> items;
+    ArrayList<Order> items;
 
 
-    public OrderAdapter(Context context, ArrayList<OrderParcel> items) {
+    public OrderAdapter(Context context, ArrayList<Order> items) {
         this.context = context;
         this.items = items;
 
@@ -33,7 +33,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
 
     @Override
     public void onBindViewHolder(@NonNull OrderViewHolder holder, int position) {
-        OrderParcel model = items.get(position);
+        Order model = items.get(position);
         holder.id.setText(model.orderid);
         holder.customer.setText(model.customer.Name);
         holder.datetime.setText(model.fromDateTime.toDate().toString());

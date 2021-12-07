@@ -1,14 +1,18 @@
 package com.example.groceryapp;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -23,6 +27,10 @@ public class addItem extends AppCompatActivity {
     protected FirebaseFirestore db;
     protected Button bSave, bCancel;
 
+    FirebaseUser current;
+    String account;
+
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,11 +40,63 @@ public class addItem extends AppCompatActivity {
         setTB();
         assignEditText();
 
+        Bundle extras = getIntent().getExtras();
+        current = (FirebaseUser) extras.get("auth");
+        account = extras.getString("account");
+
         // Save new item
         saveChanges();
 
         // Cancel adding new item
         cancelChanges();
+
+        BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.main_navig);
+        BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
+        Menu menu = bottomNavigationView.getMenu();
+        MenuItem menuItem = menu.getItem(1);
+        menuItem.setChecked(true);
+
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()) {
+
+                    case R.id.nav_orders:
+//                        Intent intent = new Intent(addItem.this, listStoreOrders.class);
+//                        intent.putExtra("account", "store");
+//                        intent.putExtra("auth", current);
+//                        startActivity(intent);
+                        break;
+
+                    case R.id.nav_products:
+                        Intent intent2 = new Intent(addItem.this, ListProducts.class);
+                        intent2.putExtra("account", "Store");
+                        intent2.putExtra("auth", current);
+                        startActivity(intent2);
+                        break;
+
+
+                    case R.id.nav_history:
+//                        Intent intent3 = new Intent(addItem.this, Archived.class);
+//                        intent3.putExtra("account", "Store");
+//                        intent3.putExtra("auth", current);
+//                        startActivity(intent3);
+                        break;
+
+
+                    case R.id.nav_account:
+//                        Intent intent4 = new Intent(addItem.this, AccountActivity.class);
+//                        intent4.putExtra("account", "Store");
+//                        intent4.putExtra("auth", current);
+//                        startActivity(intent4);
+                        break;
+
+                }
+                return false;
+            }
+        });
+
+
     }
 
     protected void setTB(){
