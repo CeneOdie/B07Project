@@ -210,7 +210,8 @@ public class SignUpActivity extends AppCompatActivity {
                 switch (item.getItemId()){
 
                     case R.id.nav_login:
-
+                        Intent intent2 = new Intent(SignUpActivity.this, ShowLoginActivity.class);
+                        startActivity(intent2);
                         break;
 
                     case R.id.nav_main_home:
@@ -222,8 +223,8 @@ public class SignUpActivity extends AppCompatActivity {
 
 
                     case R.id.nav_signup:
-                        Intent intent2 = new Intent(SignUpActivity.this, SignUpActivity.class);
-                        startActivity(intent2);
+//                        Intent intent2 = new Intent(SignUpActivity.this, SignUpActivity.class);
+//                        startActivity(intent2);
                         break;
 
                 }

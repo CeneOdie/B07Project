@@ -84,8 +84,8 @@ public class Archived extends AppCompatActivity {
                         break;
 
 
-                    case R.id.nav_account:
-                        Intent intent4 = new Intent(Archived.this, AccountActivity.class);
+                    case R.id.nav_store_account:
+                        Intent intent4 = new Intent(Archived.this, StoreAccountActivity.class);
                         intent4.putExtra("account", "Store");
                         intent4.putExtra("auth", current);
                         startActivity(intent4);

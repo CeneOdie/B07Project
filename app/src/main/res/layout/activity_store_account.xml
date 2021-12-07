@@ -7,7 +7,7 @@
     tools:context=".AccountActivity">
 
     <Button
-        android:id="@+id/btn_deleteAccount"
+        android:id="@+id/btn_sdeleteAccount"
         android:layout_width="330dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
@@ -22,11 +22,11 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.493"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_logout"
+        app:layout_constraintTop_toBottomOf="@+id/btn_slogout"
         app:layout_constraintVertical_bias="0.0" />
 
     <Button
-        android:id="@+id/btn_logout"
+        android:id="@+id/btn_slogout"
         android:layout_width="330dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
@@ -40,19 +40,19 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.493"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button2" />
+        app:layout_constraintTop_toBottomOf="@+id/sbutton2" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/sbutton2"
         android:layout_width="330dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:backgroundTint="@color/colorPrimary"
         android:background="@drawable/rounded_corners"
+        android:backgroundTint="@color/colorPrimary"
         android:drawableLeft="@drawable/ic_store"
         android:paddingStart="15dp"
         android:paddingLeft="5dp"
-        android:text="Button"
+        android:text="Go To Customer Account"
         android:textAlignment="textStart"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.493"
@@ -74,7 +74,7 @@
         app:layout_constraintVertical_bias="0.09">
 
         <TextView
-            android:id="@+id/text_account_type"
+            android:id="@+id/text_saccount_type"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -85,10 +85,26 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/text_account_name" />
+            app:layout_constraintTop_toBottomOf="@+id/text_saccount_name" />
 
         <TextView
-            android:id="@+id/text_account_email"
+            android:id="@+id/text_saccount_address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:drawableLeft="@drawable/ic_address"
+            android:paddingStart="5dp"
+            android:text="Store address"
+            android:textAlignment="viewStart"
+            android:textSize="16sp"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_saccount_owner"
+            tools:visibility="visible" />
+
+        <TextView
+            android:id="@+id/text_saccount_email"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
@@ -100,10 +116,10 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.502"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/text_account_type" />
+            app:layout_constraintTop_toBottomOf="@+id/text_saccount_type" />
 
         <TextView
-            android:id="@+id/text_account_name"
+            android:id="@+id/text_saccount_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -119,6 +135,22 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <TextView
+            android:id="@+id/text_saccount_owner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:drawableLeft="@drawable/ic_customer"
+            android:paddingStart="5dp"
+            android:text="Store Owner"
+            android:textAlignment="viewStart"
+            android:textSize="16sp"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_saccount_email"
+            tools:visibility="visible" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <RelativeLayout
@@ -141,7 +173,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:menu="@menu/customer_menu"/>
+            app:menu="@menu/store_menu"/>
 
     </RelativeLayout>
 

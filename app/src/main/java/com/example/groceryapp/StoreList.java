@@ -81,7 +81,7 @@ public class StoreList extends AppCompatActivity {
                         break;
 
 
-                    case R.id.nav_history:
+                    case R.id.nav_cust_history:
                         Intent intent3 = new Intent(StoreList.this, CustomerHistoryActivity.class);
                         intent3.putExtra("account", "Customer");
                         intent3.putExtra("auth", current);

@@ -91,8 +91,8 @@ public class editItem extends addItem {
                         break;
 
 
-                    case R.id.nav_account:
-//                        Intent intent4 = new Intent(editItem.this, AccountActivity.class);
+                    case R.id.nav_store_account:
+//                        Intent intent4 = new Intent(editItem.this, StoreAccountActivity.class);
 //                        intent4.putExtra("account", "Store");
 //                        intent4.putExtra("auth", current);
 //                        startActivity(intent4);

@@ -50,7 +50,7 @@ public class CartActivity extends AppCompatActivity {
                         break;
 
 
-                    case R.id.nav_history:
+                    case R.id.nav_cust_history:
                         Intent intent3 = new Intent(CartActivity.this, CustomerHistoryActivity.class);
                         intent3.putExtra("account", "Customer");
                         intent3.putExtra("auth", current);

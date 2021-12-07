@@ -75,7 +75,7 @@ public class SetupStore extends AppCompatActivity {
 
 
 
-                    case R.id.nav_history:
+                    case R.id.nav_cust_history:
 //                        Intent intent3 = new Intent(StoreList.this, CustomerHistoryActivity.class);
 //                        startActivity(intent3);
                         break;
