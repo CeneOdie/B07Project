@@ -14,23 +14,13 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.groceryapp.AdapterProduct;
-import com.example.groceryapp.ItemAdapter;
-import com.example.groceryapp.Order;
+import com.example.groceryapp.OrderParcel;
 import com.example.groceryapp.OrderAdapter;
-import com.example.groceryapp.Product;
-import com.example.groceryapp.StoreAdapter;
-import com.example.groceryapp.StoreOwner;
-import com.example.groceryapp.databinding.FragmentCustHomeBinding;
-import com.example.groceryapp.databinding.FragmentItemsBinding;
 import com.example.groceryapp.databinding.FragmentStoreHomeBinding;
-import com.example.groceryapp.ui.cust_home.CustHomeViewModel;
-import com.example.groceryapp.ui.items.ItemsViewModel;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
 
 import java.util.ArrayList;
 
@@ -77,7 +67,7 @@ public class StoreHomeFragment extends Fragment {
         return root;
     }
 
-    public void showOrders(ArrayList<Order> orders) {
+    public void showOrders(ArrayList<OrderParcel> orders) {
         adapter = new OrderAdapter(getActivity(), orders);
         viewer.setAdapter(adapter);
 
@@ -88,7 +78,7 @@ public class StoreHomeFragment extends Fragment {
 
     public void getOrders() {
 
-        ArrayList<Order> orders = new ArrayList<>();
+        ArrayList<OrderParcel> orders = new ArrayList<>();
 
         DocumentReference storeref = db.collection("Store Owners").document(current.getUid());
 
@@ -107,7 +97,7 @@ public class StoreHomeFragment extends Fragment {
 
                     } else {
                         for(DocumentSnapshot doc : value.getDocuments()) {
-                            Order neworder = new Order(doc.getData(), doc.getId());
+                            OrderParcel neworder = new OrderParcel(doc.getData(), doc.getId());
                             if (!orders.contains(neworder)) orders.add(neworder);
 
 

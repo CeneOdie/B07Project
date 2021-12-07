@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -74,7 +75,7 @@ public class CustHomeFragment extends Fragment {
     public void fetchStores() {
 
         ArrayList<StoreOwner> stores = new ArrayList<>();
-
+        db = FirebaseFirestore.getInstance();
         stores.clear();
         db.collection("Store Owners").orderBy("Store Name", Query.Direction.ASCENDING)
                 .addSnapshotListener((value, error) -> {
@@ -85,19 +86,22 @@ public class CustHomeFragment extends Fragment {
                     if(value.isEmpty()) {
                         err.setText("No stores to display.Check back later.");
                     } else {
+                        int noproducts = 0;
                         for(DocumentSnapshot doc : value.getDocuments()) {
-                            StoreOwner newstore = new StoreOwner(doc.getData());
-                            if (!stores.contains(newstore)) stores.add(newstore);
-
-
+                            StoreOwner newstore = doc.toObject(StoreOwner.class);
+                            if (newstore != null) {
+                                if (newstore.getItems().isEmpty()) noproducts++;
+                                else {
+                                    if (!stores.contains((newstore))) stores.add(newstore);
+                                }
+                            }
                         }
-                        err.setText("Showing " + stores.size() + " stores");
+                        Toast.makeText(getActivity().getApplicationContext(), noproducts + " store(s) have no products", Toast.LENGTH_SHORT).show();
+
+                        err.setText("Showing " + stores.size() + " stores (that have products)");
                         showStores(stores);
                     }
-
                 });
-
-
     }
 
     @Override

@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,9 +16,13 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import Navigation.CustomerNav;
+
+import com.example.groceryapp.BottomNavigationViewHelper;
+import com.example.groceryapp.MainActivity;
 import com.example.groceryapp.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -32,7 +38,7 @@ public class SignUpActivity extends AppCompatActivity {
 
     EditText name, email, pass1, pass2;
     TextView err;
-    Button signup, login;
+    Button signup;
     ProgressBar progress;
 
     FirebaseAuth mAuth;
@@ -58,16 +64,6 @@ public class SignUpActivity extends AppCompatActivity {
         email.setText("");
         pass1.setText("");
         pass2.setText("");
-
-        login = findViewById(R.id.switchLogin);
-        login.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                progress.setVisibility(View.VISIBLE);
-                progress.setVisibility(View.GONE);
-                switchLogin();
-            }
-        });
 
         signup = findViewById(R.id.signupBtn);
 
@@ -120,22 +116,8 @@ public class SignUpActivity extends AppCompatActivity {
                                                     //doc exists => abort
                                                     err.setTextColor(Color.BLUE);
                                                     progress.setVisibility(View.GONE);
-                                                    err.setText("Account exists. Click here to login");
+                                                    err.setText("Account exists.");
 
-                                                    err.setOnClickListener(new View.OnClickListener() {
-
-                                                        @Override
-                                                        public void onClick(View view) {
-                                                            progress.setVisibility(View.VISIBLE);
-                                                            name.setText("");
-                                                            email.setText("");
-                                                            pass1.setText("");
-                                                            pass2.setText("");
-                                                            progress.setVisibility(View.GONE);
-                                                            switchLogin();
-                                                        }
-
-                                                    });
 
                                                 } else {
                                                     // doc dne, set with new data
@@ -220,6 +202,41 @@ public class SignUpActivity extends AppCompatActivity {
             }
         });
 
+        BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.main_navig);
+        BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
+        Menu menu = bottomNavigationView.getMenu();
+        MenuItem menuItem = menu.getItem(2);
+        menuItem.setChecked(true);
+
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()){
+
+                    case R.id.nav_login:
+                        Intent intent2 = new Intent(SignUpActivity.this, ShowLoginActivity.class);
+                        startActivity(intent2);
+                        break;
+
+                    case R.id.nav_main_home:
+                        Intent intent1 = new Intent(SignUpActivity.this, MainActivity.class);
+                        intent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent1);
+                        break;
+
+
+
+                    case R.id.nav_signup:
+
+                        break;
+
+                }
+
+                return false;
+            }
+        });
+
+
     }
 
     //view changers
@@ -228,11 +245,6 @@ public class SignUpActivity extends AppCompatActivity {
         Intent intent = new Intent(this, CustomerNav.class);
         intent.putExtra("auth", mAuth.getCurrentUser());
         intent.putExtra("account", "Customer");
-        startActivity(intent);
-    }
-
-    public void switchLogin() {
-        Intent intent = new Intent(this, ShowLoginActivity.class);
         startActivity(intent);
     }
 

@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -46,8 +45,8 @@ public class Archived extends AppCompatActivity implements setRecyclerViewer {
                 .orderBy("DateTime", Query.Direction.ASCENDING)
                 .whereEqualTo("Archived", true);
 
-        FirestoreRecyclerOptions<Order> options = new FirestoreRecyclerOptions.Builder<Order>()
-                .setQuery(query, Order.class).build();
+        FirestoreRecyclerOptions<OrderParcel> options = new FirestoreRecyclerOptions.Builder<OrderParcel>()
+                .setQuery(query, OrderParcel.class).build();
 
         // Interface here?
         adapter = new AdapterOrder(options);

@@ -15,10 +15,10 @@ import java.util.ArrayList;
 public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder> {
 
     Context context;
-    ArrayList<Product> items;
+    ArrayList<Item> items;
 
 
-    public ItemAdapter(Context context, ArrayList<Product> items) {
+    public ItemAdapter(Context context, ArrayList<Item> items) {
         this.context = context;
         this.items = items;
 
@@ -33,12 +33,12 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
-        Product model = items.get(position);
-        holder.name.setText(model.name);
-        holder.brand.setText(model.brand);
-        holder.description.setText(model.description);
-        holder.quantity.setText(model.qs);
-        holder.price.setText("$" + String.valueOf(model.price));
+        Item model = items.get(position);
+        holder.name.setText(model.getName());
+        holder.brand.setText(model.getBrand());
+        holder.description.setText(model.getDescription());
+        holder.quantity.setText(model.getQuantity_Size());
+        holder.price.setText("$" + String.valueOf(model.getPrice()));
         holder.edit.setClickable(false);
 
     }

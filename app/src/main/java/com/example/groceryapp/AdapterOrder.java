@@ -4,7 +4,6 @@ package com.example.groceryapp;
 // ADAPTERORDERMAIN EXTENDS THIS ADAPTER
 
 import android.content.Intent;
-import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,16 +18,16 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 
-public class AdapterOrder extends FirestoreRecyclerAdapter<Order, AdapterOrder.OrderViewHolder> {
+public class AdapterOrder extends FirestoreRecyclerAdapter<OrderParcel, AdapterOrder.OrderViewHolder> {
 
     private OnOrderClickListener listener;
 
-    public AdapterOrder(@NonNull FirestoreRecyclerOptions<Order> options) {
+    public AdapterOrder(@NonNull FirestoreRecyclerOptions<OrderParcel> options) {
         super(options);
     }
 
     @Override
-    protected void onBindViewHolder(@NonNull OrderViewHolder holder, int position, @NonNull Order model) {
+    protected void onBindViewHolder(@NonNull OrderViewHolder holder, int position, @NonNull OrderParcel model) {
         holder.orderID.setText(getSnapshots().getSnapshot(position).getId());
         holder.customer.setText(model.customer.Name);
         holder.timeStamp.setText(String.valueOf(model.getPlaced()));

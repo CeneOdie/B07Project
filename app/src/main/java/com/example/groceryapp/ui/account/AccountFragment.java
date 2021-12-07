@@ -18,15 +18,19 @@ import androidx.lifecycle.ViewModelProvider;
 
 import Navigation.CustomerNav;
 import com.example.groceryapp.MainActivity;
+import com.example.groceryapp.POGO.Customer;
+import com.example.groceryapp.StoreOwner;
 import com.example.groceryapp.R;
 import com.example.groceryapp.Auth.SetupStore;
 import Navigation.StoreNav;
+
 import com.example.groceryapp.databinding.FragmentAcountBinding;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.ArrayList;
 
 public class AccountFragment extends Fragment {
 
@@ -166,11 +170,13 @@ public class AccountFragment extends Fragment {
         switch (account) {
             case "Customer":
                 setTextInfo();
+
                 db.collection("Store Owners").document(current.getUid()).get().addOnCompleteListener(task -> {
                     if (task.isSuccessful() && task.getResult() != null) {
                         DocumentSnapshot doc = task.getResult();
-                        if (doc.exists()) {
-                            setButtonInfo("Switch to Store Account : " + doc.get("Store Name"), R.drawable.ic_store, GO_TO_STORE);
+                        StoreOwner store = doc.toObject(StoreOwner.class);
+                        if (store != null) {
+                            setButtonInfo("Switch to Store Account : " + store.getStoreName(), R.drawable.ic_store, GO_TO_STORE);
                         } else {
                             setButtonInfo("Set up store account", R.drawable.ic_new_store, GO_TO_NEW_STORE);
                         }
@@ -187,9 +193,11 @@ public class AccountFragment extends Fragment {
                         setButtonInfo();
                     } else {
                         DocumentSnapshot doc = task.getResult();
-                        if (doc.exists()) {
-                            setTextInfo(doc.getString("Store Name"), doc.getString("Address"));
-                        } else {
+                        StoreOwner store = doc.toObject(StoreOwner.class);
+                        if (store != null) {
+                            setTextInfo(store.getStoreName(), store.getAddress());
+                        }
+                        else {
                             setTextInfo("Please refresh to access account information");
                             setButtonInfo();
                         }
@@ -234,55 +242,39 @@ public class AccountFragment extends Fragment {
             DocumentReference storedoc = db.collection("Store Owners").document(uid);
             storedoc.get()
                 .addOnFailureListener(e ->
-                        toast("Unable to find store for "))
+                        toast("Unable to find store for " + storedoc.getId()))
                 .addOnSuccessListener(documentSnapshot -> {
                     //check if store exists
-                    if (documentSnapshot.exists()){
+                    StoreOwner store = documentSnapshot.toObject(StoreOwner.class);
+                    if (store == null) toast( "No store for " + uid);
+                    else {
+                        ArrayList<DocumentReference> orders = store.getOrders();
+                        ArrayList<DocumentReference> products = store.getItems();
 
-                        //find and delete orders
-                        deleteCollectionForAccount("Orders", "Store", storedoc);
+                        if (orders.isEmpty()) toast("No orders for store.");
+                        else deleteRefs(orders, "Deleted order for store: ", "Unable to delete order for store: ");
 
+                        if (products.isEmpty()) toast("No products for store");
+                        else deleteRefs(products, "Deleted product for store: ", "Unable to delete product for store: ");
 
-                        //find and delete items
-                        deleteCollectionForAccount("Items", "Store", storedoc);
-
-                        //delete store
-                        db.collection("Store Owners")
-                                .document(uid)
-                                .delete()
+                        storedoc.delete()
                                 .addOnSuccessListener(unused ->
                                         toast("Deleting store account " + uid))
                                 .addOnFailureListener(e ->
-                                        toast("Unable to eleting store account " + uid));
-                    } else toast( "No store for " + uid);
+                                        toast("Unable to delete store account " + uid));
+                    }
+
             });
         }
     }
 
-    public void deleteCollectionForAccount(String collection, String account, DocumentReference docref) {
-        db.collection(collection)
-                .whereEqualTo(account, docref)
-                .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful() && task.getResult() != null) {
-
-                        QuerySnapshot docs = task.getResult();
-                        if (docs.isEmpty()) {
-                            toast( "No "+collection+" for "+account);
-                        } else {
-                            for (DocumentSnapshot doc : docs) {
-                                db.collection(collection).document(doc.getId()).delete()
-                                        .addOnSuccessListener(unused ->
-                                                toast( "Deleted "+collection+" "+account+": " + doc.getId()))
-                                        .addOnFailureListener(e ->
-                                                toast("Unable to delete "+account+" "+collection+": " + doc.getId()));
-                            }
-                        }
-                    } else {
-                        toast("Could not get "+collection+" for "+account);
-                    }
-                });
+    public void deleteRefs(ArrayList<DocumentReference> docs, String success, String fail) {
+        for(DocumentReference doc : docs) {
+            doc.delete().addOnSuccessListener(unused -> toast(success + doc.getId())).addOnFailureListener(e -> toast(fail + doc.getId()));
+        }
     }
+
+
 
     public void deleteCustomer() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -291,27 +283,27 @@ public class AccountFragment extends Fragment {
             String uid = current.getUid();
             DocumentReference custdoc = db.collection("Customers").document(uid);
 
-            custdoc.get().addOnSuccessListener(documentSnapshot -> {
+            custdoc.get()
+                    .addOnFailureListener(e -> toast( "Could not find customer " + uid))
+                    .addOnSuccessListener(documentSnapshot -> {
 
-                if (documentSnapshot.exists()){
-                    // customer exists
-                    deleteCollectionForAccount("Orders", "Customer", custdoc);
+                Customer cust = documentSnapshot.toObject(Customer.class);
+                if (cust == null) toast( "No Customer account found for " + uid);
+                else {
+                    ArrayList<DocumentReference> orders = cust.getOrders();
+                    if (orders.isEmpty()) toast("No orders for customer.");
+                    else deleteRefs(orders, "Deleted order for customer: ", "Unable to delete order for customer: ");
 
-                    //delete customer
-                    db.collection("Customers")
-                            .document(uid)
-                            .delete()
+                    custdoc.delete()
                             .addOnSuccessListener(unused -> {
                                 toast( "Deleting Customer account " + uid);
                             }).addOnFailureListener(e ->
                                 toast( "Unable to delete Customer account " + uid));
 
-                } else {
-                    //customer does not exist
-                    toast( "No Customer account found for " + uid);
                 }
 
-            }).addOnFailureListener(e -> toast( "Could not find customer " + uid));
+
+            });
         }
     }
 

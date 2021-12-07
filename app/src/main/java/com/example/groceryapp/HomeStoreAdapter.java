@@ -1,5 +1,7 @@
 package com.example.groceryapp;
 
+import static android.view.View.GONE;
+
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,13 +14,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
-public class StoreAdapter extends RecyclerView.Adapter<StoreAdapter.StoreViewHolder> {
+public class HomeStoreAdapter extends RecyclerView.Adapter<HomeStoreAdapter.StoreViewHolder> {
 
     Context context;
     ArrayList<StoreOwner> stores;
 
 
-    public StoreAdapter(Context context, ArrayList<StoreOwner> stores) {
+    public HomeStoreAdapter(Context context, ArrayList<StoreOwner> stores) {
         this.context = context;
         this.stores = stores;
 
@@ -37,10 +39,7 @@ public class StoreAdapter extends RecyclerView.Adapter<StoreAdapter.StoreViewHol
         holder.storename.setText(model.getStoreName());
         holder.address.setText("Address: " + model.getAddress());
         holder.owner.setText(("Owner: " + model.getName()));
-        holder.openStore.setOnClickListener(view -> {
-//            String docID = model.getUID();StoreAdapter
-//            intent to view items for store
-        });
+        holder.openStore.setVisibility(GONE);
     }
 
 

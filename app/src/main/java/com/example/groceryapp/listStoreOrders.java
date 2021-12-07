@@ -35,8 +35,8 @@ public class listStoreOrders extends AppCompatActivity implements AdapterOrder.O
         btnBack.setOnClickListener(v -> startActivity(new Intent(getApplicationContext(), ListProducts.class)));
 
         Query query = db.collection("Orders").orderBy("DateTime", Query.Direction.ASCENDING).whereEqualTo("Archived", true);
-        FirestoreRecyclerOptions<Order> options = new FirestoreRecyclerOptions.Builder<Order>()
-                .setQuery(query, Order.class)
+        FirestoreRecyclerOptions<OrderParcel> options = new FirestoreRecyclerOptions.Builder<OrderParcel>()
+                .setQuery(query, OrderParcel.class)
                 .build();
         adapter = new AdapterOrderMain(options);
 

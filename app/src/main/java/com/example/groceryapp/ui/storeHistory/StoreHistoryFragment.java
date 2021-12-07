@@ -14,12 +14,9 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.groceryapp.AdapterProduct;
-import com.example.groceryapp.Order;
+import com.example.groceryapp.OrderParcel;
 import com.example.groceryapp.OrderAdapter;
 import com.example.groceryapp.databinding.FragmentStoreHistoryBinding;
-import com.example.groceryapp.databinding.FragmentStoreHomeBinding;
-import com.example.groceryapp.ui.storeHome.StoreHomeViewModel;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -68,7 +65,7 @@ public class StoreHistoryFragment extends Fragment {
         return root;
     }
 
-    public void showOrders(ArrayList<Order> orders) {
+    public void showOrders(ArrayList<OrderParcel> orders) {
         adapter = new OrderAdapter(getActivity(), orders);
         viewer.setAdapter(adapter);
 
@@ -79,7 +76,7 @@ public class StoreHistoryFragment extends Fragment {
 
     public void getOrders() {
 
-        ArrayList<Order> orders = new ArrayList<>();
+        ArrayList<OrderParcel> orders = new ArrayList<>();
 
         DocumentReference storeref = db.collection("Store Owners").document(current.getUid());
 
@@ -98,7 +95,7 @@ public class StoreHistoryFragment extends Fragment {
 
                     } else {
                         for(DocumentSnapshot doc : value.getDocuments()) {
-                            Order neworder = new Order(doc.getData(), doc.getId());
+                            OrderParcel neworder = new OrderParcel(doc.getData(), doc.getId());
                             if (!orders.contains(neworder)) orders.add(neworder);
 
 

@@ -1,212 +1,122 @@
 package com.example.groceryapp;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
-import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.type.DateTime;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-public class Order implements Parcelable {
+public class Order {
+    DocumentReference Store, Customer;
+    ArrayList<Map<DocumentReference, Long>> Items;
+    boolean Archived, Completed;
+    String Status;
+    Long Count;
+    Double Subtotal, Total;
+    DateTime DateTime;
 
-    long count;
-    Customer customer;
-    DateTime placed;
-    HashMap<Product, Integer> items;
-    boolean archived, completed;
-    String status, orderid;
-    StoreOwner store;
-    double subtotal, total;
-    DocumentReference storeRef, customerRef;
-    HashMap<DocumentReference, Integer> itemRefs;
-    Timestamp fromDateTime;
-
-    ArrayList<Object> itemsfromdb;
-
-    public Order() { }
-
-    public Order(int count, Customer customer, DateTime placed, HashMap<Product, Integer> items, boolean archived, boolean completed, String status, StoreOwner store, double subtotal, double total) {
-        this.count = items.size();
-        this.customer = customer;
-        this.placed = placed;
-        this.items = (HashMap<Product, Integer>) items.clone();
-        this.archived = archived;
-        this.completed = completed;
-        this.status = status;
-        this.store = store;
-//        this.subtotal = calculateSubtotal();
-//        this.total = calculateSubtotal() * 1.13;
+    public Order() {
     }
 
-    public static String getTimeDate(long timestamp){
-        try{
-            DateFormat dateFormat = DateFormat.getDateTimeInstance();
-            Date netDate = (new Date(timestamp));
-            return dateFormat.format(netDate);
-        } catch(Exception e) {
-            return "date";
-        }
+    public Order(DocumentReference Store,
+                 DocumentReference Customer,
+                 ArrayList<Map<DocumentReference, Long>> Items,
+                 boolean Archived,
+                 boolean Completed,
+                 String Status,
+                 Long Count,
+                 Double Subtotal,
+                 Double Total,
+                 DateTime DateTime) {
+        this.Store = Store;
+        this.Customer = Customer;
+        this.Items = Items;
+        this.Archived = Archived;
+        this.Completed = Completed;
+        this.Status = Status;
+        this.Count = Count;
+        this.Subtotal = Subtotal;
+        this.Total = Total;
+        this.DateTime = DateTime;
     }
 
-    public Order(Map<String, Object> data, String id) {
-        orderid = id;
-        count = ((Long) data.get("Count")).intValue();
-        customerRef = (DocumentReference) data.get("Customer");
-        customer = new Customer(customerRef);
-        storeRef = (DocumentReference) data.get("Store");
-        fromDateTime = (Timestamp) data.get("DateTime");
-        archived = (boolean) data.get("Archived");
-        fromDateTime = (Timestamp) data.get("DateTime");
-
-//        DateTime placed;
-
-        completed = (boolean) data.get("Completed");
-
-//        itemRefs -
-        itemsfromdb = (ArrayList<Object>) data.get("Items");
-//        itemRefs = (HashMap<DocumentReference, Integer>) data.get("Items");
-        status = (String) data.get("Status");
-
-        Object subtotalimport = data.get("Subtotal");
-//        if (subtotalimport.getClass() == Long.class) subtotal=((Long) data.get("Subtotal")).doubleValue();
-//        else if (subtotalimport.getClass() == Double.class) subtotal = (Double) data.get("Subtotal");
-//        Object totalimport = data.get("Total");
-//        if (totalimport.getClass() == Long.class) total = ((Long) data.get("Total")).doubleValue();
-//        else if (totalimport.getClass() == Double.class) total = (Double) data.get("Total");
-
-        subtotal=((Long) data.get("Subtotal")).doubleValue();
-        total = ((Long) data.get("Total")).doubleValue();
+    public DocumentReference getStore() {
+        return Store;
     }
 
-    protected Order(Parcel in) {
-        count = in.readLong();
-        archived = in.readByte() != 0;
-        completed = in.readByte() != 0;
-        status = in.readString();
-        subtotal = in.readDouble();
-        total = in.readDouble();
+    public void setStore(DocumentReference Store) {
+        this.Store = Store;
     }
 
-    public static final Creator<Order> CREATOR = new Creator<Order>() {
-        @Override
-        public Order createFromParcel(Parcel in) {
-            return new Order(in);
-        }
-
-        @Override
-        public Order[] newArray(int size) {
-            return new Order[size];
-        }
-    };
-
-//    public double calculateSubtotal(){
-//        double result = 0;
-//        for (Item key: items.keySet()) {
-//            result += key.price * items.get(key);
-//        }
-//        return result;
-//    }
-
-    public long getCount() {
-        return count;
+    public DocumentReference getCustomer() {
+        return Customer;
     }
 
-    public void setCount(int count) {
-        this.count = count;
+    public void setCustomer(DocumentReference Customer) {
+        this.Customer = Customer;
     }
 
-    public Customer getCustomer() {
-        return customer;
+    public ArrayList<Map<DocumentReference, Long>> getItems() {
+        return Items;
     }
 
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
-    }
-
-    public DateTime getPlaced() {
-        return placed;
-    }
-
-    public void setPlaced(DateTime placed) {
-        this.placed = placed;
-    }
-
-    public HashMap<Product, Integer> getItems() {
-        return items;
-    }
-
-    public void setItems(HashMap<Product, Integer> items) {
-        this.items = items;
+    public void setItems(ArrayList<Map<DocumentReference, Long>> Items) {
+        this.Items = Items;
     }
 
     public boolean isArchived() {
-        return archived;
+        return Archived;
     }
 
-    public void setArchived(boolean archived) {
-        this.archived = archived;
+    public void setArchived(boolean Archived) {
+        this.Archived = Archived;
     }
 
     public boolean isCompleted() {
-        return completed;
+        return Completed;
     }
 
-    public void setCompleted(boolean completed) {
-        this.completed = completed;
+    public void setCompleted(boolean Completed) {
+        this.Completed = Completed;
     }
 
     public String getStatus() {
-        return status;
+        return Status;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setStatus(String Status) {
+        this.Status = Status;
     }
 
-    public StoreOwner getStore() {
-        return store;
+    public Long getCount() {
+        return Count;
     }
 
-    public void setStore(StoreOwner store) {
-        this.store = store;
+    public void setCount(Long Count) {
+        this.Count = Count;
     }
 
-    public double getSubtotal() {
-        return subtotal;
+    public Double getSubtotal() {
+        return Subtotal;
     }
 
-    public void setSubtotal(double subtotal) {
-        this.subtotal = subtotal;
+    public void setSubtotal(Double Subtotal) {
+        this.Subtotal = Subtotal;
     }
 
-    public double getTotal() {
-        return total;
+    public Double getTotal() {
+        return Total;
     }
 
-    public void setTotal(double total) {
-        this.total = total;
+    public void setTotal(Double Total) {
+        this.Total = Total;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
+    public com.google.type.DateTime getDateTime() {
+        return DateTime;
     }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeLong(count);
-        dest.writeByte((byte) (archived ? 1 : 0));
-        dest.writeByte((byte) (completed ? 1 : 0));
-        dest.writeString(status);
-        dest.writeDouble(subtotal);
-        dest.writeDouble(total);
+    public void setDateTime(com.google.type.DateTime DateTime) {
+        this.DateTime = DateTime;
     }
 }

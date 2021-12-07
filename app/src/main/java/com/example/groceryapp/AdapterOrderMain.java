@@ -12,12 +12,12 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 public class AdapterOrderMain extends AdapterOrder {
 
-    public AdapterOrderMain(@NonNull FirestoreRecyclerOptions<Order> options) {
+    public AdapterOrderMain(@NonNull FirestoreRecyclerOptions<OrderParcel> options) {
         super(options);
     }
 
     @Override
-    protected void onBindViewHolder(@NonNull OrderViewHolder holder, int position, @NonNull Order model) {
+    protected void onBindViewHolder(@NonNull OrderViewHolder holder, int position, @NonNull OrderParcel model) {
         super.onBindViewHolder(holder, position, model);
 
         holder.archive.setVisibility(View.VISIBLE);

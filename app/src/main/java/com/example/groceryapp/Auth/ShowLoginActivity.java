@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,9 +17,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import Navigation.CustomerNav;
+
+import com.example.groceryapp.BottomNavigationViewHelper;
+import com.example.groceryapp.MainActivity;
 import com.example.groceryapp.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -28,7 +34,7 @@ public class ShowLoginActivity extends AppCompatActivity {
     EditText email, pass;
     TextView err, forgot;
     FirebaseAuth mAuth;
-    Button login, signup;
+    Button login;
     FirebaseFirestore db;
     ProgressBar progress;
 
@@ -53,98 +59,98 @@ public class ShowLoginActivity extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
 
         forgot = findViewById(R.id.forgotPass);
-        forgot.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                progress.setVisibility(View.VISIBLE);
+        forgot.setOnClickListener(view -> {
+            progress.setVisibility(View.VISIBLE);
 
-                String emailIn = email.getText().toString().trim();
-                if (TextUtils.isEmpty(emailIn)) email.setError("Please enter a recovery email.");
-                else {
-                    mAuth.sendPasswordResetEmail(emailIn).addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void unused) {
-                            progress.setVisibility(View.GONE);
-                            Toast.makeText(getApplicationContext(), "Password reset email sent. Please check your mailbox", Toast.LENGTH_SHORT).show();
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            progress.setVisibility(View.GONE);
-                            Toast.makeText(getApplicationContext(), "Unable to send password reset email. Please check details and try again, or sign up instead.", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                }
-            }
-        });
-
-
-        signup = findViewById(R.id.switchSignUp);
-        signup.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                progress.setVisibility(View.VISIBLE);
-                email.setText("");
-                pass.setText("");
-                progress.setVisibility(View.GONE);
-                switchSignup();
-
-            }
-        });
-
-        login.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                progress.setVisibility(View.VISIBLE);
-                err.setText("");
-                err.setTextColor(Color.RED);
-                String emailIn = email.getText().toString().trim();
-                String passIn = pass.getText().toString().trim();
-                boolean noerrs = true;
-
-                if (TextUtils.isEmpty(emailIn)) {
-                    email.setError("Please fill in an email address");
-                    noerrs = false;
-                }
-
-                if (TextUtils.isEmpty(passIn)) {
-                    pass.setError("Please fill in a password");
-                    noerrs = false;
-                }
-
-                if (noerrs) {
-                    mAuth.signInWithEmailAndPassword(emailIn, passIn).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
-                        @Override
-                        public void onSuccess(AuthResult authResult) {
-                            FirebaseUser current = authResult.getUser();
-                            if (current != null ) {
-                                email.setText("");
-                                pass.setText("");
-                                progress.setVisibility(View.GONE);
-                                goToUserView();
-                            }
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            mAuth.signOut();
-                            progress.setVisibility(View.GONE);
-                            err.setText(e.getMessage());
-                        }
-                    });
-                } else {
+            String emailIn = email.getText().toString().trim();
+            if (TextUtils.isEmpty(emailIn)) email.setError("Please enter a recovery email.");
+            else {
+                mAuth.sendPasswordResetEmail(emailIn).addOnSuccessListener(unused -> {
                     progress.setVisibility(View.GONE);
-                    err.setText("Please fill in all required fields.");
-                }
-
+                    Toast.makeText(getApplicationContext(), "Password reset email sent. Please check your mailbox", Toast.LENGTH_SHORT).show();
+                }).addOnFailureListener(e -> {
+                    progress.setVisibility(View.GONE);
+                    Toast.makeText(getApplicationContext(), "Unable to send password reset email. Please check details and try again, or sign up instead.", Toast.LENGTH_SHORT).show();
+                });
             }
         });
-    }
 
-    public void switchSignup() {
-        Intent intent = new Intent(this, SignUpActivity.class);
-        startActivity(intent);
+
+        login.setOnClickListener(v -> {
+
+            progress.setVisibility(View.VISIBLE);
+            err.setText("");
+            err.setTextColor(Color.RED);
+            String emailIn = email.getText().toString().trim();
+            String passIn = pass.getText().toString().trim();
+            boolean noerrs = true;
+
+            if (TextUtils.isEmpty(emailIn)) {
+                email.setError("Please fill in an email address");
+                noerrs = false;
+            }
+
+            if (TextUtils.isEmpty(passIn)) {
+                pass.setError("Please fill in a password");
+                noerrs = false;
+            }
+
+            if (noerrs) {
+                mAuth.signInWithEmailAndPassword(emailIn, passIn).addOnSuccessListener(authResult -> {
+                    FirebaseUser current = authResult.getUser();
+                    if (current != null ) {
+                        email.setText("");
+                        pass.setText("");
+                        progress.setVisibility(View.GONE);
+                        goToUserView();
+                    }
+                }).addOnFailureListener(e -> {
+                    mAuth.signOut();
+                    progress.setVisibility(View.GONE);
+                    err.setText(e.getMessage());
+                });
+            } else {
+                progress.setVisibility(View.GONE);
+                err.setText("Please fill in all required fields.");
+            }
+
+        });
+
+
+
+        BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.main_navig);
+        BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
+        Menu menu = bottomNavigationView.getMenu();
+        MenuItem menuItem = menu.getItem(0);
+        menuItem.setChecked(true);
+
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()){
+
+                    case R.id.nav_login:
+
+                        break;
+
+                    case R.id.nav_main_home:
+                        Intent intent1 = new Intent(ShowLoginActivity.this, MainActivity.class);
+                        intent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent1);
+                        break;
+
+
+
+                    case R.id.nav_signup:
+                        Intent intent2 = new Intent(ShowLoginActivity.this, SignUpActivity.class);
+                        startActivity(intent2);
+                        break;
+
+                }
+
+                return false;
+            }
+        });
     }
 
     public void goToUserView() {

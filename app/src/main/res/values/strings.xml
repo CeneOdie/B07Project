@@ -98,4 +98,6 @@
     <string name="btn_logout">Logout</string>
     <string name="btn_deleteAccount">Delete Account</string>
     <string name="view_store">Enter</string>
+    <string name="store_to">Ordering to</string>
+    <string name="cart_in_progress">Cart In Progress</string>
 </resources>

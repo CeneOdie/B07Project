@@ -16,7 +16,6 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -46,7 +45,7 @@ public class ViewOrderDetail extends AppCompatActivity implements AdapterView.On
         total = findViewById(R.id.detailTotalPrice);
         itemList = findViewById(R.id.allItemList);
 
-        Order order = getIntent().getParcelableExtra("order");
+        OrderParcel order = getIntent().getParcelableExtra("order");
         orderId.setText(getIntent().getParcelableExtra("docId").toString());
         store.setText(order.store.getStoreName());
         storeAddress.setText(order.store.getAddress());

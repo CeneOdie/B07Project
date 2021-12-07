@@ -1,39 +1,29 @@
 package com.example.groceryapp.ui.items;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.ItemTouchHelper;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.groceryapp.AdapterProduct;
 import com.example.groceryapp.ItemAdapter;
-import com.example.groceryapp.Product;
-import com.example.groceryapp.R;
-import com.example.groceryapp.StoreAdapter;
+import com.example.groceryapp.Item;
 import com.example.groceryapp.StoreOwner;
-import com.example.groceryapp.addItem;
-import com.example.groceryapp.databinding.FragmentCustHomeBinding;
+import com.example.groceryapp.References;
 import com.example.groceryapp.databinding.FragmentItemsBinding;
-import com.example.groceryapp.ui.cust_home.CustHomeViewModel;
-import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
 
 import java.util.ArrayList;
 
@@ -66,11 +56,9 @@ public class ItemsFragment extends Fragment {
         Bundle extras = getActivity().getIntent().getExtras();
         current = (FirebaseUser) extras.get("auth");
 
-//        final TextView textView = binding.textCustHome;
         itemsViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
-//                textView.setText(s);
                 progress.setVisibility(View.VISIBLE);
                 getItems();
             }
@@ -78,47 +66,80 @@ public class ItemsFragment extends Fragment {
         return root;
     }
 
-    public void showItems(ArrayList<Product> items) {
+    public void showItems(ArrayList<Item> items, String storename) {
         ItemAdapter adapter = new ItemAdapter(getActivity(), items);
         viewer.setAdapter(adapter);
 
         viewer.setHasFixedSize(true);
 
+        endGet("Showing " + items.size() + " products for " + storename);
+
+    }
+
+    public void endGet(String msg) {
         progress.setVisibility(View.GONE);
+        err.setText(msg);
     }
 
     public void getItems() {
 
-        ArrayList<Product> items = new ArrayList<>();
-
+        ArrayList<Item> items = new ArrayList<>();
+        db = FirebaseFirestore.getInstance();
+        items.clear();
         DocumentReference storeref = db.collection("Store Owners").document(current.getUid());
+        storeref.addSnapshotListener((value, error) -> {
+            if (error != null) {
+                endGet(error.getMessage());
+                return;
+            }
+            StoreOwner store = value.toObject(StoreOwner.class);
+            if (store == null) {
+                items.clear();
+                showItems(items, "");
+                endGet("Store not found");
 
-        db.collection("Items").whereEqualTo("Store", storeref)
-//                .orderBy("Name", Query.Direction.ASCENDING)
-                .addSnapshotListener((value, error) -> {
-                    if (error != null) {
-                        Log.e("LINK", error.getLocalizedMessage());
-                        err.setText(error.getLocalizedMessage());
-                        progress.setVisibility(View.GONE);
-                        return;
-                    }
-                    if(value.isEmpty()) {
-                        err.setText("No products to display.Add some by clicking the + button.");
-                        progress.setVisibility(View.GONE);
+            } else {
+                ArrayList<DocumentReference> products = store.getItems();
+                if (products.isEmpty()) endGet(store.getStoreName() + " has no products. Add some with the + button.");
+                else {
 
-                    } else {
-                        for(DocumentSnapshot doc : value.getDocuments()) {
-                            Product newitem = new Product(doc.getData(), doc.getId());
-                            if (!items.contains(newitem)) items.add(newitem);
+                    ArrayList<DocumentSnapshot> productSnaps = References.getReferences(products);
 
-
-                        }
-                        err.setText("Showing " + items.size() + " items");
-                        showItems(items);
-
+                    for (DocumentSnapshot doc : productSnaps) {
+                        Item product = doc.toObject(Item.class);
+                        if (product != null && !items.contains(product)) items.add(product);
                     }
 
-                });
+                    showItems(items, store.getStoreName());
+            }
+
+            }
+        });
+//                get().addOnSuccessListener(documentSnapshot -> {
+//            StoreOwner store = documentSnapshot.toObject(StoreOwner.class);
+//            if (store == null) endGet("Store Account not found");
+//            else {
+//
+//                ArrayList<DocumentReference> products = store.getItems();
+//                if (products.isEmpty()) endGet(store.getStoreName() + " has no products. Add some with the + button.");
+//                else {
+//                    for (DocumentReference productref : products) {
+//                        Toast.makeText(getActivity().getApplicationContext(), productref.getId(), Toast.LENGTH_SHORT).show();
+//                        productref.get().addOnSuccessListener(documentSnapshot1 -> {
+//                            Item product = documentSnapshot1.toObject(Item.class);
+//
+//                            if(product != null) {
+//                                Toast.makeText(getActivity().getApplicationContext(), product.getName(), Toast.LENGTH_SHORT).show();
+//
+//                                if (!items.contains(product))  items.add(product);
+//                            }
+//                        });
+//                    }
+//                    showItems(items, store.getStoreName());
+//                }
+//
+//            }
+//        }).addOnFailureListener(e -> endGet("Store not found"));
 
     }
 

@@ -10,7 +10,7 @@ import java.util.Map;
 
 public class Product implements Parcelable {
 
-    String name, brand, description, store, qs, itemid;
+    String name, brand, description, store, qs;
     double price;
     DocumentReference storeRef;
 
@@ -26,8 +26,7 @@ public class Product implements Parcelable {
         this.price = price;
     }
 
-    public Product(Map<String, Object> data, String id) {
-        itemid = id;
+    public Product(Map<String, Object> data) {
         name = (String) data.get("Name");
         brand = (String) data.get("Brand");
         description = (String) data.get("Description");

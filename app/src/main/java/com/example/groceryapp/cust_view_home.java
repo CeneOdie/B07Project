@@ -1,12 +1,4 @@
-package Navigation;
-
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.MenuItem;
-import android.view.View;
-
-import com.example.groceryapp.R;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
+package com.example.groceryapp;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,20 +7,17 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import com.example.groceryapp.databinding.ActivityCustomerNavBinding;
-import com.google.firebase.auth.FirebaseUser;
+import android.os.Bundle;
+import android.view.MenuItem;
 
-public class CustomerNav extends AppCompatActivity {
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-    private ActivityCustomerNavBinding binding;
+public class cust_view_home extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Bundle extras = getIntent().getExtras();
-        FirebaseUser current = (FirebaseUser) extras.get("logged in");
-        binding = ActivityCustomerNavBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+        setContentView(R.layout.activity_cust_view_home);
 
         BottomNavigationView navView = findViewById(R.id.nav_view);
         // Passing each menu ID as a set of Ids because each
@@ -39,7 +28,7 @@ public class CustomerNav extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_customer_nav);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
 
-        NavigationUI.setupWithNavController(binding.navView, navController);
+        NavigationUI.setupWithNavController(navView, navController);
 
         BottomNavigationView nav = findViewById(R.id.nav_view);
         nav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -48,15 +37,5 @@ public class CustomerNav extends AppCompatActivity {
                 return false;
             }
         });
-
-
     }
-
-
-
-
-    public void goToStoreView() {
-        Intent intent = new Intent(this, StoreNav.class);
-    }
-
 }

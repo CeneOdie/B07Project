@@ -12,13 +12,14 @@ public class Customer {
     String Name;
     String Email;
     String UID;
-    ArrayList<Order> Orders;
+    ArrayList<OrderParcel> Orders;
 
 
     ArrayList<DocumentReference> OrderRefs;
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
+    public Customer() {}
 
     public Customer(String custID, String name, String email, String UID, ArrayList<DocumentReference> orderRefs) {
         CustID = custID;
@@ -72,12 +73,12 @@ public class Customer {
         this.UID = UID;
     }
 
-    public ArrayList<Order> getOrders() {
+    public ArrayList<OrderParcel> getOrders() {
         if (!OrderRefs.isEmpty()) {
             for (DocumentReference ref : OrderRefs) {
                 ref.get().addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
-                        Order neworder = new Order(documentSnapshot.getData(), documentSnapshot.getId());
+                        OrderParcel neworder = new OrderParcel(documentSnapshot.getData(), documentSnapshot.getId());
                         if (!Orders.contains(neworder)) Orders.add(neworder);
                     } else {
                         Log.d("CUSTOMER_ORDER", "Order " + ref.getId() + " DNE");
@@ -90,7 +91,7 @@ public class Customer {
         return Orders;
     }
 
-    public void setOrders(ArrayList<Order> orders) {
+    public void setOrders(ArrayList<OrderParcel> orders) {
         Orders = orders;
     }
 

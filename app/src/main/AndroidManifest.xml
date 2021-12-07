@@ -10,6 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.GroceryApp">
         <activity
+            android:name=".cust_view_home"
+            android:exported="false" />
+        <activity
             android:name=".Auth.SetupStore"
             android:exported="false" />
         <activity

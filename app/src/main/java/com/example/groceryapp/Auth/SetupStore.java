@@ -7,24 +7,21 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.groceryapp.MainActivity;
+import com.example.groceryapp.StoreOwner;
 import com.example.groceryapp.R;
 import Navigation.StoreNav;
 import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
 
 public class SetupStore extends AppCompatActivity {
 
@@ -50,48 +47,44 @@ public class SetupStore extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
         context = getApplicationContext();
 
-        create.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                boolean noerrs = true;
+        create.setOnClickListener(view -> {
+            boolean noerrs = true;
 
-                if (TextUtils.isEmpty(name.getText().toString().trim())) {
-                    name.setError("Store name is required");
-                    noerrs = false;
-                }
-                if (TextUtils.isEmpty(address.getText().toString().trim())) {
-                    address.setError("Store address is required");
-                    noerrs = false;
-                }
+            if (TextUtils.isEmpty(name.getText().toString().trim())) {
+                name.setError("Store name is required");
+                noerrs = false;
+            }
+            if (TextUtils.isEmpty(address.getText().toString().trim())) {
+                address.setError("Store address is required");
+                noerrs = false;
+            }
 
-                if (noerrs) {
+            if (noerrs) {
 
-                    if (current == null) {
-                        // not logged in, please log in and try again
+                if (current == null) {
+                    // not logged in, please log in and try again
 
-                        Toast.makeText(context, "No user logged in. Redirecting...", Toast.LENGTH_SHORT).show();
-                        goHome();
-                    } else {
-                        //recheck if store exists
-                        db.collection("Store Owners").document(current.getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                            @Override
-                            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                if (documentSnapshot.exists()) {
-                                    Toast.makeText(context, "Store account already set up as " + documentSnapshot.getString("Store Name") + ". Redirecting...", Toast.LENGTH_SHORT).show();
-                                    goToStoreView();
-                                } else {
-                                    setStoreData();
-                                }
+                    Toast.makeText(context, "No user logged in. Redirecting...", Toast.LENGTH_SHORT).show();
+                    goHome();
+                } else {
+                    //recheck if store exists
 
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                // user does not have store. create new
-                                setStoreData();
-                            }
-                        });
-                    }
+                    db.collection("Store Owners").document(current.getUid()).get().addOnSuccessListener(documentSnapshot -> {
+                        StoreOwner store = documentSnapshot.toObject(StoreOwner.class);
+                        if (store != null) {
+                            Toast.makeText(context, "Store account already set up as " + documentSnapshot.getString("Store Name") + ". Redirecting...", Toast.LENGTH_SHORT).show();
+                            goToStoreView();
+                        } else {
+                            setStoreData();
+                        }
+
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            // user does not have store. create new
+                            setStoreData();
+                        }
+                    });
                 }
             }
         });
@@ -107,26 +100,18 @@ public class SetupStore extends AppCompatActivity {
 
 
     public void setStoreData() {
-        Map<String, Object> data = new HashMap<>();
-        data.put("Name", current.getDisplayName());
-        data.put("Email", current.getEmail());
-        data.put("UID", current.getUid());
-        data.put("Orders", Arrays.asList());
-        data.put("Items", Arrays.asList());
-        data.put("Store Name", name.getText().toString().trim());
-        data.put("Address", address.getText().toString().trim());
-        db.collection("Store Owners").document(current.getUid()).set(data).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void unused) {
-                Toast.makeText(context, "Welcome to your Store Account! Get started by adding some products to your store.", Toast.LENGTH_LONG).show();
-                goToStoreView();
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                // store create failed, try again
-                Toast.makeText(context, "Store create failed. Please try again.", Toast.LENGTH_SHORT).show();
-            }
+        StoreOwner store = new StoreOwner(current.getUid(),
+                                        name.getText().toString().trim(),
+                                        address.getText().toString().trim(),
+                                        current.getDisplayName(),
+                                        current.getEmail(),
+                                         new ArrayList<DocumentReference>(),new ArrayList<DocumentReference>());
+        db.collection("Store Owners").document(current.getUid()).set(store).addOnSuccessListener(unused -> {
+            Toast.makeText(context, "Welcome to your Store Account! Get started by adding some products to your store.", Toast.LENGTH_LONG).show();
+            goToStoreView();
+        }).addOnFailureListener(e -> {
+            // store create failed, try again
+            Toast.makeText(context, "Store create failed. Please try again.", Toast.LENGTH_SHORT).show();
         });
     }
 
