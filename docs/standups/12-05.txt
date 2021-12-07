@@ -10,13 +10,15 @@
   
 Julia:
   Since yesterday:
-  - 
+  - Ran the app on the emulator
+  - Reviewed codes and restored functions lost during merging
   
   For tomorrow:
-  - 
+  - Focus on finnessing codes instead of testing
   
   Impediments:
-  -
+  - Time
+  - Testing 
   
 Perry:
   Since yesterday:
