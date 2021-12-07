@@ -10,19 +10,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.GroceryApp">
         <activity
-            android:name=".cust_view_home"
+            android:name=".AccountActivity"
             android:exported="false" />
         <activity
-            android:name=".Auth.SetupStore"
+            android:name=".StoreList"
             android:exported="false" />
         <activity
-            android:name="Navigation.StoreNav"
-            android:exported="false"
-            android:label="@string/title_activity_store_nav" />
-        <activity
-            android:name="Navigation.CustomerNav"
-            android:exported="false"
-            android:label="@string/title_activity_customer_nav" />
+            android:name=".SetupStore"
+            android:exported="false" />
         <activity
             android:name=".addItem"
             android:exported="false" />
@@ -33,10 +28,10 @@
             android:name=".ListProducts"
             android:exported="false" />
         <activity
-            android:name=".Auth.SignUpActivity"
+            android:name=".SignUpActivity"
             android:exported="false" />
         <activity
-            android:name=".Auth.ShowLoginActivity"
+            android:name=".ShowLoginActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"

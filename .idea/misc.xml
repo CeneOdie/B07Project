@@ -8,8 +8,10 @@
         <entry key="..\:/Users/ceneo/AndroidStudioProjects/GroceryAppNavsetupBackup/app/src/main/res/drawable/ic_launcher_background.xml" value="0.27708333333333335" />
         <entry key="..\:/Users/ceneo/AndroidStudioProjects/GroceryAppNavsetupBackup/app/src/main/res/drawable/image2vector.xml" value="0.27708333333333335" />
         <entry key="..\:/Users/ceneo/AndroidStudioProjects/GroceryAppNavsetupBackup/app/src/main/res/drawable/rounded_corners.xml" value="0.21875" />
-        <entry key="..\:/Users/ceneo/AndroidStudioProjects/GroceryAppNavsetupBackup/app/src/main/res/layout/activity_add_item.xml" value="0.3625" />
+        <entry key="..\:/Users/ceneo/AndroidStudioProjects/GroceryAppNavsetupBackup/app/src/main/res/layout/activity_account.xml" value="0.315625" />
+        <entry key="..\:/Users/ceneo/AndroidStudioProjects/GroceryAppNavsetupBackup/app/src/main/res/layout/activity_add_item.xml" value="0.25" />
         <entry key="..\:/Users/ceneo/AndroidStudioProjects/GroceryAppNavsetupBackup/app/src/main/res/layout/activity_archived.xml" value="0.20260416666666667" />
+        <entry key="..\:/Users/ceneo/AndroidStudioProjects/GroceryAppNavsetupBackup/app/src/main/res/layout/activity_cust_view_home.xml" value="0.16197916666666667" />
         <entry key="..\:/Users/ceneo/AndroidStudioProjects/GroceryAppNavsetupBackup/app/src/main/res/layout/activity_customer_nav.xml" value="0.25" />
         <entry key="..\:/Users/ceneo/AndroidStudioProjects/GroceryAppNavsetupBackup/app/src/main/res/layout/activity_list_orders.xml" value="0.27291666666666664" />
         <entry key="..\:/Users/ceneo/AndroidStudioProjects/GroceryAppNavsetupBackup/app/src/main/res/layout/activity_list_products.xml" value="0.20260416666666667" />
@@ -22,7 +24,7 @@
         <entry key="..\:/Users/ceneo/AndroidStudioProjects/GroceryAppNavsetupBackup/app/src/main/res/layout/activity_store_list.xml" value="0.20260416666666667" />
         <entry key="..\:/Users/ceneo/AndroidStudioProjects/GroceryAppNavsetupBackup/app/src/main/res/layout/activity_store_nav.xml" value="0.296875" />
         <entry key="..\:/Users/ceneo/AndroidStudioProjects/GroceryAppNavsetupBackup/app/src/main/res/layout/activity_user_nav.xml" value="0.14437689969604864" />
-        <entry key="..\:/Users/ceneo/AndroidStudioProjects/GroceryAppNavsetupBackup/app/src/main/res/layout/activity_view_order_detail.xml" value="0.33" />
+        <entry key="..\:/Users/ceneo/AndroidStudioProjects/GroceryAppNavsetupBackup/app/src/main/res/layout/activity_view_order_detail.xml" value="0.25" />
         <entry key="..\:/Users/ceneo/AndroidStudioProjects/GroceryAppNavsetupBackup/app/src/main/res/layout/card_order.xml" value="0.20260416666666667" />
         <entry key="..\:/Users/ceneo/AndroidStudioProjects/GroceryAppNavsetupBackup/app/src/main/res/layout/card_product.xml" value="0.25" />
         <entry key="..\:/Users/ceneo/AndroidStudioProjects/GroceryAppNavsetupBackup/app/src/main/res/layout/cart_item.xml" value="0.5" />
@@ -31,7 +33,7 @@
         <entry key="..\:/Users/ceneo/AndroidStudioProjects/GroceryAppNavsetupBackup/app/src/main/res/layout/fragment_acount.xml" value="0.33" />
         <entry key="..\:/Users/ceneo/AndroidStudioProjects/GroceryAppNavsetupBackup/app/src/main/res/layout/fragment_cart.xml" value="0.22" />
         <entry key="..\:/Users/ceneo/AndroidStudioProjects/GroceryAppNavsetupBackup/app/src/main/res/layout/fragment_cust_history.xml" value="0.296875" />
-        <entry key="..\:/Users/ceneo/AndroidStudioProjects/GroceryAppNavsetupBackup/app/src/main/res/layout/fragment_cust_home.xml" value="0.296875" />
+        <entry key="..\:/Users/ceneo/AndroidStudioProjects/GroceryAppNavsetupBackup/app/src/main/res/layout/fragment_cust_home.xml" value="0.14285714285714285" />
         <entry key="..\:/Users/ceneo/AndroidStudioProjects/GroceryAppNavsetupBackup/app/src/main/res/layout/fragment_customer_history.xml" value="0.3625" />
         <entry key="..\:/Users/ceneo/AndroidStudioProjects/GroceryAppNavsetupBackup/app/src/main/res/layout/fragment_items.xml" value="0.25" />
         <entry key="..\:/Users/ceneo/AndroidStudioProjects/GroceryAppNavsetupBackup/app/src/main/res/layout/fragment_order.xml" value="0.20260416666666667" />

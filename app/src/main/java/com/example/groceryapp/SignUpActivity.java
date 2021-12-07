@@ -1,4 +1,4 @@
-package com.example.groceryapp.Auth;
+package com.example.groceryapp;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,11 +15,7 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import Navigation.CustomerNav;
 
-import com.example.groceryapp.BottomNavigationViewHelper;
-import com.example.groceryapp.MainActivity;
-import com.example.groceryapp.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -214,8 +210,7 @@ public class SignUpActivity extends AppCompatActivity {
                 switch (item.getItemId()){
 
                     case R.id.nav_login:
-                        Intent intent2 = new Intent(SignUpActivity.this, ShowLoginActivity.class);
-                        startActivity(intent2);
+
                         break;
 
                     case R.id.nav_main_home:
@@ -227,7 +222,8 @@ public class SignUpActivity extends AppCompatActivity {
 
 
                     case R.id.nav_signup:
-
+                        Intent intent2 = new Intent(SignUpActivity.this, SignUpActivity.class);
+                        startActivity(intent2);
                         break;
 
                 }
@@ -242,7 +238,7 @@ public class SignUpActivity extends AppCompatActivity {
     //view changers
 
     public void goToUserView() {
-        Intent intent = new Intent(this, CustomerNav.class);
+        Intent intent = new Intent(this, StoreList.class);
         intent.putExtra("auth", mAuth.getCurrentUser());
         intent.putExtra("account", "Customer");
         startActivity(intent);

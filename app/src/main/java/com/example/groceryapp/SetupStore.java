@@ -1,4 +1,4 @@
-package com.example.groceryapp.Auth;
+package com.example.groceryapp;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -15,8 +17,8 @@ import android.widget.Toast;
 import com.example.groceryapp.MainActivity;
 import com.example.groceryapp.StoreOwner;
 import com.example.groceryapp.R;
-import Navigation.StoreNav;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -46,6 +48,53 @@ public class SetupStore extends AppCompatActivity {
         current = (FirebaseUser) getIntent().getExtras().get("auth");
         db = FirebaseFirestore.getInstance();
         context = getApplicationContext();
+
+
+        BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.main_navig);
+        BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
+        Menu menu = bottomNavigationView.getMenu();
+        MenuItem menuItem = menu.getItem(3);
+        menuItem.setChecked(true);
+
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()){
+
+                    case R.id.nav_stores:
+                        Intent intent = new Intent(SetupStore.this, StoreList.class);
+                        intent.putExtra("account", "Customer");
+                        intent.putExtra("auth", current);
+                        startActivity(intent);
+                        break;
+
+                    case R.id.nav_cart:
+//                        Intent intent2 = new Intent(StoreList.this, CartActivity.class);
+//                        startActivity(intent2);
+                        break;
+
+
+
+                    case R.id.nav_history:
+//                        Intent intent3 = new Intent(StoreList.this, CustomerHistoryActivity.class);
+//                        startActivity(intent3);
+                        break;
+
+
+
+                    case R.id.nav_account:
+                        Intent intent4 = new Intent(SetupStore.this, AccountActivity.class);
+                        intent4.putExtra("auth", current);
+                        intent4.putExtra("account", "Customer");
+                        startActivity(intent4);
+                        break;
+
+                }
+
+                return false;
+            }
+        });
+
 
         create.setOnClickListener(view -> {
             boolean noerrs = true;
@@ -116,7 +165,7 @@ public class SetupStore extends AppCompatActivity {
     }
 
     public void goToStoreView() {
-        Intent intent = new Intent(this, StoreNav.class);
+        Intent intent = new Intent(this, listStoreOrders.class);
         intent.putExtra("account", "Store");
         intent.putExtra("auth", current);
         startActivity(intent);

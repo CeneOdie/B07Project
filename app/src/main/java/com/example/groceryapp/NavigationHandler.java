@@ -1,21 +1,14 @@
 package com.example.groceryapp;
 
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
-import androidx.annotation.NonNull;
-
-import com.example.groceryapp.Auth.ShowLoginActivity;
-import com.example.groceryapp.Auth.SignUpActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.firebase.firestore.ListenerRegistration;
 
 public class NavigationHandler {
 

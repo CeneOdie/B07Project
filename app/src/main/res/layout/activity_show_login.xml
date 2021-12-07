@@ -7,7 +7,7 @@
     android:layout_margin="10dp"
     android:layout_marginStart="10dp"
     android:layout_marginEnd="10dp"
-    tools:context=".Auth.ShowLoginActivity">
+    tools:context=".ShowLoginActivity">
 
     <TextView
         android:id="@+id/textView2"
@@ -78,19 +78,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/errLogin" />
 
-    <Button
-        android:id="@+id/switchSignUp"
-        android:layout_width="280dp"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@color/colorBackground"
-        android:background="@drawable/rounded_corners"
-        android:layout_marginTop="8dp"
-        android:text="@string/SignupButton"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/loginBtn" />
-
     <TextView
         android:id="@+id/forgotPass"
         android:layout_width="280dp"
@@ -98,7 +85,7 @@
         android:layout_marginTop="56dp"
         android:text=" Forgot password? Click here"
         android:textAlignment="textEnd"
-        android:textColor="@color/colorAccent"
+        android:textColor="@color/colorPrimaryDark"
         android:textStyle="italic"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.496"
