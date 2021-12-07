@@ -7,12 +7,26 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.SimpleAdapter;
 
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class listStoreOrders extends AppCompatActivity implements AdapterOrder.OnOrderClickListener {
 
@@ -34,9 +48,19 @@ public class listStoreOrders extends AppCompatActivity implements AdapterOrder.O
         FloatingActionButton btnBack = findViewById(R.id.backbtn);
         btnBack.setOnClickListener(v -> startActivity(new Intent(getApplicationContext(), ListProducts.class)));
 
-        Query query = db.collection("Orders").orderBy("DateTime", Query.Direction.ASCENDING).whereEqualTo("Archived", true);
-        FirestoreRecyclerOptions<OrderParcel> options = new FirestoreRecyclerOptions.Builder<OrderParcel>()
-                .setQuery(query, OrderParcel.class)
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        String uID = null;
+        if (user != null) {
+            // How can I check if user is a store owner?
+            uID = user.getUid();
+        }
+
+        Query query = db.collection("Orders")
+                .whereEqualTo("Store", "/Store Owners/" + uID)
+                .orderBy("DateTime", Query.Direction.ASCENDING);
+
+        FirestoreRecyclerOptions<Order> options = new FirestoreRecyclerOptions.Builder<Order>()
+                .setQuery(query, Order.class)
                 .build();
         adapter = new AdapterOrderMain(options);
 
@@ -68,7 +92,5 @@ public class listStoreOrders extends AppCompatActivity implements AdapterOrder.O
         super.onStop();
         adapter.stopListening();
     }
-
-    //TODO Julia list of orders for a store (allow for a field of completed/notcompleted when created to use in db query)
 
 }
