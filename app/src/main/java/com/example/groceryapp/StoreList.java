@@ -89,13 +89,6 @@ public class StoreList extends AppCompatActivity {
                         break;
 
 
-                    case R.id.nav_account:
-                        Intent intent4 = new Intent(StoreList.this, AccountActivity.class);
-                        intent4.putExtra("account", "Customer");
-                        intent4.putExtra("auth", current);
-                        startActivity(intent4);
-                        break;
-
                 }
                 return false;
             }
@@ -143,6 +136,65 @@ public class StoreList extends AppCompatActivity {
                             showStores(stores);
                         }
                     });
+
+
+    }
+
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the main_menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.customer_settings, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch(item.getItemId()) {
+            case R.id.nav_to_store_account:
+
+                db.collection("Store Owners").document(current.getUid()).get().addOnCompleteListener(task -> {
+                    if (task.isSuccessful() && task.getResult() != null) {
+                        DocumentSnapshot doc = task.getResult();
+                        StoreOwner store = doc.toObject(StoreOwner.class);
+                        if (store != null) {
+
+                            Intent intent1 = new Intent(StoreList.this, listStoreOrders.class);
+                            intent1.putExtra("account", "Store");
+                            intent1.putExtra("auth", current);
+                            startActivity(intent1);
+                        } else {
+
+                            Intent intent2 = new Intent(StoreList.this, SetupStore.class);
+                            intent2.putExtra("account", "Customer");
+                            intent2.putExtra("auth", current);
+                            startActivity(intent2);
+                        }
+
+                    }
+                });
+                break;
+
+
+
+            case R.id.nav_logout:
+                Intent intent = new Intent(StoreList.this, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                break;
+
+
+
+
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+
+        return true;
         }
     }
+
 

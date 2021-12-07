@@ -143,12 +143,6 @@ public class StoreAccountActivity extends AppCompatActivity {
                         break;
 
 
-                    case R.id.nav_store_account:
-//                        Intent intent4 = new Intent(StoreAccountActivity.this, StoreAccountActivity.class);
-//                        intent4.putExtra("account", "Customer");
-//                        intent4.putExtra("auth", current);
-//                        startActivity(intent4);
-                        break;
 
                 }
                 return false;

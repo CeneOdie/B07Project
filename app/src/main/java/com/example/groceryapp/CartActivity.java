@@ -58,13 +58,6 @@ public class CartActivity extends AppCompatActivity {
                         break;
 
 
-                    case R.id.nav_account:
-                        Intent intent4 = new Intent(CartActivity.this, AccountActivity.class);
-                        intent4.putExtra("account", "Customer");
-                        intent4.putExtra("auth", current);
-                        startActivity(intent4);
-                        break;
-
                 }
                 return false;
             }

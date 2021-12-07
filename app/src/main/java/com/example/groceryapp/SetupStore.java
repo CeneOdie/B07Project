@@ -81,14 +81,6 @@ public class SetupStore extends AppCompatActivity {
                         break;
 
 
-
-                    case R.id.nav_account:
-                        Intent intent4 = new Intent(SetupStore.this, AccountActivity.class);
-                        intent4.putExtra("auth", current);
-                        intent4.putExtra("account", "Customer");
-                        startActivity(intent4);
-                        break;
-
                 }
 
                 return false;

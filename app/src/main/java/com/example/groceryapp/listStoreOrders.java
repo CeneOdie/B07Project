@@ -114,13 +114,6 @@ public class listStoreOrders extends AppCompatActivity implements AdapterOrder.O
                         break;
 
 
-                    case R.id.nav_store_account:
-                        Intent intent4 = new Intent(listStoreOrders.this, StoreAccountActivity.class);
-                        intent4.putExtra("account", "Store");
-                        intent4.putExtra("auth", current);
-                        startActivity(intent4);
-                        break;
-
                 }
                 return false;
             }
@@ -147,6 +140,48 @@ public class listStoreOrders extends AppCompatActivity implements AdapterOrder.O
     protected void onStop() {
         super.onStop();
         adapter.stopListening();
+    }
+
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the main_menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.customer_settings, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch(item.getItemId()) {
+            case R.id.nav_to_cust_account:
+
+                            Intent intent1 = new Intent(listStoreOrders.this, StoreList.class);
+                            intent1.putExtra("account", "Customer");
+                            intent1.putExtra("auth", current);
+                            startActivity(intent1);
+
+
+                break;
+
+
+
+            case R.id.nav_logout:
+                Intent intent = new Intent(listStoreOrders.this, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                break;
+
+
+
+
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+
+        return true;
     }
 
 }
