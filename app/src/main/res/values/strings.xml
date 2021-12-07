@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">GroceryApp</string>
-    <string name="WelcomeString">Welcome to Buy &amp; Sell Grocery App!</string>
+    <string name="WelcomeString">Welcome to the Grocery App!</string>
     <string name="LoginButton">Log In</string>
     <string name="SignupButton">Sign Up</string>
     <string name="CustSwitch">Customer</string>

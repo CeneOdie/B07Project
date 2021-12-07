@@ -24,7 +24,7 @@ public class AdapterProduct extends FirestoreRecyclerAdapter<Product, AdapterPro
         holder.name.setText(model.getName());
         holder.brand.setText(model.getBrand());
         holder.description.setText(model.getDescription());
-        holder.price.setText(String.valueOf(model.getPrice()));
+        holder.price.setText(String.format("$ %s", model.getPrice()));
         holder.qs.setText(model.getQs());
         holder.edit.setOnClickListener(v -> {
             String docID = getSnapshots().getSnapshot(position).getId();

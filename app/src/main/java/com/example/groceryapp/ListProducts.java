@@ -4,49 +4,50 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
+public class ListProducts extends AppCompatActivity {
 
-public class ListProducts extends CommonSetUp {
-
-    AdapterProduct adapter;
+    private AdapterProduct adapter;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_products);
 
-        setTB();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        RecyclerView recyclerView = findViewById(R.id.productsRecyclerView);
 
-        Query query = db.collection("Items").orderBy("Name", Query.Direction.ASCENDING);
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        String uID = null;
+        if (user != null) {
+            uID = user.getUid();
+        }
+
+        Query query = db.collection("Items")
+                .whereEqualTo("Store", "/Store Owners/" + uID)
+                .orderBy("Name", Query.Direction.ASCENDING);
         FirestoreRecyclerOptions<Product> options = new FirestoreRecyclerOptions.Builder<Product>()
                 .setQuery(query, Product.class)
                 .build();
 
-        setRecyclerViewer(options);
+        adapter = new AdapterProduct(options);
 
-        FloatingActionButton buttonAddProduct = findViewById(R.id.button_add);
-        buttonAddProduct.setOnClickListener(v -> startActivity(new Intent(getApplicationContext(), addItem.class)));
-    }
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(adapter);
 
-    @Override
-    protected int getLayout(){
-        return R.id.productsRecyclerView;
-    }
-
-    @Override
-    public AdapterProduct getAdapter(FirestoreRecyclerOptions<Product> options) {
-        return new AdapterProduct(options);
-    }
-
-    @Override
-    public RecyclerView setRecyclerViewer(FirestoreRecyclerOptions<Product> options){
-        RecyclerView rV = super.setRecyclerViewer(options);
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
             @Override
             public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
@@ -57,9 +58,10 @@ public class ListProducts extends CommonSetUp {
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
                 adapter.deleteItem(viewHolder.getBindingAdapterPosition());
             }
-        }).attachToRecyclerView(rV);
+        }).attachToRecyclerView(recyclerView);
 
-        return rV;
+        FloatingActionButton addbtn = findViewById(R.id.button_add);
+        addbtn.setOnClickListener(v -> startActivity(new Intent(ListProducts.this, addItem.class)));
     }
 
     @Override

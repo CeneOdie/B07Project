@@ -10,6 +10,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
@@ -19,6 +21,7 @@ public class addItem extends AppCompatActivity {
 
     protected EditText name, brand, description, qs, price;
     protected FirebaseFirestore db;
+    protected Button bSave, bCancel;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -42,10 +45,6 @@ public class addItem extends AppCompatActivity {
             getSupportActionBar().hide();
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         setSupportActionBar(findViewById(R.id.archivedTB));
-
-        // Return to ListProducts activity
-        FloatingActionButton btnBack = findViewById(R.id.backbtn);
-        btnBack.setOnClickListener(v -> startActivity(new Intent(addItem.this, ListProducts.class)));
     }
 
     protected void assignEditText(){
@@ -58,7 +57,7 @@ public class addItem extends AppCompatActivity {
 
     protected void saveChanges(){
         Map<String, Object> newProduct = new HashMap<>();
-        Button bSave = findViewById(R.id.buttonSaveNew);
+        bSave = findViewById(R.id.buttonSaveNew);
         bSave.setOnClickListener(v -> {
 
             // Obtain changes from user input
@@ -67,7 +66,6 @@ public class addItem extends AppCompatActivity {
             String newDesc = description.getText().toString();
             String newQs = qs.getText().toString();
             String newPrice = price.getText().toString();
-            // Need to get store information by identifying the user ***********
 
             // User needs to at least input name and price
             if (newName.trim().isEmpty() || newPrice.trim().isEmpty()){
@@ -86,7 +84,7 @@ public class addItem extends AppCompatActivity {
                 return;
             }
 
-            // Evaluate if QS involves numbers? --> regex
+            // Evaluate if QS involves numbers?
 
             // Create a new map to add onto Firestore database
             newProduct.put("Name", newName);
@@ -94,7 +92,13 @@ public class addItem extends AppCompatActivity {
             newProduct.put("Description", newDesc);
             newProduct.put("Quantity_Size", newQs);
             newProduct.put("Price", finPrice);
-                // newProduct.put("Store", storeOwner); ****************
+
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            String uID = null;
+            if (user != null) {
+                uID = user.getUid();
+            }
+            newProduct.put("Store", "/Store Owners/" + uID);
 
             saveToFirestore(newProduct);
             finish();
@@ -109,7 +113,7 @@ public class addItem extends AppCompatActivity {
     }
 
     protected void cancelChanges() {
-        Button bCancel = findViewById(R.id.buttonCancelNew);
+        bCancel = findViewById(R.id.buttonCancelNew);
         bCancel.setOnClickListener(v -> startActivity(new Intent(getApplicationContext(), ListProducts.class)));
     }
 }
