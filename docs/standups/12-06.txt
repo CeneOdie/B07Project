@@ -10,13 +10,13 @@
   
 Julia:
   Since yesterday:
-  - 
+  - Figured how to acquire current user information for limitting the display of orders & products
   
   For tomorrow:
-  - 
+  - None [project is due tonight]
   
   Impediments:
-  -
+  - Time & stress
   
 Perry:
   Since yesterday:
