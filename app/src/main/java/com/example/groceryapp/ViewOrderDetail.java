@@ -1,5 +1,6 @@
 package com.example.groceryapp;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -12,6 +13,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -78,6 +81,21 @@ public class ViewOrderDetail extends AppCompatActivity implements AdapterView.On
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.order_status, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
+        String spinnerDisplay = (String) order.status;
+        switch (spinnerDisplay) {
+            case "Order received":
+                spinner.setSelection(0);
+                break;
+            case "In progress":
+                spinner.setSelection(1);
+                break;
+            case "Completed":
+                spinner.setSelection(2);
+                break;
+            default:
+                spinner.setSelection(3);
+                break;
+        }
         spinner.setOnItemClickListener(this);
     }
 
@@ -87,20 +105,20 @@ public class ViewOrderDetail extends AppCompatActivity implements AdapterView.On
 
         if (text.equals("Archived")) {
             docRef.update("Archived", true)
-                    .addOnSuccessListener(unused -> Toast.makeText(ViewOrderDetail.this, "Updated successfully", Toast.LENGTH_SHORT).show())
-                    .addOnFailureListener(e -> Toast.makeText(ViewOrderDetail.this, "Error while updating", Toast.LENGTH_SHORT).show());
+                    .addOnSuccessListener(unused -> docRef.update("Status", text)
+                            .addOnSuccessListener(v -> Toast.makeText(ViewOrderDetail.this, "Updated successfully", Toast.LENGTH_SHORT).show())
+                            .addOnFailureListener(e -> Toast.makeText(ViewOrderDetail.this, "Error while updating", Toast.LENGTH_SHORT).show())
+                            .addOnFailureListener(e -> Toast.makeText(ViewOrderDetail.this, "Error while updating", Toast.LENGTH_SHORT).show()));
         } else if (text.equals("Completed")) {
             docRef.update("Completed", true)
+                    .addOnSuccessListener(unused -> docRef.update("Status", text)
+                            .addOnSuccessListener(v -> Toast.makeText(ViewOrderDetail.this, "Updated successfully", Toast.LENGTH_SHORT).show())
+                            .addOnFailureListener(e -> Toast.makeText(ViewOrderDetail.this, "Error while updating", Toast.LENGTH_SHORT).show())
+                            .addOnFailureListener(e -> Toast.makeText(ViewOrderDetail.this, "Error while updating", Toast.LENGTH_SHORT).show()));
+        } else {
+            docRef.update("Status", text)
                     .addOnSuccessListener(unused -> Toast.makeText(ViewOrderDetail.this, "Updated successfully", Toast.LENGTH_SHORT).show())
                     .addOnFailureListener(e -> Toast.makeText(ViewOrderDetail.this, "Error while updating", Toast.LENGTH_SHORT).show());
         }
-
-        // update status in Firestore
-        docRef.update("Status", text)
-                .addOnSuccessListener(unused ->
-                        Toast.makeText(ViewOrderDetail.this, "Updated successfully", Toast.LENGTH_SHORT).show()
-                ).addOnFailureListener(e ->
-                        Toast.makeText(ViewOrderDetail.this, "Error while updating", Toast.LENGTH_SHORT).show()
-        );
     }
 }

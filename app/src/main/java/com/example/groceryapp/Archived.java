@@ -14,7 +14,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
-public class Archived extends AppCompatActivity implements setRecyclerViewer {
+public class Archived extends AppCompatActivity {
 
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     AdapterOrder adapter;
@@ -24,7 +24,7 @@ public class Archived extends AppCompatActivity implements setRecyclerViewer {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_archived);
 
-        // Hide default toolbar and its title
+        //Hide default toolbar and its title
         // Display custom toolbar
         if (getSupportActionBar() != null)
             getSupportActionBar().hide();
@@ -34,11 +34,9 @@ public class Archived extends AppCompatActivity implements setRecyclerViewer {
         // Return to listStoreOrders activity
         FloatingActionButton btnBack = findViewById(R.id.backbtn);
         btnBack.setOnClickListener(v -> startActivity(new Intent(Archived.this, listStoreOrders.class)));
-
         setupRecyclerView();
     }
 
-    @Override
     public void setupRecyclerView() {
 
         Query query = db.collection("Orders")
@@ -48,7 +46,6 @@ public class Archived extends AppCompatActivity implements setRecyclerViewer {
         FirestoreRecyclerOptions<OrderParcel> options = new FirestoreRecyclerOptions.Builder<OrderParcel>()
                 .setQuery(query, OrderParcel.class).build();
 
-        // Interface here?
         adapter = new AdapterOrder(options);
         RecyclerView recyclerView = findViewById(R.id.archivedRecyclerView);
         recyclerView.setHasFixedSize(true);
